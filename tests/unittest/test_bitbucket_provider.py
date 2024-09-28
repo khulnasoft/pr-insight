@@ -72,7 +72,7 @@ class TestBitbucketServerProvider:
     o - o - o  main
         ^ node c
     '''
-    def test_get_diff_files_simple_diverge_70(self):
+    def test_get_diff_files_simple_branch_divergence_bitbucket_70(self):
         bitbucket_client = MagicMock(Bitbucket)
         bitbucket_client.get_pull_request.return_value = {
             'toRef': {'latestCommit': '9c1cffdd9f276074bfb6fb3b70fbee62d298b058'},
