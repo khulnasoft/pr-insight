@@ -280,7 +280,7 @@ __old hunk__
     start1, size1, start2, size2 = -1, -1, -1, -1
     prev_header_line = []
     header_line = []
-    for line_i, line in enumerate(patch_lines):
+    for line_index, line in enumerate(patch_lines):
         if 'no newline at end of file' in line.lower().strip().strip('//'):
             continue
 
