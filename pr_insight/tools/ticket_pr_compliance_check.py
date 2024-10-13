@@ -13,17 +13,10 @@ def find_jira_tickets(text):
         r'(?:https?://[^\s/]+/browse/)?([A-Z]{2,10}-\d{1,7})\b'  # JIRA URL or just the ticket
     ]
 
-    tickets = set()
-    for pattern in patterns:
-        matches = re.findall(pattern, text)
-        for match in matches:
-            if isinstance(match, tuple):
-                # If it's a tuple (from the URL pattern), take the last non-empty group
-                ticket = next((m for m in reversed(match) if m), None)
-            else:
-                ticket = match
-            if ticket:
-                tickets.add(ticket)
+    tickets = {next((m for m in reversed(match) if m), match) if isinstance(match, tuple) else match
+               for pattern in patterns
+               for match in re.findall(pattern, text)
+               if match}
 
     return list(tickets)
 
