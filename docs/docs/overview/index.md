@@ -29,7 +29,6 @@ PR-Insight offers extensive pull request functionalities across various git prov
 |-------|-----------------------------------------------------------------------------------------------------------------------|:------:|:------:|:---------:|:------------:|
 | TOOLS | Review                                                                                                                |   ✅    |   ✅    |   ✅       |      ✅      |
 |       | ⮑ Incremental                                                                                                         |   ✅    |        |            |              |
-|       | ⮑ [SOC2 Compliance](https://pr-insight-docs.khulnasoft.com/tools/review/#soc2-ticket-compliance){:target="_blank"} 💎        |   ✅    |   ✅    |   ✅        |      ✅      |
 |       | Ask                                                                                                                   |   ✅    |   ✅    |   ✅        |      ✅      |
 |       | Describe                                                                                                              |   ✅    |   ✅    |   ✅        |      ✅      |
 |       | ⮑ [Inline file summary](https://pr-insight-docs.khulnasoft.com/tools/describe/#inline-file-summary){:target="_blank"} 💎     |   ✅    |   ✅    |           |      ✅      |
