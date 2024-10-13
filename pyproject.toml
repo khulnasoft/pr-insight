@@ -42,9 +42,12 @@ dependencies = {file = ["requirements.txt"]}
 [tool.setuptools]
 include-package-data = true
 license-files = ["LICENSE"]
-
 [tool.setuptools.packages.find]
 where = ["."]
+include = ["pr_insight*"]
+
+[tool.setuptools.package-data]
+pr_insight = ["py.typed"]
 include = ["pr_insight*"]
 
 [project.scripts]
