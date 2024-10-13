@@ -6,24 +6,10 @@ from pr_insight.git_providers import GithubProvider
 from pr_insight.log import get_logger
 
 
-def find_jira_tickets(text):
-    # Regular expression patterns for JIRA tickets
-    patterns = [
-        r'\b[A-Z]{2,10}-\d{1,7}\b',  # Standard JIRA ticket format (e.g., PROJ-123)
-        r'(?:https?://[^\s/]+/browse/)?([A-Z]{2,10}-\d{1,7})\b'  # JIRA URL or just the ticket
-    ]
-
-    tickets = set()
-    for pattern in patterns:
-        matches = re.findall(pattern, text)
-        for match in matches:
-            if isinstance(match, tuple):
-                # If it's a tuple (from the URL pattern), take the last non-empty group
-                ticket = next((m for m in reversed(match) if m), None)
-            else:
-                ticket = match
-            if ticket:
-                tickets.add(ticket)
+tickets = {next((m for m in reversed(match) if m), None) if isinstance(match, tuple) else match
+           for pattern in patterns
+           for match in re.findall(pattern, text)
+           if match}
 
     return list(tickets)
 
