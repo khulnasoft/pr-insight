@@ -57,7 +57,7 @@ class TestConvertToMarkdown:
             '<table>\n'
             '<tr><td>⏱️&nbsp;<strong>Estimated effort to review</strong>: 1 🔵⚪⚪⚪⚪</td></tr>\n'
             '<tr><td>🧪&nbsp;<strong>No relevant tests</strong></td></tr>\n'
-            '<tr><td>⚡&nbsp;<strong>Possible issues</strong>: No\n</td></tr>\n'
+            '<tr><td>&nbsp;<strong>Possible issues</strong>: No\n</td></tr>\n'
             '<tr><td>🔒&nbsp;<strong>No security concerns identified</strong></td></tr>\n'
             '</table>\n\n\n'
             '<details><summary> <strong>Code feedback:</strong></summary>\n\n'
