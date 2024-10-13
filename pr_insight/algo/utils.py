@@ -910,7 +910,7 @@ def get_rate_limit_status(github_token) -> dict:
         if rate_limit_info.get('message') == 'Rate limiting is not enabled.':  # for github enterprise
             return {'resources': {}}
         response.raise_for_status()  # Check for HTTP errors
-    except:  # retry
+    except Exception:
         time.sleep(0.1)
         response = requests.get(RATE_LIMIT_URL, headers=HEADERS)
         return response.json()
@@ -949,7 +949,7 @@ def validate_and_await_rate_limit(github_token):
                     time.sleep(sleep_time_sec + 1)
                 rate_limit_status = get_rate_limit_status(github_token)
         return rate_limit_status
-    except:
+    except Exception:
         get_logger().error("Error in rate limit")
         return None
 
@@ -1016,8 +1016,7 @@ def string_to_uniform_number(s: str) -> float:
     hash_int = int(hash_object.hexdigest(), 16)
     # Normalize the integer to the range [0, 1]
     max_hash_int = 2 ** 256 - 1
-    uniform_number = float(hash_int) / max_hash_int
-    return uniform_number
+    return float(hash_int) / max_hash_int
 
 
 def process_description(description_full: str) -> Tuple[str, List]:

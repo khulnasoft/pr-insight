@@ -76,9 +76,8 @@ async def extract_tickets(git_provider):
                         continue
 
                     # clip issue_main.body max length
-                    issue_body_str = issue_main.body
-                    if not issue_body_str:
-                        issue_body_str = ""
+                    issue_body_str = issue_main.body or ""
+
                     if len(issue_body_str) > MAX_TICKET_CHARACTERS:
                         issue_body_str = issue_body_str[:MAX_TICKET_CHARACTERS] + "..."
 
