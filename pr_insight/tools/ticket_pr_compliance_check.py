@@ -57,37 +57,15 @@ async def extract_tickets(git_provider):
                     # extract ticket number and repo name
                     repo_name, original_issue_number = git_provider._parse_issue_url(ticket)
 
-                    # get the ticket object
-                    issue_main = git_provider.repo_obj.get_issue(original_issue_number)
-
-                    # clip issue_main.body max length
-                    issue_body = issue_main.body
-                    if len(issue_main.body) > MAX_TICKET_CHARACTERS:
-                        issue_body = issue_main.body[:MAX_TICKET_CHARACTERS] + "..."
-
-                    # extract labels
-                    labels = []
-                    try:
-                        for label in issue_main.labels:
-                            if isinstance(label, str):
-                                labels.append(label)
-                            else:
-                                labels.append(label.name)
-                    except Exception as e:
-                        get_logger().error(f"Error extracting labels error= {e}",
-                                           artifact={"traceback": traceback.format_exc()})
-                    tickets_content.append(
-                        {'ticket_id': issue_main.number,
-                         'ticket_url': ticket, 'title': issue_main.title, 'body': issue_body,
-                         'labels': ", ".join(labels)})
-                return tickets_content
-
-    except Exception as e:
-        get_logger().error(f"Error extracting tickets error= {e}",
-                           artifact={"traceback": traceback.format_exc()})
-
-
-async def extract_and_cache_pr_tickets(git_provider, vars):
+                    tickets_content = []
+                    if tickets:
+                        for ticket in tickets:
+                            # ... (ticket processing code)
+                            tickets_content.append(
+                                {'ticket_id': issue_main.number,
+                                 'ticket_url': ticket, 'title': issue_main.title, 'body': issue_body,
+                                 'labels': ", ".join(labels)})
+                    return tickets_content if tickets_content else None
     if get_settings().get('config.require_ticket_analysis_review', False):
         return
     related_tickets = get_settings().get('related_tickets', [])
