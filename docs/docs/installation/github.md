@@ -28,26 +28,6 @@ jobs:
 ```
 
 
-if you want to pin your action to a specific release (v0.23 for example) for stability reasons, use:
-```yaml
-...
-    steps:
-      - name: PR Insight action step
-        id: prinsight
-        uses: docker://khulnasoft/pr-insight:0.23-github_action
-...
-```
-
-For enhanced security, you can also specify the Docker image by its [digest](https://hub.docker.com/repository/docker/khulnasoft/pr-insight/tags):
-```yaml
-...
-    steps:
-      - name: PR Insight action step
-        id: prinsight
-        uses: docker://khulnasoft/pr-insight@sha256:14165e525678ace7d9b51cda8652c2d74abb4e1d76b57c4a6ccaeba84663cc64
-...
-```
-
 2) Add the following secret to your repository under `Settings > Secrets and variables > Actions > New repository secret > Add secret`:
 
 ```
@@ -69,6 +49,40 @@ When you open your next PR, you should see a comment from `github-actions` bot w
         PR_CODE_SUGGESTIONS.NUM_CODE_SUGGESTIONS: 6 # Increase number of code suggestions
 ```
 See detailed usage instructions in the [USAGE GUIDE](https://pr-insight-docs.khulnasoft.com/usage-guide/automations_and_usage/#github-action)
+
+
+ ### Using a specific release
+ !!! tip ""
+     if you want to pin your action to a specific release (v0.23 for example) for stability reasons, use:
+     ```yaml
+     ...
+         steps:
+           - name: PR Insight action step
+             id: prinsight
+             uses: docker://khulnasoft/pr-insight:0.23-github_action
+     ...
+     ```
+
+     For enhanced security, you can also specify the Docker image by its [digest](https://hub.docker.com/repository/docker/khulnasoft/pr-insight/tags):
+     ```yaml
+     ...
+         steps:
+           - name: PR Insight action step
+             id: prinsight
+             uses: docker://khulnasoft/pr-insight@sha256:962612a3dadafadb084b8b00975d54ae4605618d4d1bbb0aa73a4c2e07863e4f
+     ...
+     ```
+
+ ### Action for GitHub enterprise server 
+ !!! tip ""
+     To use the action with a GitHub enterprise server, add an environment variable `GITHUB.BASE_URL` with the API URL of your GitHub server.
+
+     For example, if your GitHub server is at `https://github.mycompany.com`, add the following to your workflow file:
+     ```yaml
+           env:
+             # ... previous environment values
+             GITHUB.BASE_URL: "https://github.mycompany.com/api/v3"
+     ```
 
 ---
 
