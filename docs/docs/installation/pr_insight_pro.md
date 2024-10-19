@@ -17,8 +17,8 @@ Users without a purchased seat who interact with a repository featuring PR-Insig
 Beyond this limit, PR-Insight Pro will cease to respond to their inquiries unless a seat is purchased.
 
 ## Install PR-Insight Pro for GitHub Enterprise Server
-You can install PR-Insight Pro application on your GitHub Enterprise Server, and enjoy two weeks of free trial.
-After the trial period, to continue using PR-Insight Pro, you will need to contact us for an [Enterprise license](https://www.khulnasoft.com/pricing/).
+
+To use Qodo Merge Pro application on your private GitHub Enterprise Server, you will need to contact us for starting an [Enterprise](https://www.khulnasoft.com/pricing/) trial.
 
 
 ## Install PR-Insight Pro for GitLab (Teams & Enterprise)
