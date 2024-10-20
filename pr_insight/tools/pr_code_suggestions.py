@@ -4,7 +4,6 @@ import textwrap
 from functools import partial
 from typing import Dict, List
 from jinja2 import Environment, StrictUndefined
-from bs4 import BeautifulSoup, Comment
 
 from pr_insight.algo.ai_handlers.base_ai_handler import BaseAiHandler
 from pr_insight.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
@@ -312,6 +311,7 @@ class PRCodeSuggestions:
             self.git_provider.publish_comment(pr_comment)
 
     def extract_link(self, s):
+        from bs4 import BeautifulSoup, Comment
         soup = BeautifulSoup(s, 'html.parser')
         comment = soup.find(string=lambda text: isinstance(text, Comment))
 
