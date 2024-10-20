@@ -3,7 +3,7 @@ import textwrap
 from functools import partial
 from typing import Dict
 
-from jinja2 import Environment, StrictUndefined
+from jinja2 import Environment, StrictUndefined, select_autoescape
 
 from pr_insight.algo.ai_handlers.base_ai_handler import BaseAiHandler
 from pr_insight.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
@@ -83,7 +83,7 @@ class PRAddDocs:
     async def _get_prediction(self, model: str):
         variables = copy.deepcopy(self.vars)
         variables["diff"] = self.patches_diff  # update diff
-        environment = Environment(undefined=StrictUndefined)
+        environment = Environment(undefined=StrictUndefined, autoescape=select_autoescape(['html', 'xml']))
         system_prompt = environment.from_string(get_settings().pr_add_docs_prompt.system).render(variables)
         user_prompt = environment.from_string(get_settings().pr_add_docs_prompt.user).render(variables)
         if get_settings().config.verbosity_level >= 2:
