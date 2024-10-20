@@ -312,11 +312,12 @@ class PRCodeSuggestions:
             self.git_provider.publish_comment(pr_comment)
 
     def extract_link(self, s):
-        from bs4 import BeautifulSoup, Comment
         soup = BeautifulSoup(s, 'html.parser')
         comment = soup.find(string=lambda text: isinstance(text, Comment))
 
         up_to_commit_txt = ""
+        if comment is None:
+            return ""
         if comment:
             up_to_commit_txt = f" up to commit {comment.strip()}"
         return up_to_commit_txt
