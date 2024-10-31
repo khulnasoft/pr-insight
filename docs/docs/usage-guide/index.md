@@ -1,7 +1,7 @@
 # Usage guide
 
-This page provides a detailed guide on how to use Khulnasoft Merge. 
-It includes information on how to adjust Khulnasoft Merge configurations, define which tools will run automatically, and other advanced configurations.
+This page provides a detailed guide on how to use PR-Insight. 
+It includes information on how to adjust PR-Insight configurations, define which tools will run automatically, and other advanced configurations.
 
 
 - [Introduction](./introduction.md)
@@ -23,4 +23,4 @@ It includes information on how to adjust Khulnasoft Merge configurations, define
     - [Changing a model](./additional_configurations.md#changing-a-model)
     - [Patch Extra Lines](./additional_configurations.md#patch-extra-lines)
     - [Editing the prompts](./additional_configurations.md#editing-the-prompts)
-- [Khulnasoft Merge Pro Models](./PR_insight_pro_models.md)
+- [PR-Insight Pro Models](./PR_insight_pro_models.md)

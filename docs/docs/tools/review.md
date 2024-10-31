@@ -8,7 +8,7 @@ The tool can be triggered automatically every time a new PR is [opened](../usage
 
 Note that the main purpose of the `review` tool is to provide the **PR reviewer** with useful feedbacks and insights. The PR author, in contrast, may prefer to save time and focus on the output of the [improve](./improve.md) tool, which provides actionable code suggestions.
 
-(Read more about the different personas in the PR process and how Khulnasoft Merge aims to assist them in our [blog](https://www.khulnasoft.com/blog/understanding-the-challenges-and-pain-points-of-the-pull-request-cycle/))
+(Read more about the different personas in the PR process and how PR-Insight aims to assist them in our [blog](https://www.khulnasoft.com/blog/understanding-the-challenges-and-pain-points-of-the-pull-request-cycle/))
 
 
 ## Example usage
@@ -49,7 +49,7 @@ num_code_suggestions = ...
 [//]: # ()
 [//]: # (### Incremental Mode)
 
-[//]: # (Incremental review only considers changes since the last Khulnasoft Merge review. This can be useful when working on the PR in an iterative manner, and you want to focus on the changes since the last review instead of reviewing the entire PR again.)
+[//]: # (Incremental review only considers changes since the last PR-Insight review. This can be useful when working on the PR in an iterative manner, and you want to focus on the changes since the last review instead of reviewing the entire PR again.)
 
 [//]: # (For invoking the incremental mode, the following command can be used:)
 
@@ -187,7 +187,7 @@ If enabled, the `review` tool can approve a PR when a specific comment, `/review
     On the other hand, if you find one of the enabled features to be irrelevant for your use case, disable it. No default configuration can fit all use cases.
 
 !!! tip "Automation"
-    When you first install Khulnasoft Merge app, the [default mode](../usage-guide/automations_and_usage.md#github-app-automatic-tools-when-a-new-pr-is-opened) for the `review` tool is:
+    When you first install PR-Insight app, the [default mode](../usage-guide/automations_and_usage.md#github-app-automatic-tools-when-a-new-pr-is-opened) for the `review` tool is:
     ```
     pr_commands = ["/review --pr_reviewer.num_code_suggestions=0", ...]
     ```
@@ -226,7 +226,7 @@ If enabled, the `review` tool can approve a PR when a specific comment, `/review
 
 !!! tip "Auto-approval"
 
-    Khulnasoft Merge can approve a PR when a specific comment is invoked.
+    PR-Insight can approve a PR when a specific comment is invoked.
     
     To ensure safety, the auto-approval feature is disabled by default. To enable auto-approval, you need to actively set in a pre-defined configuration file the following:
     ```
@@ -240,7 +240,7 @@ If enabled, the `review` tool can approve a PR when a specific comment, `/review
     ```
     /review auto_approve
     ```
-    Khulnasoft Merge will automatically approve the PR, and add a comment with the approval.
+    PR-Insight will automatically approve the PR, and add a comment with the approval.
     
     
     You can also enable auto-approval only if the PR meets certain requirements, such as that the `estimated_review_effort` label is equal or below a certain threshold, by adjusting the flag:

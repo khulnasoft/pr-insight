@@ -205,7 +205,7 @@ The description should be comprehensive and detailed, indicating when to add the
 ## Usage Tips
 
 !!! tip "Automation"
-    - When you first install Khulnasoft Merge app, the [default mode](../usage-guide/automations_and_usage.md#github-app) for the describe tool is:
+    - When you first install PR-Insight app, the [default mode](../usage-guide/automations_and_usage.md#github-app) for the describe tool is:
     ```
     pr_commands = ["/describe", ...]
     ```

@@ -1,5 +1,5 @@
 # Core Abilities
-Khulnasoft Merge utilizes a variety of core abilities to provide a comprehensive and efficient code review experience. These abilities include:
+PR-Insight utilizes a variety of core abilities to provide a comprehensive and efficient code review experience. These abilities include:
 
 - [Local and global metadata](https://pr-insight-docs.khulnasoft.com/core-abilities/metadata/)
 - [Dynamic context](https://pr-insight-docs.khulnasoft.com/core-abilities/dynamic_context/)

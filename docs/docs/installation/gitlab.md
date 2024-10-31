@@ -1,5 +1,5 @@
 ## Run as a GitLab Pipeline
-You can use a pre-built Action Docker image to run Khulnasoft Merge as a GitLab pipeline. This is a simple way to get started with Khulnasoft Merge without setting up your own server.
+You can use a pre-built Action Docker image to run PR-Insight as a GitLab pipeline. This is a simple way to get started with PR-Insight without setting up your own server.
 
 (1) Add the following file to your repository under `.gitlab-ci.yml`:
 ```yaml
@@ -26,8 +26,8 @@ pr_insight_job:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 ```
-This script will run Khulnasoft Merge on every new merge request. You can modify the `rules` section to run Khulnasoft Merge on different events.
-You can also modify the `script` section to run different Khulnasoft Merge commands, or with different parameters by exporting different environment variables.
+This script will run PR-Insight on every new merge request. You can modify the `rules` section to run PR-Insight on different events.
+You can also modify the `script` section to run different PR-Insight commands, or with different parameters by exporting different environment variables.
 
 
 (2) Add the following masked variables to your GitLab repository (CI/CD -> Variables):

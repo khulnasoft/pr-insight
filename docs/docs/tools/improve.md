@@ -9,7 +9,7 @@ The tool can be triggered automatically every time a new PR is [opened](../usage
 
 ![code_suggestions_as_comment_open.png](https://khulnasoft.com/images/pr_insight/code_suggestions_as_comment_open.png){width=512}
 
-Note that the `Apply this suggestion` checkbox, which interactively converts a suggestion into a commitable code comment, is available only for Khulnasoft Merge Pro 💎 users.
+Note that the `Apply this suggestion` checkbox, which interactively converts a suggestion into a commitable code comment, is available only for PR-Insight Pro 💎 users.
 
 
 ## Example usage
@@ -54,14 +54,14 @@ num_code_suggestions_per_chunk = ...
 
 ### Assessing Impact 💎
 
-Note that Khulnasoft Merge pro tracks two types of implementations:
+Note that PR-Insight pro tracks two types of implementations:
 
 - Direct implementation - when the user directly applies the suggestion by clicking the `Apply` checkbox.
-- Indirect implementation - when the user implements the suggestion in their IDE environment. In this case, Khulnasoft Merge will utilize, after each commit, a dedicated logic to identify if a suggestion was implemented, and will mark it as implemented.
+- Indirect implementation - when the user implements the suggestion in their IDE environment. In this case, PR-Insight will utilize, after each commit, a dedicated logic to identify if a suggestion was implemented, and will mark it as implemented.
 
 ![code_suggestions_asses_impact](https://khulnasoft.com/images/pr_insight/code_suggestions_asses_impact.png){width=512}
 
-In post-process, Khulnasoft Merge counts the number of suggestions that were implemented, and provides general statistics and insights about the suggestions' impact on the PR process.
+In post-process, PR-Insight counts the number of suggestions that were implemented, and provides general statistics and insights about the suggestions' impact on the PR process.
 
 ![code_suggestions_asses_impact_stats_1](https://khulnasoft.com/images/pr_insight/code_suggestions_asses_impact_stats_1.png){width=512}
 
@@ -70,7 +70,7 @@ In post-process, Khulnasoft Merge counts the number of suggestions that were imp
 ## Suggestion tracking 💎
 `Platforms supported: GitHub, GitLab`
 
-Khulnasoft Merge employs an novel detection system to automatically [identify](https://pr-insight-docs.khulnasoft.com/core-abilities/impact_evaluation/) AI code suggestions that PR authors have accepted and implemented.
+PR-Insight employs an novel detection system to automatically [identify](https://pr-insight-docs.khulnasoft.com/core-abilities/impact_evaluation/) AI code suggestions that PR authors have accepted and implemented.
 
 Accepted suggestions are also automatically documented in a dedicated wiki page called `.pr_insight_accepted_suggestions`, allowing users to track historical changes, assess the tool's effectiveness, and learn from previously implemented recommendations in the repository.
 An example [result](https://github.com/Khulnasoft/pr-insight/wiki/.pr_insight_accepted_suggestions):
@@ -170,17 +170,17 @@ code_suggestions_self_review_text = "... (your text here) ..."
  
 
 ### How many code suggestions are generated?
-Khulnasoft Merge uses a dynamic strategy to generate code suggestions based on the size of the pull request (PR). Here's how it works:
+PR-Insight uses a dynamic strategy to generate code suggestions based on the size of the pull request (PR). Here's how it works:
 
 1) Chunking large PRs:
 
-- Khulnasoft Merge divides large PRs into 'chunks'.
+- PR-Insight divides large PRs into 'chunks'.
 - Each chunk contains up to `pr_code_suggestions.max_context_tokens` tokens (default: 14,000).
 
 
 2) Generating suggestions:
 
-- For each chunk, Khulnasoft Merge generates up to `pr_code_suggestions.num_code_suggestions_per_chunk` suggestions (default: 4).
+- For each chunk, PR-Insight generates up to `pr_code_suggestions.num_code_suggestions_per_chunk` suggestions (default: 4).
 
 
 This approach has two main benefits:
@@ -188,7 +188,7 @@ This approach has two main benefits:
 - Scalability: The number of suggestions scales with the PR size, rather than being fixed.
 - Quality: By processing smaller chunks, the AI can maintain higher quality suggestions, as larger contexts tend to decrease AI performance.
 
-Note: Chunking is primarily relevant for large PRs. For most PRs (up to 500 lines of code), Khulnasoft Merge will be able to process the entire code in a single call.
+Note: Chunking is primarily relevant for large PRs. For most PRs (up to 500 lines of code), PR-Insight will be able to process the entire code in a single call.
 
 
 ### 'Extra instructions' and 'best practices'
@@ -234,7 +234,7 @@ This file is only an example. Since it is used as a prompt for an AI model, we w
      2) A lengthy file probably represent a more "**generic**" set of guidelines, which the AI model is already familiar with. The objective is to focus on a more targeted set of guidelines tailored to the specific needs of this project.
 
 ##### Local and global best practices
-By default, Khulnasoft Merge will look for a local `best_practices.md` wiki file in the root of the relevant local repo.
+By default, PR-Insight will look for a local `best_practices.md` wiki file in the root of the relevant local repo.
 
 If you want to enable also a global `best_practices.md` wiki file, set first in the global configuration file:
 
