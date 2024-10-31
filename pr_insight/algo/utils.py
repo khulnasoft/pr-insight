@@ -43,6 +43,10 @@ class PRReviewHeader(str, Enum):
     INCREMENTAL = "## Incremental PR Reviewer Guide"
 
 
+class PRDescriptionHeader(str, Enum):
+    CHANGES_WALKTHROUGH = "### **Changes walkthrough** 📝"
+
+
 def get_setting(key: str) -> Any:
     try:
         key = key.upper()
@@ -910,7 +914,7 @@ def get_rate_limit_status(github_token) -> dict:
         if rate_limit_info.get('message') == 'Rate limiting is not enabled.':  # for github enterprise
             return {'resources': {}}
         response.raise_for_status()  # Check for HTTP errors
-    except Exception:
+    except:  # retry
         time.sleep(0.1)
         response = requests.get(RATE_LIMIT_URL, headers=HEADERS)
         return response.json()
@@ -949,7 +953,7 @@ def validate_and_await_rate_limit(github_token):
                     time.sleep(sleep_time_sec + 1)
                 rate_limit_status = get_rate_limit_status(github_token)
         return rate_limit_status
-    except Exception:
+    except:
         get_logger().error("Error in rate limit")
         return None
 
@@ -968,45 +972,28 @@ def github_action_output(output_data: dict, key_name: str):
 
 
 def show_relevant_configurations(relevant_section: str) -> str:
-    # Define skip keys as a set for efficient lookups
-    skip_keys = {
-        'ai_disclaimer', 
-        'ai_disclaimer_title', 
-        'ANALYTICS_FOLDER', 
-        'secret_provider', 
-        'skip_keys', 
-        'app_id', 
-        'redirect',
-        'trial_prefix_message', 
-        'no_eligible_message', 
-        'identity_provider', 
-        'ALLOWED_REPOS',
-        'APP_NAME'
-    }
-
-    # Get extra skip keys from settings
+    skip_keys = ['ai_disclaimer', 'ai_disclaimer_title', 'ANALYTICS_FOLDER', 'secret_provider', "skip_keys", "app_id", "redirect",
+                      'trial_prefix_message', 'no_eligible_message', 'identity_provider', 'ALLOWED_REPOS','APP_NAME']
     extra_skip_keys = get_settings().config.get('config.skip_keys', [])
-    skip_keys.update(extra_skip_keys)  # Use update for sets
+    if extra_skip_keys:
+        skip_keys.extend(extra_skip_keys)
 
-    # Start building the markdown text
-    markdown_text = "\n<hr>\n<details> <summary><strong>🛠️ Relevant configurations:</strong></summary> \n\n"
-    markdown_text += "<br>These are the relevant [configurations](https://github.com/khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) for this tool:\n\n"
-    markdown_text += f"**[config]**\n```yaml\n\n"
-
-    # Collect settings excluding skip keys
+    markdown_text = ""
+    markdown_text += "\n<hr>\n<details> <summary><strong>🛠️ Relevant configurations:</strong></summary> \n\n"
+    markdown_text +="<br>These are the relevant [configurations](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) for this tool:\n\n"
+    markdown_text += f"**[config**]\n```yaml\n\n"
     for key, value in get_settings().config.items():
-        if key not in skip_keys:
-            markdown_text += f"{key}: {value}\n"
-
+        if key in skip_keys:
+            continue
+        markdown_text += f"{key}: {value}\n"
     markdown_text += "\n```\n"
     markdown_text += f"\n**[{relevant_section}]**\n```yaml\n\n"
-
-    # Collect relevant section settings excluding skip keys
     for key, value in get_settings().get(relevant_section, {}).items():
-        if key not in skip_keys:
-            markdown_text += f"{key}: {value}\n"
-
-    markdown_text += "\n```\n</details>\n"
+        if key in skip_keys:
+            continue
+        markdown_text += f"{key}: {value}\n"
+    markdown_text += "\n```"
+    markdown_text += "\n</details>\n"
     return markdown_text
 
 def is_value_no(value):
@@ -1033,15 +1020,15 @@ def string_to_uniform_number(s: str) -> float:
     hash_int = int(hash_object.hexdigest(), 16)
     # Normalize the integer to the range [0, 1]
     max_hash_int = 2 ** 256 - 1
-    return float(hash_int) / max_hash_int
+    uniform_number = float(hash_int) / max_hash_int
+    return uniform_number
 
 
 def process_description(description_full: str) -> Tuple[str, List]:
     if not description_full:
         return "", []
 
-    split_str = "### **Changes walkthrough** 📝"
-    description_split = description_full.split(split_str)
+    description_split = description_full.split(PRDescriptionHeader.CHANGES_WALKTHROUGH.value)
     base_description_str = description_split[0]
     changes_walkthrough_str = ""
     files = []
@@ -1075,6 +1062,9 @@ def process_description(description_full: str) -> Tuple[str, List]:
                     res = re.search(pattern, file_data, re.DOTALL)
                     if not res or res.lastindex != 4:
                         pattern_back = r'<details>\s*<summary><strong>(.*?)</strong><dd><code>(.*?)</code>.*?</summary>\s*<hr>\s*(.*?)\n\n\s*(.*?)</details>'
+                        res = re.search(pattern_back, file_data, re.DOTALL)
+                    if not res or res.lastindex != 4:
+                        pattern_back = r'<details>\s*<summary><strong>(.*?)</strong>\s*<dd><code>(.*?)</code>.*?</summary>\s*<hr>\s*(.*?)\s*-\s*(.*?)\s*</details>' # looking for hypen ('- ')
                         res = re.search(pattern_back, file_data, re.DOTALL)
                     if res and res.lastindex == 4:
                         short_filename = res.group(1).strip()

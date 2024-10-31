@@ -311,15 +311,12 @@ class PRCodeSuggestions:
             self.git_provider.publish_comment(pr_comment)
 
     def extract_link(self, s):
-        from bs4 import BeautifulSoup, Comment
-        soup = BeautifulSoup(s, 'html.parser')
-        comment = soup.find(string=lambda text: isinstance(text, Comment))
+        r = re.compile(r"<!--.*?-->")
+        match = r.search(s)
 
         up_to_commit_txt = ""
-        if comment is None:
-            return ""
-        if comment:
-            up_to_commit_txt = f" up to commit {comment.strip()}"
+        if match:
+            up_to_commit_txt = f" up to commit {match.group(0)[4:-3].strip()}"
         return up_to_commit_txt
 
     async def _prepare_prediction(self, model: str) -> dict:
@@ -370,6 +367,18 @@ class PRCodeSuggestions:
                                                          "code_suggestions_feedback": code_suggestions_feedback[i]})
                             suggestion["score"] = 7
                             suggestion["score_why"] = ""
+
+                        # if the before and after code is the same, clear one of them
+                        try:
+                            if suggestion['existing_code'] == suggestion['improved_code']:
+                                get_logger().debug(
+                                    f"edited improved suggestion {i + 1}, because equal to existing code: {suggestion['existing_code']}")
+                                if get_settings().pr_code_suggestions.commitable_code_suggestions:
+                                    suggestion['improved_code'] = ""  # we need 'existing_code' to locate the code in the PR
+                                else:
+                                    suggestion['existing_code'] = ""
+                        except Exception as e:
+                            get_logger().error(f"Error processing suggestion {i + 1}, error: {e}")
             else:
                 # get_logger().error(f"Could not self-reflect on suggestions. using default score 7")
                 for i, suggestion in enumerate(data["code_suggestions"]):
@@ -425,13 +434,6 @@ class PRCodeSuggestions:
                     continue
 
                 if ('existing_code' in suggestion) and ('improved_code' in suggestion):
-                    if suggestion['existing_code'] == suggestion['improved_code']:
-                        get_logger().debug(
-                            f"edited improved suggestion {i + 1}, because equal to existing code: {suggestion['existing_code']}")
-                        if get_settings().pr_code_suggestions.commitable_code_suggestions:
-                            suggestion['improved_code'] = ""  # we need 'existing_code' to locate the code in the PR
-                        else:
-                            suggestion['existing_code'] = ""
                     suggestion = self._truncate_if_needed(suggestion)
                     one_sentence_summary_list.append(suggestion['one_sentence_summary'])
                     suggestion_list.append(suggestion)
@@ -604,7 +606,7 @@ class PRCodeSuggestions:
 
             variables = {'suggestion_list': suggestion_list, 'suggestion_str': suggestion_str}
             model = get_settings().config.model
-            environment = Environment(undefined=StrictUndefined, autoescape=select_autoescape(['html', 'xml']))
+            environment = Environment(undefined=StrictUndefined)
             system_prompt = environment.from_string(get_settings().pr_sort_code_suggestions_prompt.system).render(
                 variables)
             user_prompt = environment.from_string(get_settings().pr_sort_code_suggestions_prompt.user).render(variables)
@@ -781,3 +783,4 @@ class PRCodeSuggestions:
             get_logger().info(f"Could not reflect on suggestions, error: {e}")
             return ""
         return response_reflect
+

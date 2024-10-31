@@ -3,7 +3,7 @@ import re
 from functools import partial
 from typing import List, Tuple
 
-from jinja2 import Environment, StrictUndefined, select_autoescape
+from jinja2 import Environment, StrictUndefined
 
 from pr_insight.algo.ai_handlers.base_ai_handler import BaseAiHandler
 from pr_insight.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
@@ -134,7 +134,7 @@ class PRGenerateLabels:
         variables = copy.deepcopy(self.vars)
         variables["diff"] = self.patches_diff  # update diff
 
-        environment = Environment(undefined=StrictUndefined, autoescape=select_autoescape(['html', 'xml']))
+        environment = Environment(undefined=StrictUndefined)
         set_custom_labels(variables, self.git_provider)
         self.variables = variables
 

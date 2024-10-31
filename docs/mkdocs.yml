@@ -1,11 +1,11 @@
-site_name: PR-Insight Documentation
+site_name: Khulnasoft Merge (formerly known as PR-Insight)
 repo_url: https://github.com/Khulnasoft/pr-insight
 repo_name: Khulnasoft/pr-insight
 
 nav:
   - Overview:
     - 'index.md'
-    - 💎 PR-Insight Pro: 'overview/pr_insight_pro.md'
+    - 💎 Khulnasoft Merge Pro: 'overview/pr_insight_pro.md'
     - Data Privacy: 'overview/data_privacy.md'
   - Installation:
     - 'installation/index.md'
@@ -14,7 +14,7 @@ nav:
     - GitLab: 'installation/gitlab.md'
     - BitBucket: 'installation/bitbucket.md'
     - Azure DevOps: 'installation/azure.md'
-    - 💎 PR-Insight Pro: 'installation/pr_insight_pro.md'
+    - 💎 Khulnasoft Merge Pro: 'installation/pr_insight_pro.md'
   - Usage Guide:
     - 'usage-guide/index.md'
     - Introduction: 'usage-guide/introduction.md'
@@ -23,7 +23,7 @@ nav:
     - Managing Mail Notifications: 'usage-guide/mail_notifications.md'
     - Changing a Model: 'usage-guide/changing_a_model.md'
     - Additional Configurations: 'usage-guide/additional_configurations.md'
-    - 💎 PR-Insight Pro Models: 'usage-guide/PR_insight_pro_models'
+    - 💎 Khulnasoft Merge Pro Models: 'usage-guide/PR_insight_pro_models'
   - Tools:
     - 'tools/index.md'
     - Describe: 'tools/describe.md'
@@ -53,7 +53,7 @@ nav:
       - Static code analysis: 'core-abilities/static_code_analysis.md'
       - Code Fine-tuning Benchmark: 'finetuning_benchmark/index.md'
   - Chrome Extension:
-      - PR-Insight Chrome Extension: 'chrome-extension/index.md'
+      - Khulnasoft Merge Chrome Extension: 'chrome-extension/index.md'
       - Features: 'chrome-extension/features.md'
       - Data Privacy: 'chrome-extension/data_privacy.md'
   - FAQ:
@@ -115,7 +115,7 @@ extra:
     - icon: fontawesome/brands/discord
       link: https://discord.com/invite/SgSxuQ65GF
     - icon: fontawesome/brands/youtube
-      link: https://www.youtube.com/@KhulnaSoft
+      link: https://www.youtube.com/@KhulnaSoft-AI
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/company/khulnasoft
     - icon: fontawesome/brands/twitter

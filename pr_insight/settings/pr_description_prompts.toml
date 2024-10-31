@@ -112,6 +112,7 @@ Ticket Description:
 =====
 {% endfor %}
 {%- endif %}
+
 PR Info:
 
 Previous title: '{{title}}'

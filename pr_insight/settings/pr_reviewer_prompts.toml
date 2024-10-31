@@ -85,10 +85,10 @@ class KeyIssuesComponentLink(BaseModel):
     start_line: int = Field(description="The start line that corresponds to this issue in the relevant file")
     end_line: int = Field(description="The end line that corresponds to this issue in the relevant file")
 
-{%- if pr_related_tickets %}
+{%- if related_tickets %}
 
 class TicketCompliance(BaseModel):
-    ticket_url: str = Field(description="Ticket URL or ID", default="")
+    ticket_url: str = Field(description="Ticket URL or ID")
     ticket_requirements: str = Field(description="Repeat, in your own words, all ticket requirements, in bullet points")
     fully_compliant_requirements: str = Field(description="A list, in bullet points, of which requirements are met by the PR code. Don't explain how the requirements are met, just list them shortly. Can be empty")
     not_compliant_requirements: str = Field(description="A list, in bullet points, of which requirements are not met by the PR code. Don't explain how the requirements are not met, just list them shortly. Can be empty")

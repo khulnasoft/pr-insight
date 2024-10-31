@@ -12,7 +12,7 @@ from pr_insight.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
 from pr_insight.algo.pr_processing import get_pr_diff, retry_with_fallback_models, get_pr_diff_multiple_patchs, \
     OUTPUT_BUFFER_TOKENS_HARD_THRESHOLD
 from pr_insight.algo.token_handler import TokenHandler
-from pr_insight.algo.utils import set_custom_labels
+from pr_insight.algo.utils import set_custom_labels, PRDescriptionHeader
 from pr_insight.algo.utils import load_yaml, get_user_labels, ModelType, show_relevant_configurations, get_max_tokens, \
     clip_tokens
 from pr_insight.config_loader import get_settings
@@ -133,7 +133,7 @@ class PRDescription:
 
             if get_settings().config.publish_output:
                 # publish labels
-                if get_settings().pr_description.publish_labels and self.git_provider.is_supported("get_labels"):
+                if get_settings().pr_description.publish_labels and pr_labels and self.git_provider.is_supported("get_labels"):
                     original_labels = self.git_provider.get_pr_labels(update=True)
                     get_logger().debug(f"original labels", artifact=original_labels)
                     user_labels = get_user_labels(original_labels)
@@ -501,7 +501,7 @@ extra_file_yaml =
                     pr_body += "</details>\n"
             elif 'pr_files' in key.lower() and get_settings().pr_description.enable_semantic_files_types:
                 changes_walkthrough, pr_file_changes = self.process_pr_files_prediction(changes_walkthrough, value)
-                changes_walkthrough = f"### **Changes walkthrough** 📝\n{changes_walkthrough}"
+                changes_walkthrough = f"{PRDescriptionHeader.CHANGES_WALKTHROUGH.value}\n{changes_walkthrough}"
             else:
                 # if the value is a list, join its items by comma
                 if isinstance(value, list):

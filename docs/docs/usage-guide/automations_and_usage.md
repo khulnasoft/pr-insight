@@ -1,5 +1,5 @@
 ## Local repo (CLI)
-When running from your locally cloned PR-Insight repo (CLI), your local configuration file will be used.
+When running from your locally cloned Khulnasoft Merge repo (CLI), your local configuration file will be used.
 Examples of invoking the different tools via the CLI:
 
 - **Review**:       `python -m pr_insight.cli --pr_url=<pr_url>  review`
@@ -28,7 +28,7 @@ This is useful for debugging or experimenting with different tools.
 
 (3)
 
-**git provider**: The [git_provider](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml#L5) field in a configuration file determines the GIT provider that will be used by PR-Insight. Currently, the following providers are supported:
+**git provider**: The [git_provider](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml#L5) field in a configuration file determines the GIT provider that will be used by Khulnasoft Merge. Currently, the following providers are supported:
 `
 "github", "gitlab", "bitbucket", "azure", "codecommit", "local", "gerrit"
 `
@@ -39,7 +39,7 @@ Default is "github".
 
 ### Online usage
 
-Online usage means invoking PR-Insight tools by [comments](https://github.com/Khulnasoft/pr-insight/pull/229#issuecomment-1695021901) on a PR.
+Online usage means invoking Khulnasoft Merge tools by [comments](https://github.com/Khulnasoft/pr-insight/pull/229#issuecomment-1695021901) on a PR.
 Commands for invoking the different tools via comments:
 
 - **Review**:       `/review`
@@ -60,8 +60,8 @@ Any configuration value in [configuration file](https://github.com/Khulnasoft/pr
 
 ## GitHub App
 
-!!! note "Configurations for PR-Insight Pro"
-    PR-Insight Pro for GitHub is an App, hosted by KhulnaSoft. So all the instructions below are relevant also for PR-Insight Pro users.
+!!! note "Configurations for Khulnasoft Merge Pro"
+    Khulnasoft Merge Pro for GitHub is an App, hosted by KhulnaSoft. So all the instructions below are relevant also for Khulnasoft Merge Pro users.
     Same goes for [GitLab webhook](#gitlab-webhook) and [BitBucket App](#bitbucket-app) sections.
 
 ### GitHub app automatic tools when a new PR is opened
@@ -77,10 +77,10 @@ pr_commands = [
     "/improve",
 ]
 ```
-This means that when a new PR is opened/reopened or marked as ready for review, PR-Insight will run the `describe`, `review` and `improve` tools.  
+This means that when a new PR is opened/reopened or marked as ready for review, Khulnasoft Merge will run the `describe`, `review` and `improve` tools.  
 For the `review` tool, for example, the `num_code_suggestions` parameter will be set to 0.
 
-You can override the default tool parameters by using one the three options for a [configuration file](https://khulnasoft.github.io/Docs-PR-Insight/usage-guide/#configuration-options): **wiki**, **local**, or **global**. 
+You can override the default tool parameters by using one the three options for a [configuration file](https://khulnasoft-merge-docs.khulnasoft.com/usage-guide/configuration_options/): **wiki**, **local**, or **global**. 
 For example, if your local `.pr_insight.toml` file contains:
 ```
 [pr_description]
@@ -108,10 +108,10 @@ push_commands = [
     "/review  --pr_reviewer.num_code_suggestions=0 --pr_reviewer.final_update_message=false",
 ]
 ```
-This means that when new code is pushed to the PR, the PR-Insight will run the `describe` and `review` tools, with the specified parameters.
+This means that when new code is pushed to the PR, the Khulnasoft Merge will run the `describe` and `review` tools, with the specified parameters.
 
 ## GitHub Action
-`GitHub Action` is a different way to trigger PR-Insight tools, and uses a different configuration mechanism than `GitHub App`.<br>
+`GitHub Action` is a different way to trigger Khulnasoft Merge tools, and uses a different configuration mechanism than `GitHub App`.<br>
 You can configure settings for `GitHub Action` by adding environment variables under the env section in `.github/workflows/pr_insight.yml` file. 
 Specifically, start by setting the following environment variables:
 ```yaml
@@ -133,14 +133,14 @@ If not set, the default configuration is `["opened", "reopened", "ready_for_revi
 Review result is output as JSON to `steps.{step-id}.outputs.review` property.
 The JSON structure is equivalent to the yaml data structure defined in [pr_reviewer_prompts.toml](https://github.com/idubnori/pr-insight/blob/main/pr_insight/settings/pr_reviewer_prompts.toml).
 
-Note that you can give additional config parameters by adding environment variables to `.github/workflows/pr_insight.yml`, or by using a `.pr_insight.toml` [configuration file](https://pr-insight-docs.khulnasoft.com/usage-guide/configuration_options/#global-configuration-file) in the root of your repo
+Note that you can give additional config parameters by adding environment variables to `.github/workflows/pr_insight.yml`, or by using a `.pr_insight.toml` [configuration file](https://khulnasoft-merge-docs.khulnasoft.com/usage-guide/configuration_options/#global-configuration-file) in the root of your repo
 
 For example, you can set an environment variable: `pr_description.publish_labels=false`, or add a `.pr_insight.toml` file with the following content:
 ```
 [pr_description]
 publish_labels = false
 ```
-to prevent PR-Insight from publishing labels when running the `describe` tool.
+to prevent Khulnasoft Merge from publishing labels when running the `describe` tool.
 
 ## GitLab Webhook
 After setting up a GitLab webhook, to control which commands will run automatically when a new MR is opened, you can set the `pr_commands` parameter in the configuration file, similar to the GitHub App:
@@ -168,7 +168,7 @@ push_commands = [
 Note that to use the 'handle_push_trigger' feature, you need to give the gitlab webhook also the "Push events" scope.
 
 ## BitBucket App
-Similar to GitHub app, when running PR-Insight from BitBucket App, the default [configuration file](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) from a pre-built docker will be initially loaded.
+Similar to GitHub app, when running Khulnasoft Merge from BitBucket App, the default [configuration file](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) from a pre-built docker will be initially loaded.
 
 By uploading a local `.pr_insight.toml` file to the root of the repo's main branch, you can edit and customize any configuration parameter. Note that you need to upload `.pr_insight.toml` prior to creating a PR, in order for the configuration to take effect.
 
@@ -182,8 +182,8 @@ Each time you invoke a `/review` tool, it will use the extra instructions you se
 
 
 Note that among other limitations, BitBucket provides relatively low rate-limits for applications (up to 1000 requests per hour), and does not provide an API to track the actual rate-limit usage.
-If you experience lack of responses from PR-Insight, you might want to set: `bitbucket_app.avoid_full_files=true` in your configuration file.
-This will prevent PR-Insight from acquiring the full file content, and will only use the diff content. This will reduce the number of requests made to BitBucket, at the cost of small decrease in accuracy, as dynamic context will not be applicable.
+If you experience lack of responses from Khulnasoft Merge, you might want to set: `bitbucket_app.avoid_full_files=true` in your configuration file.
+This will prevent Khulnasoft Merge from acquiring the full file content, and will only use the diff content. This will reduce the number of requests made to BitBucket, at the cost of small decrease in accuracy, as dynamic context will not be applicable.
 
 
 ### BitBucket Self-Hosted App automatic tools

@@ -1,6 +1,6 @@
 ## Show possible configurations
-The possible configurations of pr-insight are stored in [here](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml).
-In the [tools](https://pr-insight-docs.khulnasoft.com/tools/) page you can find explanations on how to use these configurations for each tool.
+The possible configurations of Khulnasoft Merge are stored in [here](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml).
+In the [tools](https://khulnasoft-merge-docs.khulnasoft.com/tools/) page you can find explanations on how to use these configurations for each tool.
 
 To print all the available configurations as a comment on your PR, you can use the following command:
 ```
@@ -22,7 +22,7 @@ Will output an additional field showing the actual configurations used for the `
 
 ## Ignoring files from analysis
 
-In some cases, you may want to exclude specific files or directories from the analysis performed by KhulnaSoft PR-Insight. This can be useful, for example, when you have files that are generated automatically or files that shouldn't be reviewed, like vendor code.
+In some cases, you may want to exclude specific files or directories from the analysis performed by Khulnasoft Merge. This can be useful, for example, when you have files that are generated automatically or files that shouldn't be reviewed, like vendor code.
 
 You can ignore files or folders using the following methods:
  - `IGNORE.GLOB`
@@ -52,7 +52,7 @@ regex = ['.*\.py$']
 
 ## Extra instructions
 
-All PR-Insight tools have a parameter called `extra_instructions`, that enables to add free-text extra instructions. Example usage:
+All Khulnasoft Merge tools have a parameter called `extra_instructions`, that enables to add free-text extra instructions. Example usage:
 ```
 /update_changelog --pr_update_changelog.extra_instructions="Make sure to update also the version ..."
 ```
@@ -64,8 +64,8 @@ This mode provides a very good speed-quality-cost tradeoff, and can handle most 
 When the PR is above the token limit, it employs a [PR Compression strategy](../core-abilities/index.md).
 
 However, for very large PRs, or in case you want to emphasize quality over speed and cost, there are two possible solutions:
-1) [Use a model](https://khulnasoft.github.io/Docs-PR-Insight/usage-guide/#changing-a-model) with larger context, like GPT-32K, or claude-100K. This solution will be applicable for all the tools.
-2) For the `/improve` tool, there is an ['extended' mode](https://khulnasoft.github.io/Docs-PR-Insight/tools/#improve) (`/improve --extended`),
+1) [Use a model](https://khulnasoft-merge-docs.khulnasoft.com/usage-guide/changing_a_model/) with larger context, like GPT-32K, or claude-100K. This solution will be applicable for all the tools.
+2) For the `/improve` tool, there is an ['extended' mode](https://khulnasoft-merge-docs.khulnasoft.com/tools/improve/) (`/improve --extended`),
 which divides the PR into chunks, and processes each chunk separately. With this mode, regardless of the model, no compression will be done (but for large PRs, multiple model calls may occur)
 
 
@@ -85,7 +85,7 @@ By default, around any change in your PR, git patch provides three lines of cont
  code line that already existed in the file...
 ```
 
-PR-Insight will try to increase the number of lines of context, via the parameter:
+Khulnasoft Merge will try to increase the number of lines of context, via the parameter:
 ```
 [config]
 patch_extra_lines_before=3
@@ -94,12 +94,12 @@ patch_extra_lines_after=1
 
 Increasing this number provides more context to the model, but will also increase the token budget, and may overwhelm the model with too much information, unrelated to the actual PR code changes.
 
-If the PR is too large (see [PR Compression strategy](https://github.com/Khulnasoft/pr-insight/blob/main/PR_COMPRESSION.md)), PR-Insight may automatically set this number to 0, and will use the original git patch.
+If the PR is too large (see [PR Compression strategy](https://github.com/Khulnasoft/pr-insight/blob/main/PR_COMPRESSION.md)), Khulnasoft Merge may automatically set this number to 0, and will use the original git patch.
 
 
 ## Editing the prompts
 
-The prompts for the various PR-Insight tools are defined in the `pr_insight/settings` folder.
+The prompts for the various Khulnasoft Merge tools are defined in the `pr_insight/settings` folder.
 In practice, the prompts are loaded and stored as a standard setting object.
 Hence, editing them is similar to editing any other configuration value - just place the relevant key in `.pr_insight.toml`file, and override the default value.
 
@@ -138,7 +138,7 @@ LANGSMITH_BASE_URL=<url>
 
 ## Ignoring automatic commands in PRs
 
-In some cases, you may want to automatically ignore specific PRs . PR-Insight enables you to ignore PR with a specific title, or from/to specific branches (regex matching).
+In some cases, you may want to automatically ignore specific PRs . Khulnasoft Merge enables you to ignore PR with a specific title, or from/to specific branches (regex matching).
 
 To ignore PRs with a specific title such as "[Bump]: ...", you can add the following to your `configuration.toml` file:
 

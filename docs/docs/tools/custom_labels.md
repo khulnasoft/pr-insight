@@ -25,10 +25,10 @@ There are 3 ways to enable custom labels:
 When working from CLI, you need to apply the [configuration changes](#configuration-options) to the [custom_labels file](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/custom_labels.toml):
 
 #### 2. Repo configuration file
-To enable custom labels, you need to apply the [configuration changes](#configuration-options) to the local `.pr_insight.toml` file in you repository.
+To enable custom labels, you need to apply the [configuration changes](#configuration-options) to the local `.pr_insight.toml` file in your repository.
 
 #### 3. Handle custom labels from the Repo's labels page 💎
-> This feature is available only in PR-Insight Pro 
+> This feature is available only in Khulnasoft Merge Pro 
 
 * GitHub : `https://github.com/{owner}/{repo}/labels`, or click on the "Labels" tab in the issues or PRs page.
 * GitLab : `https://gitlab.com/{owner}/{repo}/-/labels`, or click on "Manage" -> "Labels" on the left menu.

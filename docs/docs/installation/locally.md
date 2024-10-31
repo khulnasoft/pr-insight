@@ -19,7 +19,7 @@ def main():
     provider = "github" # github/gitlab/bitbucket/azure_devops
     user_token = "..."  #  user token
     openai_key = "..."  # OpenAI key
-    pr_url = "..."      # PR URL, for example 'https://github.com/khulnasoft/pr-insight/pull/809'
+    pr_url = "..."      # PR URL, for example 'https://github.com/Khulnasoft/pr-insight/pull/809'
     command = "/review" # Command to run (e.g. '/review', '/describe', '/ask="What is the purpose of this PR?"', ...)
 
     # Setting the configurations
@@ -75,7 +75,7 @@ For other git providers, update CONFIG.GIT_PROVIDER accordingly, and check the `
 1. Clone this repository:
 
 ```
-git clone https://github.com/khulnasoft/pr-insight.git
+git clone https://github.com/Khulnasoft/pr-insight.git
 ```
 
 2. Navigate to the `/pr-insight` folder and install the requirements in your favorite virtual environment:

@@ -470,4 +470,4 @@ class PRReviewer:
         else:
             get_logger().info("Auto-approval option is disabled")
             self.git_provider.publish_comment("Auto-approval option for PR-Insight is disabled. "
-                                              "You can enable it via a [configuration file](https://github.com/khulnasoft/pr-insight/blob/main/docs/REVIEW.md#auto-approval-1)")
+                                              "You can enable it via a [configuration file](https://github.com/Khulnasoft/pr-insight/blob/main/docs/REVIEW.md#auto-approval-1)")
