@@ -36,7 +36,7 @@ Also note that collapsible are not supported in _Bitbucket_. Hence, the suggesti
 
 ### Automatic triggering
 
-To run the `improve` automatically when a PR is opened, define in a [configuration file](https://khulnasoft-merge-docs.khulnasoft.com/usage-guide/configuration_options/#wiki-configuration-file):
+To run the `improve` automatically when a PR is opened, define in a [configuration file](https://pr-insight-docs.khulnasoft.com/usage-guide/configuration_options/#wiki-configuration-file):
 ```toml
 [github_app]
 pr_commands = [
@@ -70,7 +70,7 @@ In post-process, Khulnasoft Merge counts the number of suggestions that were imp
 ## Suggestion tracking 💎
 `Platforms supported: GitHub, GitLab`
 
-Khulnasoft Merge employs an novel detection system to automatically [identify](https://khulnasoft-merge-docs.khulnasoft.com/core-abilities/impact_evaluation/) AI code suggestions that PR authors have accepted and implemented.
+Khulnasoft Merge employs an novel detection system to automatically [identify](https://pr-insight-docs.khulnasoft.com/core-abilities/impact_evaluation/) AI code suggestions that PR authors have accepted and implemented.
 
 Accepted suggestions are also automatically documented in a dedicated wiki page called `.pr_insight_accepted_suggestions`, allowing users to track historical changes, assess the tool's effectiveness, and learn from previously implemented recommendations in the repository.
 An example [result](https://github.com/Khulnasoft/pr-insight/wiki/.pr_insight_accepted_suggestions):
@@ -109,7 +109,7 @@ In addition to mistakes (which may happen, but are rare), sometimes the presente
 In such cases, we recommend prioritizing the suggestion's detailed description, using the diff snippet primarily as a supporting reference.
 
 ### Dual publishing mode
-Our recommended approach for presenting code suggestions is through a [table](https://khulnasoft-merge-docs.khulnasoft.com/tools/improve/#overview) (`--pr_code_suggestions.commitable_code_suggestions=false`). 
+Our recommended approach for presenting code suggestions is through a [table](https://pr-insight-docs.khulnasoft.com/tools/improve/#overview) (`--pr_code_suggestions.commitable_code_suggestions=false`). 
 This method significantly reduces the PR footprint and allows for quick and easy digestion of multiple suggestions.
 
 We also offer a complementary **dual publishing mode**. When enabled, suggestions exceeding a certain score threshold are not only displayed in the table, but also presented as commitable PR comments. 
@@ -243,7 +243,7 @@ If you want to enable also a global `best_practices.md` wiki file, set first in 
 enable_global_best_practices = true
 ```
 
-Then, create a `best_practices.md` wiki file in the root of [global](https://khulnasoft-merge-docs.khulnasoft.com/usage-guide/configuration_options/#global-configuration-file) configuration repository,  `pr-insight-settings`.
+Then, create a `best_practices.md` wiki file in the root of [global](https://pr-insight-docs.khulnasoft.com/usage-guide/configuration_options/#global-configuration-file) configuration repository,  `pr-insight-settings`.
 
 ##### Example results
 
@@ -329,11 +329,11 @@ Using a combination of both can help the AI model to provide relevant and tailor
 ## A note on code suggestions quality
 
 - AI models for code are getting better and better (Sonnet-3.5 and GPT-4), but they are not flawless. Not all the suggestions will be perfect, and a user should not accept all of them automatically. Critical reading and judgment are required.
-- While mistakes of the AI are rare but can happen, a real benefit from the suggestions of the `improve` (and [`review`](https://khulnasoft-merge-docs.khulnasoft.com/tools/review/)) tool is to catch, with high probability, **mistakes or bugs done by the PR author**, when they happen. So, it's a good practice to spend the needed ~30-60 seconds to review the suggestions, even if not all of them are always relevant.
+- While mistakes of the AI are rare but can happen, a real benefit from the suggestions of the `improve` (and [`review`](https://pr-insight-docs.khulnasoft.com/tools/review/)) tool is to catch, with high probability, **mistakes or bugs done by the PR author**, when they happen. So, it's a good practice to spend the needed ~30-60 seconds to review the suggestions, even if not all of them are always relevant.
 - The hierarchical structure of the suggestions is designed to help the user to _quickly_ understand them, and to decide which ones are relevant and which are not:
 
     - Only if the `Category` header is relevant, the user should move to the summarized suggestion description
     - Only if the summarized suggestion description is relevant, the user should click on the collapsible, to read the full suggestion description with a code preview example.
 
-- In addition, we recommend to use the [`extra_instructions`](https://khulnasoft-merge-docs.khulnasoft.com/tools/improve/#extra-instructions-and-best-practices) field to guide the model to suggestions that are more relevant to the specific needs of the project. 
-- The interactive [PR chat](https://khulnasoft-merge-docs.khulnasoft.com/chrome-extension/) also provides an easy way to get more tailored suggestions and feedback from the AI model.
+- In addition, we recommend to use the [`extra_instructions`](https://pr-insight-docs.khulnasoft.com/tools/improve/#extra-instructions-and-best-practices) field to guide the model to suggestions that are more relevant to the specific needs of the project. 
+- The interactive [PR chat](https://pr-insight-docs.khulnasoft.com/chrome-extension/) also provides an easy way to get more tailored suggestions and feedback from the AI model.

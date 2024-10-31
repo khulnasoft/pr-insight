@@ -73,7 +73,7 @@ def handle_configurations_errors(config_errors, git_provider):
                 err_message = err['error']
                 config_type = err['category']
                 header = f"❌ **PR-Insight failed to apply '{config_type}' repo settings**"
-                body = f"{header}\n\nThe configuration file needs to be a valid [TOML](https://khulnasoft-merge-docs.khulnasoft.com/usage-guide/configuration_options/), please fix it.\n\n"
+                body = f"{header}\n\nThe configuration file needs to be a valid [TOML](https://pr-insight-docs.khulnasoft.com/usage-guide/configuration_options/), please fix it.\n\n"
                 body += f"___\n\n**Error message:**\n`{err_message}`\n\n"
                 if git_provider.is_supported("gfm_markdown"):
                     body += f"\n\n<details><summary>Configuration content:</summary>\n\n```toml\n{configuration_file_content}\n```\n\n</details>"

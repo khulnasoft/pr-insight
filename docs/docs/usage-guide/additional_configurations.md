@@ -1,6 +1,6 @@
 ## Show possible configurations
 The possible configurations of Khulnasoft Merge are stored in [here](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml).
-In the [tools](https://khulnasoft-merge-docs.khulnasoft.com/tools/) page you can find explanations on how to use these configurations for each tool.
+In the [tools](https://pr-insight-docs.khulnasoft.com/tools/) page you can find explanations on how to use these configurations for each tool.
 
 To print all the available configurations as a comment on your PR, you can use the following command:
 ```
@@ -64,8 +64,8 @@ This mode provides a very good speed-quality-cost tradeoff, and can handle most 
 When the PR is above the token limit, it employs a [PR Compression strategy](../core-abilities/index.md).
 
 However, for very large PRs, or in case you want to emphasize quality over speed and cost, there are two possible solutions:
-1) [Use a model](https://khulnasoft-merge-docs.khulnasoft.com/usage-guide/changing_a_model/) with larger context, like GPT-32K, or claude-100K. This solution will be applicable for all the tools.
-2) For the `/improve` tool, there is an ['extended' mode](https://khulnasoft-merge-docs.khulnasoft.com/tools/improve/) (`/improve --extended`),
+1) [Use a model](https://pr-insight-docs.khulnasoft.com/usage-guide/changing_a_model/) with larger context, like GPT-32K, or claude-100K. This solution will be applicable for all the tools.
+2) For the `/improve` tool, there is an ['extended' mode](https://pr-insight-docs.khulnasoft.com/tools/improve/) (`/improve --extended`),
 which divides the PR into chunks, and processes each chunk separately. With this mode, regardless of the model, no compression will be done (but for large PRs, multiple model calls may occur)
 
 

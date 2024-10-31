@@ -80,7 +80,7 @@ pr_commands = [
 This means that when a new PR is opened/reopened or marked as ready for review, Khulnasoft Merge will run the `describe`, `review` and `improve` tools.  
 For the `review` tool, for example, the `num_code_suggestions` parameter will be set to 0.
 
-You can override the default tool parameters by using one the three options for a [configuration file](https://khulnasoft-merge-docs.khulnasoft.com/usage-guide/configuration_options/): **wiki**, **local**, or **global**. 
+You can override the default tool parameters by using one the three options for a [configuration file](https://pr-insight-docs.khulnasoft.com/usage-guide/configuration_options/): **wiki**, **local**, or **global**. 
 For example, if your local `.pr_insight.toml` file contains:
 ```
 [pr_description]
@@ -133,7 +133,7 @@ If not set, the default configuration is `["opened", "reopened", "ready_for_revi
 Review result is output as JSON to `steps.{step-id}.outputs.review` property.
 The JSON structure is equivalent to the yaml data structure defined in [pr_reviewer_prompts.toml](https://github.com/idubnori/pr-insight/blob/main/pr_insight/settings/pr_reviewer_prompts.toml).
 
-Note that you can give additional config parameters by adding environment variables to `.github/workflows/pr_insight.yml`, or by using a `.pr_insight.toml` [configuration file](https://khulnasoft-merge-docs.khulnasoft.com/usage-guide/configuration_options/#global-configuration-file) in the root of your repo
+Note that you can give additional config parameters by adding environment variables to `.github/workflows/pr_insight.yml`, or by using a `.pr_insight.toml` [configuration file](https://pr-insight-docs.khulnasoft.com/usage-guide/configuration_options/#global-configuration-file) in the root of your repo
 
 For example, you can set an environment variable: `pr_description.publish_labels=false`, or add a `.pr_insight.toml` file with the following content:
 ```

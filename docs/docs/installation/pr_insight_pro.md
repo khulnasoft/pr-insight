@@ -2,7 +2,7 @@
 ## Getting Started with Khulnasoft Merge Pro
 
 Khulnasoft Merge Pro is a versatile application compatible with GitHub, GitLab, and BitBucket, hosted by KhulnaSoft.
-See [here](https://khulnasoft-merge-docs.khulnasoft.com/overview/pr_insight_pro/) for more details about the benefits of using Khulnasoft Merge Pro.
+See [here](https://pr-insight-docs.khulnasoft.com/overview/pr_insight_pro/) for more details about the benefits of using Khulnasoft Merge Pro.
 
 Interested parties can subscribe to Khulnasoft Merge Pro through the following [link](https://www.khulnasoft.com/pricing/). 
 After subscribing, you are granted the ability to easily install the application across any of your repositories.

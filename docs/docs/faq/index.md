@@ -35,15 +35,15 @@ ___
         - Only if the `Category` header is relevant, the user should move to the summarized suggestion description.
         - Only if the summarized suggestion description is relevant, the user should click on the collapsible, to read the full suggestion description with a code preview example.
 
-    - In addition, we recommend to use the [`extra_instructions`](https://khulnasoft-merge-docs.khulnasoft.com/tools/improve/#extra-instructions-and-best-practices) field to guide the model to suggestions that are more relevant to the specific needs of the project. 
-    - The interactive [PR chat](https://khulnasoft-merge-docs.khulnasoft.com/chrome-extension/) also provides an easy way to get more tailored suggestions and feedback from the AI model.
+    - In addition, we recommend to use the [`extra_instructions`](https://pr-insight-docs.khulnasoft.com/tools/improve/#extra-instructions-and-best-practices) field to guide the model to suggestions that are more relevant to the specific needs of the project. 
+    - The interactive [PR chat](https://pr-insight-docs.khulnasoft.com/chrome-extension/) also provides an easy way to get more tailored suggestions and feedback from the AI model.
 
 ___
 
 ??? note "Question: How can I get more tailored suggestions?"
     #### Answer:<span style="display:none;">3</span>
 
-    See [here](https://khulnasoft-merge-docs.khulnasoft.com/tools/improve/#extra-instructions-and-best-practices) for more information on how to use the `extra_instructions` and `best_practices` configuration options, to guide the model to more tailored suggestions.
+    See [here](https://pr-insight-docs.khulnasoft.com/tools/improve/#extra-instructions-and-best-practices) for more information on how to use the `extra_instructions` and `best_practices` configuration options, to guide the model to more tailored suggestions.
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
     No. Khulnasoft Merge strict privacy policy ensures that your code is not stored or used for training purposes.
     
-    For a detailed overview of our data privacy policy, please refer to [this link](https://khulnasoft-merge-docs.khulnasoft.com/overview/data_privacy/)
+    For a detailed overview of our data privacy policy, please refer to [this link](https://pr-insight-docs.khulnasoft.com/overview/data_privacy/)
 
 ___
 

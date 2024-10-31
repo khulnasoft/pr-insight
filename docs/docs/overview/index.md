@@ -16,7 +16,7 @@ To search the documentation site using natural language:
 1) Comment `/help "your question"` in either:
 
    - A pull request where Khulnasoft Merge is installed
-   - A [PR Chat](https://khulnasoft-merge-docs.khulnasoft.com/chrome-extension/features/#pr-chat)
+   - A [PR Chat](https://pr-insight-docs.khulnasoft.com/chrome-extension/features/#pr-chat)
 
 2) Khulnasoft Merge will respond with an [answer](https://github.com/Khulnasoft/pr-insight/pull/1241#issuecomment-2365259334) that includes relevant documentation links.
 
@@ -31,7 +31,7 @@ Khulnasoft Merge offers extensive pull request functionalities across various gi
 |       | ⮑ Incremental                                                                                                         |   ✅    |        |            |              |
 |       | Ask                                                                                                                   |   ✅    |   ✅    |   ✅        |      ✅      |
 |       | Describe                                                                                                              |   ✅    |   ✅    |   ✅        |      ✅      |
-|       | ⮑ [Inline file summary](https://khulnasoft-merge-docs.khulnasoft.com/tools/describe/#inline-file-summary){:target="_blank"} 💎     |   ✅    |   ✅    |           |      ✅      |
+|       | ⮑ [Inline file summary](https://pr-insight-docs.khulnasoft.com/tools/describe/#inline-file-summary){:target="_blank"} 💎     |   ✅    |   ✅    |           |      ✅      |
 |       | Improve                                                                                                               |   ✅    |   ✅    |   ✅        |      ✅      |
 |       | ⮑ Extended                                                                                                            |   ✅    |   ✅    |   ✅        |      ✅      |
 |       | [Custom Prompt](./tools/custom_prompt.md){:target="_blank"} 💎                                                        |   ✅    |   ✅    |   ✅        |      ✅      |

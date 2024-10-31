@@ -54,7 +54,7 @@ Here are the results:
 ### Training dataset
 
 Our training dataset comprises 25,000 pull requests, aggregated from permissive license repos. For each pull request, we generated responses for the three main tools of Khulnasoft Merge:
-[Describe](https://khulnasoft-merge-docs.khulnasoft.com/tools/describe/), [Review](https://khulnasoft-merge-docs.khulnasoft.com/tools/improve/) and [Improve](https://khulnasoft-merge-docs.khulnasoft.com/tools/improve/).
+[Describe](https://pr-insight-docs.khulnasoft.com/tools/describe/), [Review](https://pr-insight-docs.khulnasoft.com/tools/improve/) and [Improve](https://pr-insight-docs.khulnasoft.com/tools/improve/).
 
 On the raw data collected, we employed various automatic and manual cleaning techniques to ensure the outputs were of the highest quality, and suitable for instruct-tuning.
 

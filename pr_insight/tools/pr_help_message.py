@@ -134,7 +134,7 @@ class PRHelpMessage:
                     answer_str += f"### Question: \n{self.question_str}\n\n"
                     answer_str += f"### Answer:\n{response_str.strip()}\n\n"
                     answer_str += f"#### Relevant Sources:\n\n"
-                    base_path = "https://khulnasoft-merge-docs.khulnasoft.com/"
+                    base_path = "https://pr-insight-docs.khulnasoft.com/"
                     for section in relevant_sections:
                         file = section.get('file_name').strip().removesuffix('.md')
                         if str(section['relevant_section_header_string']).strip():
