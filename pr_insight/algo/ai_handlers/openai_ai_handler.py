@@ -57,7 +57,7 @@ class OpenAIHandler(BaseAiHandler):
                               model=model, usage=usage)
             return resp, finish_reason
         except (APIError, Timeout) as e:
-            get_logger().error("Error during OpenAI inference - Model: %s, Messages: %s", self.model, messages, exc_info=e)
+            get_logger().error(f"Error during OpenAI inference - Model: {self.model}, Messages: {messages}", exc_info=e)
             raise
         except (RateLimitError) as e:
             get_logger().error("Rate limit error during OpenAI inference: ", e)
