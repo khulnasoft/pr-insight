@@ -60,7 +60,7 @@ class OpenAIHandler(BaseAiHandler):
             get_logger().error("Error during OpenAI inference: ", e)
             raise
         except (RateLimitError) as e:
-            get_logger().error("Rate limit error during OpenAI inference: ", e)
+            get_logger().error(f"Rate limit error during OpenAI inference - Model: {self.model}, Messages: {messages}", e)
             raise
         except (Exception) as e:
             get_logger().error("Unknown error during OpenAI inference: ", e)
