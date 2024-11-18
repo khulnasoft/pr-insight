@@ -1,8 +1,8 @@
-aiohttp==3.9.5
+aiohttp==3.10.11
 anthropic[vertex]==0.37.1
 atlassian-python-api==3.41.4
 azure-devops==7.1.0b3
-azure-identity==1.15.0
+azure-identity==1.16.1
 boto3==1.33.6
 certifi==2024.8.30
 dynaconf==3.2.4
@@ -11,7 +11,7 @@ GitPython==3.1.41
 google-cloud-aiplatform==1.38.0
 google-generativeai==0.8.3
 google-cloud-storage==2.10.0
-Jinja2==3.1.2
+Jinja2==3.1.4
 litellm==1.50.2
 loguru==0.7.2
 msrest==0.7.1
