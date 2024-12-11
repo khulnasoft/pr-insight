@@ -1,26 +1,30 @@
 import asyncio
 import copy
+import difflib
+import re
 import textwrap
 import traceback
 from functools import partial
 from typing import Dict, List
+
 from jinja2 import Environment, StrictUndefined
 
 from pr_insight.algo.ai_handlers.base_ai_handler import BaseAiHandler
 from pr_insight.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
-from pr_insight.algo.pr_processing import get_pr_diff, get_pr_multi_diffs, retry_with_fallback_models, \
-    add_ai_metadata_to_diff_files
+from pr_insight.algo.pr_processing import (add_ai_metadata_to_diff_files,
+                                         get_pr_diff, get_pr_multi_diffs,
+                                         retry_with_fallback_models)
 from pr_insight.algo.token_handler import TokenHandler
-from pr_insight.algo.utils import load_yaml, replace_code_tags, ModelType, show_relevant_configurations
+from pr_insight.algo.utils import (ModelType, load_yaml, replace_code_tags,
+                                 show_relevant_configurations)
 from pr_insight.config_loader import get_settings
-from pr_insight.git_providers import get_git_provider, get_git_provider_with_context, GithubProvider, GitLabProvider, \
-    AzureDevopsProvider
+from pr_insight.git_providers import (AzureDevopsProvider, GithubProvider,
+                                    GitLabProvider, get_git_provider,
+                                    get_git_provider_with_context)
 from pr_insight.git_providers.git_provider import get_main_pr_language
 from pr_insight.log import get_logger
 from pr_insight.servers.help import HelpMessage
 from pr_insight.tools.pr_description import insert_br_after_x_chars
-import difflib
-import re
 
 
 class PRCodeSuggestions:
@@ -333,6 +337,8 @@ class PRCodeSuggestions:
                                         model,
                                         add_line_numbers_to_hunks=True,
                                         disable_extra_lines=False)
+        self.patches_diff_list = [self.patches_diff]
+        self.patches_diff_no_line_number = self.remove_line_numbers([self.patches_diff])[0]
 
         if self.patches_diff:
             get_logger().debug(f"PR diff", artifact=self.patches_diff)
@@ -785,7 +791,7 @@ class PRCodeSuggestions:
 
 [{relevant_file} {range_str}]({code_snippet_link})
 
-{example_code.rstrip()}                   
+{example_code.rstrip()}
 """
                     pr_body += f"<details><summary>Suggestion importance[1-10]: {suggestion['score']}</summary>\n\n"
                     pr_body += f"Why: {suggestion['score_why']}\n\n"
