@@ -1,9 +1,9 @@
+import logging
 from dynaconf import Dynaconf
-
 from pr_insight.config_loader import get_settings
 from pr_insight.git_providers import get_git_provider
-from pr_insight.log import get_logger
 
+logger = logging.getLogger(__name__)
 
 class PRConfig:
     """
@@ -26,13 +26,15 @@ class PRConfig:
         This method retrieves the configuration settings, prepares them for display, and publishes them as a comment
         on the pull request.
         """
-        get_logger().info('Getting configuration settings...')
-        get_logger().info('Preparing configs...')
-        pr_comment = self._prepare_pr_configs()
-        if get_settings().config.publish_output:
-            get_logger().info('Pushing configs...')
-            self.git_provider.publish_comment(pr_comment)
-            self.git_provider.remove_initial_comment()
+        try:
+            logger.info('Getting configuration settings...')
+            pr_comment = self._prepare_pr_configs()
+            if get_settings().config.publish_output:
+                logger.info('Pushing configs...')
+                self.git_provider.publish_comment(pr_comment)
+                self.git_provider.remove_initial_comment()
+        except Exception as e:
+            logger.error(f"Failed to run PRConfig: {e}")
         return ""
 
     def _prepare_pr_configs(self) -> str:
@@ -45,17 +47,46 @@ class PRConfig:
         Returns:
             str: The formatted configuration settings as a markdown string.
         """
-        conf_file = get_settings().find_file("configuration.toml")
-        conf_settings = Dynaconf(settings_files=[conf_file])
-        configuration_headers = [header.lower() for header in conf_settings.keys()]
-        relevant_configs = {
+        try:
+            conf_file = get_settings().find_file("configuration.toml")
+            conf_settings = Dynaconf(settings_files=[conf_file])
+            configuration_headers = [header.lower() for header in conf_settings.keys()]
+            relevant_configs = self._filter_relevant_configs(configuration_headers)
+            markdown_text = self._format_configs_to_markdown(relevant_configs)
+            logger.info(f"Possible Configurations outputted to PR comment", extra={"artifact": markdown_text})
+            return markdown_text
+        except Exception as e:
+            logger.error(f"Error preparing PR configs: {e}")
+            return ""
+
+    def _filter_relevant_configs(self, configuration_headers):
+        """
+        Filter relevant configuration settings.
+
+        Args:
+            configuration_headers (list): List of relevant configuration headers.
+
+        Returns:
+            dict: Filtered configuration settings.
+        """
+        return {
             header: configs for header, configs in get_settings().to_dict().items()
             if (header.lower().startswith("pr_") or header.lower().startswith("config")) and header.lower() in configuration_headers
         }
 
+    def _format_configs_to_markdown(self, relevant_configs):
+        """
+        Format configuration settings to markdown.
+
+        Args:
+            relevant_configs (dict): Relevant configuration settings.
+
+        Returns:
+            str: Formatted markdown string.
+        """
         skip_keys = ['ai_disclaimer', 'ai_disclaimer_title', 'ANALYTICS_FOLDER', 'secret_provider', "skip_keys",
-                          'trial_prefix_message', 'no_eligible_message', 'identity_provider', 'ALLOWED_REPOS',
-                          'APP_NAME']
+                     'trial_prefix_message', 'no_eligible_message', 'identity_provider', 'ALLOWED_REPOS',
+                     'APP_NAME']
         extra_skip_keys = get_settings().config.get('config.skip_keys', [])
         if extra_skip_keys:
             skip_keys.extend(extra_skip_keys)
@@ -73,5 +104,4 @@ class PRConfig:
                 markdown_text += "  "
         markdown_text += "\n```"
         markdown_text += "\n</details>\n"
-        get_logger().info(f"Possible Configurations outputted to PR comment", artifact=markdown_text)
         return markdown_text
