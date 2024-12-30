@@ -59,7 +59,8 @@ class PRConfig:
             logger.error(f"Error preparing PR configs: {e}")
             return ""
 
-    def _filter_relevant_configs(self, configuration_headers):
+    @staticmethod
+    def _filter_relevant_configs(configuration_headers):
         """
         Filter relevant configuration settings.
 
@@ -74,7 +75,8 @@ class PRConfig:
             if (header.lower().startswith("pr_") or header.lower().startswith("config")) and header.lower() in configuration_headers
         }
 
-    def _format_configs_to_markdown(self, relevant_configs):
+    @staticmethod
+    def _format_configs_to_markdown(relevant_configs):
         """
         Format configuration settings to markdown.
 
