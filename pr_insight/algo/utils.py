@@ -7,13 +7,14 @@ import html
 import json
 import os
 import re
+import sys
 import textwrap
 import time
 import traceback
 from datetime import datetime
 from enum import Enum
+from importlib.metadata import PackageNotFoundError, version
 from typing import Any, List, Tuple
-
 
 import html2text
 import requests
@@ -23,9 +24,16 @@ from starlette_context import context
 
 from pr_insight.algo import MAX_TOKENS
 from pr_insight.algo.token_handler import TokenEncoder
-from pr_insight.config_loader import get_settings, global_settings
 from pr_insight.algo.types import FilePatchInfo
+from pr_insight.config_loader import get_settings, global_settings
 from pr_insight.log import get_logger
+
+
+def get_weak_model() -> str:
+    if get_settings().get("config.model_weak"):
+        return get_settings().config.model_weak
+    return get_settings().config.model
+
 
 class Range(BaseModel):
     line_start: int  # should be 0-indexed
@@ -35,8 +43,7 @@ class Range(BaseModel):
 
 class ModelType(str, Enum):
     REGULAR = "regular"
-    TURBO = "turbo"
-
+    WEAK = "weak"
 
 class PRReviewHeader(str, Enum):
     REGULAR = "## PR Reviewer Guide"
@@ -97,7 +104,8 @@ def unique_strings(input_list: List[str]) -> List[str]:
 def convert_to_markdown_v2(output_data: dict,
                            gfm_supported: bool = True,
                            incremental_review=None,
-                           git_provider=None) -> str:
+                           git_provider=None,
+                           files=None) -> str:
     """
     Convert a dictionary of data into markdown format.
     Args:
@@ -173,7 +181,7 @@ def convert_to_markdown_v2(output_data: dict,
                 if is_value_no(value):
                     markdown_text += f'### {emoji} No relevant tests\n\n'
                 else:
-                    markdown_text += f"### PR contains tests\n\n"
+                    markdown_text += f"### {emoji} PR contains tests\n\n"
         elif 'ticket compliance check' in key_nice.lower():
             markdown_text = ticket_markdown_logic(emoji, markdown_text, value, gfm_supported)
         elif 'security concerns' in key_nice.lower():
@@ -221,15 +229,31 @@ def convert_to_markdown_v2(output_data: dict,
                             continue
                         relevant_file = issue.get('relevant_file', '').strip()
                         issue_header = issue.get('issue_header', '').strip()
+                        if issue_header.lower() == 'possible bug':
+                            issue_header = 'Possible Issue'  # Make the header less frightening
                         issue_content = issue.get('issue_content', '').strip()
                         start_line = int(str(issue.get('start_line', 0)).strip())
                         end_line = int(str(issue.get('end_line', 0)).strip())
-                        reference_link = git_provider.get_line_link(relevant_file, start_line, end_line)
+
+                        relevant_lines_str = extract_relevant_lines_str(end_line, files, relevant_file, start_line, dedent=True)
+                        if git_provider:
+                            reference_link = git_provider.get_line_link(relevant_file, start_line, end_line)
+                        else:
+                            reference_link = None
 
                         if gfm_supported:
-                            issue_str = f"<a href='{reference_link}'><strong>{issue_header}</strong></a><br>{issue_content}"
+                            if reference_link is not None and len(reference_link) > 0:
+                                if relevant_lines_str:
+                                    issue_str = f"<details><summary><a href='{reference_link}'><strong>{issue_header}</strong></a>\n\n{issue_content}</summary>\n\n{relevant_lines_str}\n\n</details>"
+                                else:
+                                    issue_str = f"<a href='{reference_link}'><strong>{issue_header}</strong></a><br>{issue_content}"
+                            else:
+                                issue_str = f"<strong>{issue_header}</strong><br>{issue_content}"
                         else:
-                            issue_str = f"[**{issue_header}**]({reference_link})\n\n{issue_content}\n\n"
+                            if reference_link is not None and len(reference_link) > 0:
+                                issue_str = f"[**{issue_header}**]({reference_link})\n\n{issue_content}\n\n"
+                            else:
+                                issue_str = f"**{issue_header}**\n\n{issue_content}\n\n"
                         markdown_text += f"{issue_str}\n\n"
                     except Exception as e:
                         get_logger().exception(f"Failed to process 'Recommended focus areas for review': {e}")
@@ -246,23 +270,30 @@ def convert_to_markdown_v2(output_data: dict,
     if gfm_supported:
         markdown_text += "</table>\n"
 
-    if 'code_feedback' in output_data:
-        if gfm_supported:
-            markdown_text += f"\n\n"
-            markdown_text += f"<details><summary> <strong>Code feedback:</strong></summary>\n\n"
-            markdown_text += "<hr>"
-        else:
-            markdown_text += f"\n\n### Code feedback:\n\n"
-        for i, value in enumerate(output_data['code_feedback']):
-            if value is None or value == '' or value == {} or value == []:
-                continue
-            markdown_text += parse_code_suggestion(value, i, gfm_supported)+"\n\n"
-        if markdown_text.endswith('<hr>'):
-            markdown_text= markdown_text[:-4]
-        if gfm_supported:
-            markdown_text += f"</details>"
-
     return markdown_text
+
+def extract_relevant_lines_str(end_line, files, relevant_file, start_line, dedent=False):
+    try:
+        relevant_lines_str = ""
+        if files:
+            files = set_file_languages(files)
+            for file in files:
+                if file.filename.strip() == relevant_file:
+                    if not file.head_file:
+                        get_logger().warning(f"No content found in file: {file.filename}")
+                        return ""
+                    relevant_file_lines = file.head_file.splitlines()
+                    relevant_lines_str = "\n".join(relevant_file_lines[start_line - 1:end_line])
+                    if dedent and relevant_lines_str:
+                        # Remove the longest leading string of spaces and tabs common to all lines.
+                        relevant_lines_str = textwrap.dedent(relevant_lines_str)
+                    relevant_lines_str = f"```{file.language}\n{relevant_lines_str}\n```"
+                    break
+
+        return relevant_lines_str
+    except Exception as e:
+        get_logger().exception(f"Failed to extract relevant lines: {e}")
+        return ""
 
 
 def ticket_markdown_logic(emoji, markdown_text, value, gfm_supported) -> str:
@@ -980,7 +1011,7 @@ def show_relevant_configurations(relevant_section: str) -> str:
 
     markdown_text = ""
     markdown_text += "\n<hr>\n<details> <summary><strong>🛠️ Relevant configurations:</strong></summary> \n\n"
-    markdown_text +="<br>These are the relevant [configurations](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) for this tool:\n\n"
+    markdown_text +="<br>These are the relevant [configurations](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) for this tool:\n\n"
     markdown_text += f"**[config**]\n```yaml\n\n"
     for key, value in get_settings().config.items():
         if key in skip_keys:
@@ -1097,3 +1128,48 @@ def process_description(description_full: str) -> Tuple[str, List]:
         get_logger().exception(f"Failed to process description: {e}")
 
     return base_description_str, files
+
+def get_version() -> str:
+    # First check pyproject.toml if running directly out of repository
+    if os.path.exists("pyproject.toml"):
+        if sys.version_info >= (3, 11):
+            import tomllib
+            with open("pyproject.toml", "rb") as f:
+                data = tomllib.load(f)
+                if "project" in data and "version" in data["project"]:
+                    return data["project"]["version"]
+                else:
+                    get_logger().warning("Version not found in pyproject.toml")
+        else:
+            get_logger().warning("Unable to determine local version from pyproject.toml")
+
+    # Otherwise get the installed pip package version
+    try:
+        return version('pr-insight')
+    except PackageNotFoundError:
+        get_logger().warning("Unable to find package named 'pr-insight'")
+        return "unknown"
+
+
+def set_file_languages(diff_files) -> List[FilePatchInfo]:
+    try:
+        # if the language is already set, do not change it
+        if hasattr(diff_files[0], 'language') and diff_files[0].language:
+            return diff_files
+
+        # map file extensions to programming languages
+        language_extension_map_org = get_settings().language_extension_map_org
+        extension_to_language = {}
+        for language, extensions in language_extension_map_org.items():
+            for ext in extensions:
+                extension_to_language[ext] = language
+        for file in diff_files:
+            extension_s = '.' + file.filename.rsplit('.')[-1]
+            language_name = "txt"
+            if extension_s and (extension_s in extension_to_language):
+                language_name = extension_to_language[extension_s]
+            file.language = language_name.lower()
+    except Exception as e:
+        get_logger().exception(f"Failed to set file languages: {e}")
+
+    return diff_files

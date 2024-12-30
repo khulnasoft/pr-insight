@@ -3,7 +3,6 @@ from functools import partial
 
 from pr_insight.algo.ai_handlers.base_ai_handler import BaseAiHandler
 from pr_insight.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
-
 from pr_insight.algo.utils import update_settings_from_args
 from pr_insight.config_loader import get_settings
 from pr_insight.git_providers.utils import apply_repo_settings
@@ -14,7 +13,6 @@ from pr_insight.tools.pr_config import PRConfig
 from pr_insight.tools.pr_description import PRDescription
 from pr_insight.tools.pr_generate_labels import PRGenerateLabels
 from pr_insight.tools.pr_help_message import PRHelpMessage
-from pr_insight.tools.pr_information_from_user import PRInformationFromUser
 from pr_insight.tools.pr_line_questions import PR_LineQuestions
 from pr_insight.tools.pr_questions import PRQuestions
 from pr_insight.tools.pr_reviewer import PRReviewer
@@ -26,8 +24,6 @@ command2class = {
     "answer": PRReviewer,
     "review": PRReviewer,
     "review_pr": PRReviewer,
-    "reflect": PRInformationFromUser,
-    "reflect_and_review": PRInformationFromUser,
     "describe": PRDescription,
     "describe_pr": PRDescription,
     "improve": PRCodeSuggestions,
@@ -77,12 +73,10 @@ class PRInsight:
 
         action = action.lstrip("/").lower()
         if action not in command2class:
-            get_logger().debug(f"Unknown command: {action}")
+            get_logger().error(f"Unknown command: {action}")
             return False
         with get_logger().contextualize(command=action, pr_url=pr_url):
             get_logger().info("PR-Insight request handler started", analytics=True)
-            if action == "reflect_and_review":
-                get_settings().pr_reviewer.ask_and_reflect = True
             if action == "answer":
                 if notify:
                     notify()
