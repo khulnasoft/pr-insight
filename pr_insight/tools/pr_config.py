@@ -48,13 +48,13 @@ class PRConfig:
             str: The formatted configuration settings as a markdown string.
         """
         try:
-            conf_file = get_settings().find_file("configuration.toml")
-            conf_settings = Dynaconf(settings_files=[conf_file])
-            configuration_headers = [header.lower() for header in conf_settings.keys()]
-            relevant_configs = self._filter_relevant_configs(configuration_headers)
-            markdown_text = self._format_configs_to_markdown(relevant_configs)
-            logger.info(f"Possible Configurations outputted to PR comment", extra={"artifact": markdown_text})
-            return markdown_text
+            if conf_file := get_settings().find_file("configuration.toml"):
+                conf_settings = Dynaconf(settings_files=[conf_file])
+                configuration_headers = [header.lower() for header in conf_settings.keys()]
+                relevant_configs = self._filter_relevant_configs(configuration_headers)
+                markdown_text = self._format_configs_to_markdown(relevant_configs)
+                logger.info("Possible Configurations outputted to PR comment", extra={"artifact": markdown_text})
+                return markdown_text
         except Exception as e:
             logger.error(f"Error preparing PR configs: {e}")
             return ""
@@ -84,24 +84,23 @@ class PRConfig:
         Returns:
             str: Formatted markdown string.
         """
-        skip_keys = ['ai_disclaimer', 'ai_disclaimer_title', 'ANALYTICS_FOLDER', 'secret_provider', "skip_keys",
-                     'trial_prefix_message', 'no_eligible_message', 'identity_provider', 'ALLOWED_REPOS',
-                     'APP_NAME']
+        skip_keys = [
+            'ai_disclaimer', 'ai_disclaimer_title', 'ANALYTICS_FOLDER', 'secret_provider', "skip_keys",
+            'trial_prefix_message', 'no_eligible_message', 'identity_provider', 'ALLOWED_REPOS', 'APP_NAME'
+        ]
         extra_skip_keys = get_settings().config.get('config.skip_keys', [])
         if extra_skip_keys:
             skip_keys.extend(extra_skip_keys)
 
         markdown_text = "<details> <summary><strong>🛠️ PR-Insight Configurations:</strong></summary> \n\n"
-        markdown_text += f"\n\n```yaml\n\n"
+        markdown_text += "\n\n```yaml\n\n"
         for header, configs in relevant_configs.items():
             if configs:
                 markdown_text += "\n\n"
                 markdown_text += f"==================== {header} ===================="
             for key, value in configs.items():
-                if key in skip_keys:
-                    continue
-                markdown_text += f"\n{header.lower()}.{key.lower()} = {repr(value) if isinstance(value, str) else value}"
-                markdown_text += "  "
+                if key not in skip_keys:
+                    markdown_text += f"\n{header.lower()}.{key.lower()} = {repr(value) if isinstance(value, str) else value}  "
         markdown_text += "\n```"
         markdown_text += "\n</details>\n"
         return markdown_text
