@@ -20,6 +20,12 @@ class PRConfig:
         self.git_provider = get_git_provider()(pr_url)
 
     async def run(self):
+        """
+        Run the PRConfig process to get and publish configuration settings.
+
+        This method retrieves the configuration settings, prepares them for display, and publishes them as a comment
+        on the pull request.
+        """
         get_logger().info('Getting configuration settings...')
         get_logger().info('Preparing configs...')
         pr_comment = self._prepare_pr_configs()
@@ -30,6 +36,15 @@ class PRConfig:
         return ""
 
     def _prepare_pr_configs(self) -> str:
+        """
+        Prepare the configuration settings for display.
+
+        This method retrieves the configuration settings from the configuration file, filters out irrelevant settings,
+        and formats them as a markdown string for display.
+
+        Returns:
+            str: The formatted configuration settings as a markdown string.
+        """
         conf_file = get_settings().find_file("configuration.toml")
         conf_settings = Dynaconf(settings_files=[conf_file])
         configuration_headers = [header.lower() for header in conf_settings.keys()]
