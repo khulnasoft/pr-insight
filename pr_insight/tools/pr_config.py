@@ -34,7 +34,7 @@ class PRConfig:
                 self.git_provider.publish_comment(pr_comment)
                 self.git_provider.remove_initial_comment()
         except Exception as e:
-            logger.error(f"Failed to run PRConfig: {e}")
+            logger.error("Failed to run PRConfig: %s", e)
         return ""
 
     def _prepare_pr_configs(self) -> str:
@@ -56,7 +56,7 @@ class PRConfig:
                 logger.info("Possible Configurations outputted to PR comment", extra={"artifact": markdown_text})
                 return markdown_text
         except Exception as e:
-            logger.error(f"Error preparing PR configs: {e}")
+            logger.error("Error preparing PR configs: %s", e)
             return ""
 
     @staticmethod
