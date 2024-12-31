@@ -40,7 +40,7 @@ stages:
 
         export azure_devops__org="$ORG_URL"
         export config__git_provider="azure"
-        
+
         pr-insight --pr_url="$PR_URL" describe
         pr-insight --pr_url="$PR_URL" review
         pr-insight --pr_url="$PR_URL" improve
@@ -51,10 +51,12 @@ stages:
 ```
 This script will run PR-Insight on every new merge request, with the `improve`, `review`, and `describe` commands.
 Note that you need to export the `azure_devops__pat` and `OPENAI_KEY` variables in the Azure DevOps pipeline settings (Pipelines -> Library -> + Variable group):
+
 ![PR-Insight Pro](https://khulnasoft.com/images/pr_insight/azure_devops_pipeline_secrets.png){width=468}
 
 Make sure to give pipeline permissions to the `pr_insight` variable group.
 
+> Note that Azure Pipelines lacks support for triggering workflows from PR comments. If you find a viable solution, please contribute it to our [issue tracker](https://github.com/KhulnaSoft/pr-insight/issues)
 
 ## Azure DevOps from CLI
 
@@ -65,11 +67,11 @@ git_provider="azure"
 ```
 
 Azure DevOps provider supports [PAT token](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) or [DefaultAzureCredential](https://learn.microsoft.com/en-us/azure/developer/python/sdk/authentication-overview#authentication-in-server-environments) authentication.
-PAT is faster to create, but has build in expiration date, and will use the user identity for API calls. 
+PAT is faster to create, but has build in expiration date, and will use the user identity for API calls.
 Using DefaultAzureCredential you can use managed identity or Service principle, which are more secure and will create separate ADO user identity (via AAD) to the insight.
 
-If PAT was chosen, you can assign the value in .secrets.toml. 
-If DefaultAzureCredential was chosen, you can assigned the additional env vars like AZURE_CLIENT_SECRET directly, 
+If PAT was chosen, you can assign the value in .secrets.toml.
+If DefaultAzureCredential was chosen, you can assigned the additional env vars like AZURE_CLIENT_SECRET directly,
 or use managed identity/az cli (for local development) without any additional configuration.
 in any case, 'org' value must be assigned in .secrets.toml:
 ```
@@ -80,7 +82,7 @@ org = "https://dev.azure.com/YOUR_ORGANIZATION/"
 
 ### Azure DevOps Webhook
 
-To trigger from an Azure webhook, you need to manually [add a webhook](https://learn.microsoft.com/en-us/azure/devops/service-hooks/services/webhooks?view=azure-devops). 
+To trigger from an Azure webhook, you need to manually [add a webhook](https://learn.microsoft.com/en-us/azure/devops/service-hooks/services/webhooks?view=azure-devops).
 Use the "Pull request created" type to trigger a review, or "Pull request commented on" to trigger any supported comment with /<command> <args> comment on the relevant PR. Note that for the "Pull request commented on" trigger, only API v2.0 is supported.
 
 

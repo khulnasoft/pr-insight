@@ -1,19 +1,32 @@
 # Fetching Ticket Context for PRs
+`Supported Git Platforms : GitHub, GitLab, Bitbucket`
+
 ## Overview
-Khulnasoft Merge PR Agent streamlines code review workflows by seamlessly connecting with multiple ticket management systems.
+PR-Insight PR Insight streamlines code review workflows by seamlessly connecting with multiple ticket management systems.
 This integration enriches the review process by automatically surfacing relevant ticket information and context alongside code changes.
 
+## Ticket systems supported
+- GitHub
+- Jira (💎)
+
+Ticket data fetched:
+
+1. Ticket Title
+2. Ticket Description
+3. Custom Fields (Acceptance criteria)
+4. Subtasks (linked tasks)
+5. Labels
+6. Attached Images/Screenshots
 
 ## Affected Tools
 
 Ticket Recognition Requirements:
 
-1. The PR description should contain a link to the ticket.
-2. For Jira tickets, you should follow the instructions in [Jira Integration](https://pr-insight-docs.khulnasoft.com/core-abilities/fetching_ticket_context/#jira-integration) in order to authenticate with Jira.
-
+- The PR description should contain a link to the ticket or if the branch name starts with the ticket id / number.
+- For Jira tickets, you should follow the instructions in [Jira Integration](https://pr-insight-docs.khulnasoft.com/core-abilities/fetching_ticket_context/#jira-integration) in order to authenticate with Jira.
 
 ### Describe tool
-Khulnasoft Merge PR Agent will recognize the ticket and use the ticket content (title, description, labels) to provide additional context for the code changes.
+PR-Insight PR Insight will recognize the ticket and use the ticket content (title, description, labels) to provide additional context for the code changes.
 By understanding the reasoning and intent behind modifications, the LLM can offer more insightful and relevant code analysis.
 
 ### Review tool
@@ -23,7 +36,7 @@ In addition, this feature will evaluate how well a Pull Request (PR) adheres to 
 Each ticket will be assigned a label (Compliance/Alignment level), Indicates the degree to which the PR fulfills its original purpose, Options: Fully compliant, Partially compliant or Not compliant.
 
 
-![Ticket Compliance](https://www.khulnasoft.com/images/pr_agent/ticket_compliance_review.png){width=768}
+![Ticket Compliance](https://www.khulnasoft.com/images/pr_insight/ticket_compliance_review.png){width=768}
 
 By default, the tool will automatically validate if the PR complies with the referenced ticket.
 If you want to disable this feedback, add the following line to your configuration file:
@@ -37,24 +50,30 @@ require_ticket_analysis_review=false
 
 ### Github Issues Integration
 
-Khulnasoft Merge PR Agent will automatically recognize Github issues mentioned in the PR description and fetch the issue content.
+PR-Insight PR Insight will automatically recognize Github issues mentioned in the PR description and fetch the issue content.
 Examples of valid GitHub issue references:
 
 - `https://github.com/<ORG_NAME>/<REPO_NAME>/issues/<ISSUE_NUMBER>`
 - `#<ISSUE_NUMBER>`
 - `<ORG_NAME>/<REPO_NAME>#<ISSUE_NUMBER>`
 
-Since Khulnasoft Merge PR Agent is integrated with GitHub, it doesn't require any additional configuration to fetch GitHub issues.
+Since PR-Insight PR Insight is integrated with GitHub, it doesn't require any additional configuration to fetch GitHub issues.
 
 ### Jira Integration 💎
 
 We support both Jira Cloud and Jira Server/Data Center.
-To integrate with Jira, The PR Description should contain a link to the Jira ticket.
+To integrate with Jira, you can link your PR to a ticket using either of these methods:
 
-For Jira integration, include a ticket reference in your PR description using either the complete URL format `https://<JIRA_ORG>.atlassian.net/browse/ISSUE-123` or the shortened ticket ID `ISSUE-123`.
+**Method 1: Description Reference:**
+
+Include a ticket reference in your PR description using either the complete URL format https://<JIRA_ORG>.atlassian.net/browse/ISSUE-123 or the shortened ticket ID ISSUE-123.
+
+**Method 2: Branch Name Detection:**
+
+Name your branch with the ticket ID as a prefix (e.g., `ISSUE-123-feature-description` or `ISSUE-123/feature-description`).
 
 !!! note "Jira Base URL"
-    If using the shortened format, ensure your configuration file contains the Jira base URL under the [jira] section like this:
+    For shortened ticket IDs or branch detection (method 2), you must configure the Jira base URL in your configuration file under the [jira] section:
 
     ```toml
     [jira]
@@ -66,17 +85,17 @@ There are two ways to authenticate with Jira Cloud:
 
 **1) Jira App Authentication**
 
-The recommended way to authenticate with Jira Cloud is to install the Khulnasoft Merge app in your Jira Cloud instance. This will allow Khulnasoft Merge to access Jira data on your behalf.
+The recommended way to authenticate with Jira Cloud is to install the PR-Insight app in your Jira Cloud instance. This will allow PR-Insight to access Jira data on your behalf.
 
 Installation steps:
 
-1. Click [here](https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=8krKmA4gMD8mM8z24aRCgPCSepZNP1xf&scope=read%3Ajira-work%20offline_access&redirect_uri=https%3A%2F%2Fregister.jira.pr-agent.khulnasoft.com&state=khulnasoftmerge&response_type=code&prompt=consent) to install the Khulnasoft Merge app in your Jira Cloud instance, click the `accept` button.<br>
-![Jira Cloud App Installation](https://www.khulnasoft.com/images/pr_agent/jira_app_installation1.png){width=384}
+1. Click [here](https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=8krKmA4gMD8mM8z24aRCgPCSepZNP1xf&scope=read%3Ajira-work%20offline_access&redirect_uri=https%3A%2F%2Fregister.jira.pr-insight.khulnasoft.com&state=pr-insightmerge&response_type=code&prompt=consent) to install the PR-Insight app in your Jira Cloud instance, click the `accept` button.<br>
+![Jira Cloud App Installation](https://www.khulnasoft.com/images/pr_insight/jira_app_installation1.png){width=384}
 
-2. After installing the app, you will be redirected to the Khulnasoft Merge registration page. and you will see a success message.<br>
-![Jira Cloud App success message](https://www.khulnasoft.com/images/pr_agent/jira_app_success.png){width=384}
+2. After installing the app, you will be redirected to the PR-Insight registration page. and you will see a success message.<br>
+![Jira Cloud App success message](https://www.khulnasoft.com/images/pr_insight/jira_app_success.png){width=384}
 
-3. Now you can use the Jira integration in Khulnasoft Merge PR Agent.
+3. Now you can use the Jira integration in PR-Insight PR Insight.
 
 **2) Email/Token Authentication**
 

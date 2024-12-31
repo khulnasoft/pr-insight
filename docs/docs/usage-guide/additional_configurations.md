@@ -1,5 +1,5 @@
 ## Show possible configurations
-The possible configurations of PR-Insight are stored in [here](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml).
+The possible configurations of PR-Insight are stored in [here](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml).
 In the [tools](https://pr-insight-docs.khulnasoft.com/tools/) page you can find explanations on how to use these configurations for each tool.
 
 To print all the available configurations as a comment on your PR, you can use the following command:
@@ -94,7 +94,7 @@ patch_extra_lines_after=1
 
 Increasing this number provides more context to the model, but will also increase the token budget, and may overwhelm the model with too much information, unrelated to the actual PR code changes.
 
-If the PR is too large (see [PR Compression strategy](https://github.com/Khulnasoft/pr-insight/blob/main/PR_COMPRESSION.md)), PR-Insight may automatically set this number to 0, and will use the original git patch.
+If the PR is too large (see [PR Compression strategy](https://github.com/KhulnaSoft/pr-insight/blob/main/PR_COMPRESSION.md)), PR-Insight may automatically set this number to 0, and will use the original git patch.
 
 
 ## Editing the prompts
@@ -103,7 +103,7 @@ The prompts for the various PR-Insight tools are defined in the `pr_insight/sett
 In practice, the prompts are loaded and stored as a standard setting object.
 Hence, editing them is similar to editing any other configuration value - just place the relevant key in `.pr_insight.toml`file, and override the default value.
 
-For example, if you want to edit the prompts of the [describe](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/pr_description_prompts.toml) tool, you can add the following to your `.pr_insight.toml` file:
+For example, if you want to edit the prompts of the [describe](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/pr_description_prompts.toml) tool, you can add the following to your `.pr_insight.toml` file:
 ```
 [pr_description_prompt]
 system="""
@@ -113,7 +113,7 @@ user="""
 ...
 """
 ```
-Note that the new prompt will need to generate an output compatible with the relevant [post-process function](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/tools/pr_description.py#L137).
+Note that the new prompt will need to generate an output compatible with the relevant [post-process function](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/tools/pr_description.py#L137).
 
 ## Integrating with Logging Observability Platforms
 
@@ -164,9 +164,9 @@ They are not mutually exclusive, you can use them together or separately.
 
 To allow only specific folders (often needed in large monorepos), set:
 
- ```
- [config]
- allow_only_specific_folders=['folder1','folder2']
- ```
+```
+[config]
+allow_only_specific_folders=['folder1','folder2']
+```
 
- For the configuration above, automatic feedback will only be triggered when the PR changes include files from 'folder1' or 'folder2'
+For the configuration above, automatic feedback will only be triggered when the PR changes include files from 'folder1' or 'folder2'

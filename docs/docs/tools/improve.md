@@ -1,5 +1,5 @@
 ## Overview
-The `improve` tool scans the PR code changes, and automatically generates [meaningful](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/pr_code_suggestions_prompts.toml#L41) suggestions for improving the PR code.
+The `improve` tool scans the PR code changes, and automatically generates [meaningful](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/pr_code_suggestions_prompts.toml#L41) suggestions for improving the PR code.
 The tool can be triggered automatically every time a new PR is [opened](../usage-guide/automations_and_usage.md#github-app-automatic-tools-when-a-new-pr-is-opened), or it can be invoked manually by commenting on any PR:
 ```toml
 /improve
@@ -73,9 +73,9 @@ In post-process, PR-Insight counts the number of suggestions that were implement
 PR-Insight employs an novel detection system to automatically [identify](https://pr-insight-docs.khulnasoft.com/core-abilities/impact_evaluation/) AI code suggestions that PR authors have accepted and implemented.
 
 Accepted suggestions are also automatically documented in a dedicated wiki page called `.pr_insight_accepted_suggestions`, allowing users to track historical changes, assess the tool's effectiveness, and learn from previously implemented recommendations in the repository.
-An example [result](https://github.com/Khulnasoft/pr-insight/wiki/.pr_insight_accepted_suggestions):
+An example [result](https://github.com/KhulnaSoft/pr-insight/wiki/.pr_insight_accepted_suggestions):
 
-[![pr_insight_accepted_suggestions1.png](https://khulnasoft.com/images/pr_insight/pr_insight_accepted_suggestions1.png){width=768}](https://github.com/Khulnasoft/pr-insight/wiki/.pr_insight_accepted_suggestions)
+[![pr_insight_accepted_suggestions1.png](https://khulnasoft.com/images/pr_insight/pr_insight_accepted_suggestions1.png){width=768}](https://github.com/KhulnaSoft/pr-insight/wiki/.pr_insight_accepted_suggestions)
 
 This dedicated wiki page will also serve as a foundation for future AI model improvements, allowing it to learn from historically implemented suggestions and generate more targeted, contextually relevant recommendations.
 
@@ -83,17 +83,123 @@ This feature is controlled by a boolean configuration parameter: `pr_code_sugges
 
 !!! note "Wiki must be enabled"
     While the aggregation process is automatic, GitHub repositories require a one-time manual wiki setup.
-    
-    To initialize the wiki: navigate to `Wiki`, select `Create the first page`, then click `Save page`. 
+
+    To initialize the wiki: navigate to `Wiki`, select `Create the first page`, then click `Save page`.
 
     ![pr_insight_accepted_suggestions_create_first_page.png](https://khulnasoft.com/images/pr_insight/pr_insight_accepted_suggestions_create_first_page.png){width=768}
 
     Once a wiki repo is created, the tool will automatically use this wiki for tracking suggestions.
 
 !!! note "Why a wiki page?"
-    Your code belongs to you, and we respect your privacy. Hence, we won't store any code suggestions in an external database. 
+    Your code belongs to you, and we respect your privacy. Hence, we won't store any code suggestions in an external database.
 
     Instead, we leverage a dedicated private page, within your repository wiki, to track suggestions. This approach offers convenient secure suggestion tracking while avoiding pull requests or any noise to the main repository.
+
+## `Extra instructions` and `best practices`
+
+The `improve` tool can be further customized by providing additional instructions and best practices to the AI model.
+
+### Extra instructions
+
+>`Platforms supported: GitHub, GitLab, Bitbucket, Azure DevOps`
+
+You can use the `extra_instructions` configuration option to give the AI model additional instructions for the `improve` tool.
+Be specific, clear, and concise in the instructions. With extra instructions, you are the prompter.
+
+Examples for possible instructions:
+```toml
+[pr_code_suggestions]
+extra_instructions="""\
+(1) Answer in japanese
+(2) Don't suggest to add try-except block
+(3) Ignore changes in toml files
+...
+"""
+```
+Use triple quotes to write multi-line instructions. Use bullet points or numbers to make the instructions more readable.
+
+### Best practices 💎
+
+>`Platforms supported: GitHub, GitLab, Bitbucket`
+
+Another option to give additional guidance to the AI model is by creating a dedicated [**wiki page**](https://github.com/KhulnaSoft/pr-insight/wiki) called `best_practices.md`.
+This page can contain a list of best practices, coding standards, and guidelines that are specific to your repo/organization.
+
+The AI model will use this wiki page as a reference, and in case the PR code violates any of the guidelines, it will create additional suggestions, with a dedicated label: `Organization
+best practice`.
+
+Example for a python `best_practices.md` content:
+```markdown
+## Project best practices
+- Make sure that I/O operations are encapsulated in a try-except block
+- Use the `logging` module for logging instead of `print` statements
+- Use `is` and `is not` to compare with `None`
+- Use `if __name__ == '__main__':` to run the code only when the script is executed
+- Use `with` statement to open files
+...
+```
+
+Tips for writing an effective `best_practices.md` file:
+
+- Write clearly and concisely
+- Include brief code examples when helpful
+- Focus on project-specific guidelines, that will result in relevant suggestions you actually want to get
+- Keep the file relatively short, under 800 lines, since:
+    - AI models may not process effectively very long documents
+    - Long files tend to contain generic guidelines already known to AI
+
+#### Local and global best practices
+By default, PR-Insight will look for a local `best_practices.md` wiki file in the root of the relevant local repo.
+
+If you want to enable also a global `best_practices.md` wiki file, set first in the global configuration file:
+
+```toml
+[best_practices]
+enable_global_best_practices = true
+```
+
+Then, create a `best_practices.md` wiki file in the root of [global](https://pr-insight-docs.khulnasoft.com/usage-guide/configuration_options/#global-configuration-file) configuration repository,  `pr-insight-settings`.
+
+#### Best practices for multiple languages
+For a git organization working with multiple programming languages, you can maintain a centralized global `best_practices.md` file containing language-specific guidelines.
+When reviewing pull requests, PR-Insight automatically identifies the programming language and applies the relevant best practices from this file.
+
+To do this, structure your `best_practices.md` file using the following format:
+
+```
+# [Python]
+...
+# [Java]
+...
+# [JavaScript]
+...
+```
+
+#### Dedicated label for best practices suggestions
+Best practice suggestions are labeled as `Organization best practice` by default.
+To customize this label, modify it in your configuration file:
+
+```toml
+[best_practices]
+organization_name = "..."
+```
+
+And the label will be: `{organization_name} best practice`.
+
+
+#### Example results
+
+![best_practice](https://khulnasoft.com/images/pr_insight/org_best_practice.png){width=512}
+
+
+### How to combine `extra instructions` and `best practices`
+
+The `extra instructions` configuration is more related to the `improve` tool prompt. It can be used, for example, to avoid specific suggestions ("Don't suggest to add try-except block", "Ignore changes in toml files", ...) or to emphasize specific aspects or formats ("Answer in Japanese", "Give only short suggestions", ...)
+
+In contrast, the `best_practices.md` file is a general guideline for the way code should be written in the repo.
+
+Using a combination of both can help the AI model to provide relevant and tailored suggestions.
+
 
 ## Usage Tips
 
@@ -109,10 +215,10 @@ In addition to mistakes (which may happen, but are rare), sometimes the presente
 In such cases, we recommend prioritizing the suggestion's detailed description, using the diff snippet primarily as a supporting reference.
 
 ### Dual publishing mode
-Our recommended approach for presenting code suggestions is through a [table](https://pr-insight-docs.khulnasoft.com/tools/improve/#overview) (`--pr_code_suggestions.commitable_code_suggestions=false`). 
+Our recommended approach for presenting code suggestions is through a [table](https://pr-insight-docs.khulnasoft.com/tools/improve/#overview) (`--pr_code_suggestions.commitable_code_suggestions=false`).
 This method significantly reduces the PR footprint and allows for quick and easy digestion of multiple suggestions.
 
-We also offer a complementary **dual publishing mode**. When enabled, suggestions exceeding a certain score threshold are not only displayed in the table, but also presented as commitable PR comments. 
+We also offer a complementary **dual publishing mode**. When enabled, suggestions exceeding a certain score threshold are not only displayed in the table, but also presented as commitable PR comments.
 This mode helps highlight suggestions deemed more critical.
 
 To activate dual publishing mode, use the following setting:
@@ -165,9 +271,9 @@ code_suggestions_self_review_text = "... (your text here) ..."
     ![self_review_2](https://khulnasoft.com/images/pr_insight/self_review_2.png){width=512}
 
     - If you keep the number of required reviewers for a PR to 1 and enable this configuration, this effectively means that the PR author can approve the PR by actively clicking the self-review checkbox.
-    
+
         To prevent unauthorized approvals, this configuration defaults to false, and cannot be altered through online comments; enabling requires a direct update to the configuration file and a commit to the repository. This ensures that utilizing the feature demands a deliberate documented decision by the repository owner.
- 
+
 
 ### How many code suggestions are generated?
 PR-Insight uses a dynamic strategy to generate code suggestions based on the size of the pull request (PR). Here's how it works:
@@ -191,77 +297,10 @@ This approach has two main benefits:
 Note: Chunking is primarily relevant for large PRs. For most PRs (up to 500 lines of code), PR-Insight will be able to process the entire code in a single call.
 
 
-### 'Extra instructions' and 'best practices'
-
-#### Extra instructions
-
->`Platforms supported: GitHub, GitLab, Bitbucket`
-
-You can use the `extra_instructions` configuration option to give the AI model additional instructions for the `improve` tool.
-Be specific, clear, and concise in the instructions. With extra instructions, you are the prompter. Specify relevant aspects that you want the model to focus on.
-    
-Examples for possible instructions:
-```toml
-[pr_code_suggestions]
-extra_instructions="""\
-(1) Answer in japanese
-(2) Don't suggest to add try-excpet block
-(3) Ignore changes in toml files
-...
-"""
-```
-Use triple quotes to write multi-line instructions. Use bullet points or numbers to make the instructions more readable.
-
-#### Best practices 💎
-
->`Platforms supported: GitHub, GitLab`
-
-Another option to give additional guidance to the AI model is by creating a dedicated [**wiki page**](https://github.com/Khulnasoft/pr-insight/wiki) called `best_practices.md`. 
-This page can contain a list of best practices, coding standards, and guidelines that are specific to your repo/organization.
-
-The AI model will use this wiki page as a reference, and in case the PR code violates any of the guidelines, it will suggest improvements accordingly, with a dedicated label: `Organization
-best practice`. 
-
-Example for a `best_practices.md` content can be found [here](https://github.com/Khulnasoft/pr-insight/blob/main/docs/docs/usage-guide/EXAMPLE_BEST_PRACTICE.md) (adapted from Google's [pyguide](https://google.github.io/styleguide/pyguide.html)).
-This file is only an example. Since it is used as a prompt for an AI model, we want to emphasize the following:
-
-- It should be written in a clear and concise manner
-- If needed, it should give short relevant code snippets as examples
-- Recommended to limit the text to 800 lines or fewer. Here’s why:
-
-     1) Extremely long best practices documents may not be fully processed by the AI model.
-  
-     2) A lengthy file probably represent a more "**generic**" set of guidelines, which the AI model is already familiar with. The objective is to focus on a more targeted set of guidelines tailored to the specific needs of this project.
-
-##### Local and global best practices
-By default, PR-Insight will look for a local `best_practices.md` wiki file in the root of the relevant local repo.
-
-If you want to enable also a global `best_practices.md` wiki file, set first in the global configuration file:
-
-```toml
-[best_practices]
-enable_global_best_practices = true
-```
-
-Then, create a `best_practices.md` wiki file in the root of [global](https://pr-insight-docs.khulnasoft.com/usage-guide/configuration_options/#global-configuration-file) configuration repository,  `pr-insight-settings`.
-
-##### Example results
-
-![best_practice](https://khulnasoft.com/images/pr_insight/org_best_practice.png){width=512}
-
-
-#### How to combine `extra instructions` and `best practices`
-
-The `extra instructions` configuration is more related to the `improve` tool prompt. It can be used, for example, to avoid specific suggestions ("Don't suggest to add try-except block", "Ignore changes in toml files", ...) or to emphasize specific aspects or formats ("Answer in Japanese", "Give only short suggestions", ...)
-
-In contrast, the `best_practices.md` file is a general guideline for the way code should be written in the repo.
-
-Using a combination of both can help the AI model to provide relevant and tailored suggestions.
-
 ## Configuration options
 
 ??? example "General options"
-    
+
     <table>
       <tr>
         <td><b>extra_instructions</b></td>
@@ -277,7 +316,7 @@ Using a combination of both can help the AI model to provide relevant and tailor
       </tr>
       <tr>
         <td><b>focus_only_on_problems</b></td>
-        <td>If set to true, suggestions will focus primarily on identifying and fixing code problems, and less on style considerations like best practices, maintainability, or readability. Default is false.</td> 
+        <td>If set to true, suggestions will focus primarily on identifying and fixing code problems, and less on style considerations like best practices, maintainability, or readability. Default is true.</td>
       </tr>
       <tr>
         <td><b>persistent_comment</b></td>
@@ -303,6 +342,10 @@ Using a combination of both can help the AI model to provide relevant and tailor
         <td><b>wiki_page_accepted_suggestions</b></td>
         <td>If set to true, the tool will automatically track accepted suggestions in a dedicated wiki page called `.pr_insight_accepted_suggestions`. Default is true.</td>
       </tr>
+      <tr>
+        <td><b>allow_thumbs_up_down</b></td>
+        <td>If set to true, all code suggestions will have thumbs up and thumbs down buttons, to encourage users to provide feedback on the suggestions. Default is false.</td>
+      </tr>
     </table>
 
 ??? example "Params for number of suggestions and AI calls"
@@ -320,10 +363,6 @@ Using a combination of both can help the AI model to provide relevant and tailor
         <td><b>max_number_of_calls</b></td>
         <td>Maximum number of chunks. Default is 3.</td>
       </tr>
-      <tr>
-        <td><b>rank_extended_suggestions</b></td>
-        <td>If set to true, the tool will rank the suggestions, based on importance. Default is true.</td>
-      </tr>
     </table>
 
 ## A note on code suggestions quality
@@ -335,5 +374,5 @@ Using a combination of both can help the AI model to provide relevant and tailor
     - Only if the `Category` header is relevant, the user should move to the summarized suggestion description
     - Only if the summarized suggestion description is relevant, the user should click on the collapsible, to read the full suggestion description with a code preview example.
 
-- In addition, we recommend to use the [`extra_instructions`](https://pr-insight-docs.khulnasoft.com/tools/improve/#extra-instructions-and-best-practices) field to guide the model to suggestions that are more relevant to the specific needs of the project. 
+- In addition, we recommend to use the [`extra_instructions`](https://pr-insight-docs.khulnasoft.com/tools/improve/#extra-instructions-and-best-practices) field to guide the model to suggestions that are more relevant to the specific needs of the project.
 - The interactive [PR chat](https://pr-insight-docs.khulnasoft.com/chrome-extension/) also provides an easy way to get more tailored suggestions and feedback from the AI model.

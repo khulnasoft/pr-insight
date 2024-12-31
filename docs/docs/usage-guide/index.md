@@ -1,6 +1,6 @@
 # Usage guide
 
-This page provides a detailed guide on how to use PR-Insight. 
+This page provides a detailed guide on how to use PR-Insight.
 It includes information on how to adjust PR-Insight configurations, define which tools will run automatically, and other advanced configurations.
 
 

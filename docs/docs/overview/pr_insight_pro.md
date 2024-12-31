@@ -1,6 +1,6 @@
 ### Overview
 
-[PR-Insight Pro](https://www.khulnasoft.com/pricing/) is a hosted version of PR-Insight, provided by Khulnasoft. A complimentary two-week trial is offered, followed by a monthly subscription fee.
+[PR-Insight Pro](https://www.khulnasoft.com/pricing/) is a hosted version of open-source [PR-Insight (PR-Insight)](https://github.com/KhulnaSoft/pr-insight). A complimentary two-week trial is offered, followed by a monthly subscription fee.
 PR-Insight Pro is designed for companies and teams that require additional features and capabilities. It provides the following benefits:
 
 1. **Fully managed** - We take care of everything for you - hosting, models, regular updates, and more. Installation is as simple as signing up and adding the PR-Insight app to your GitHub\GitLab\BitBucket repo.
@@ -19,7 +19,7 @@ Here are some of the additional features and capabilities that PR-Insight Pro of
 
 | Feature                                                                                                              | Description                                                                                                                                                      |
 |----------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [**Model selection**](https://pr-insight-docs.khulnasoft.com/usage-guide/PR_insight_pro_models/)          | Choose the model that best fits your needs, among top models like `GPT4` and `Claude-Sonnet-3.5`                                                                 
+| [**Model selection**](https://pr-insight-docs.khulnasoft.com/usage-guide/PR_insight_pro_models/)          | Choose the model that best fits your needs, among top models like `GPT4` and `Claude-Sonnet-3.5`
 | [**Global and wiki configuration**](https://pr-insight-docs.khulnasoft.com/usage-guide/configuration_options/)              | Control configurations for many repositories from a single location; <br>Edit configuration of a single repo without committing code                              |
 | [**Apply suggestions**](https://pr-insight-docs.khulnasoft.com/tools/improve/#overview)                                     | Generate committable code from the relevant suggestions interactively by clicking on a checkbox                                                                   |
 | [**Suggestions impact**](https://pr-insight-docs.khulnasoft.com/tools/improve/#assessing-impact)                         | Automatically mark suggestions that were implemented by the user (either directly in GitHub, or indirectly in the IDE) to enable tracking of the impact of the suggestions |
@@ -45,7 +45,7 @@ Here are additional tools that are available only for PR-Insight Pro users:
 
 ### Supported languages
 
-PR-Insight Pro leverages the world's leading code models - Claude 3.5 Sonnet and GPT-4. 
+PR-Insight Pro leverages the world's leading code models - Claude 3.5 Sonnet and GPT-4.
 As a result, its primary tools such as `describe`, `review`, and `improve`, as well as the PR-chat feature, support virtually all programming languages.
 
 For specialized commands that require static code analysis, PR-Insight Pro offers support for specific languages. For more details about features that require static code analysis, please refer to the [documentation](https://pr-insight-docs.khulnasoft.com/tools/analyze/#overview).

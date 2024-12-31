@@ -1,16 +1,17 @@
 try:
-    from langchain_openai import ChatOpenAI, AzureChatOpenAI
-    from langchain_core.messages import SystemMessage, HumanMessage
+    from langchain_core.messages import HumanMessage, SystemMessage
+    from langchain_openai import AzureChatOpenAI, ChatOpenAI
 except:  # we don't enforce langchain as a dependency, so if it's not installed, just move on
     pass
+
+import functools
+
+from openai import APIError, RateLimitError, Timeout
+from retry import retry
 
 from pr_insight.algo.ai_handlers.base_ai_handler import BaseAiHandler
 from pr_insight.config_loader import get_settings
 from pr_insight.log import get_logger
-
-from openai import APIError, RateLimitError, Timeout
-from retry import retry
-import functools
 
 OPENAI_RETRIES = 5
 
@@ -35,8 +36,13 @@ class LangChainOpenAIHandler(BaseAiHandler):
         """
         return get_settings().get("OPENAI.DEPLOYMENT_ID", None)
 
-    @retry(exceptions=(APIError, Timeout, AttributeError, RateLimitError),
-           tries=OPENAI_RETRIES, delay=2, backoff=2, jitter=(1, 3))
+    @retry(
+        exceptions=(APIError, Timeout, AttributeError, RateLimitError),
+        tries=OPENAI_RETRIES,
+        delay=2,
+        backoff=2,
+        jitter=(1, 3),
+    )
     async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2):
         try:
             messages = [SystemMessage(content=system), HumanMessage(content=user)]
@@ -46,7 +52,7 @@ class LangChainOpenAIHandler(BaseAiHandler):
             finish_reason = "completed"
             return resp.content, finish_reason
 
-        except (Exception) as e:
+        except Exception as e:
             get_logger().error("Unknown error during OpenAI inference: ", e)
             raise e
 
@@ -73,4 +79,3 @@ class LangChainOpenAIHandler(BaseAiHandler):
                 raise ValueError(f"OpenAI {e.name} is required") from e
             else:
                 raise e
-

@@ -1,6 +1,7 @@
 # Core Abilities
 PR-Insight utilizes a variety of core abilities to provide a comprehensive and efficient code review experience. These abilities include:
 
+- [Fetching ticket context](https://pr-insight-docs.khulnasoft.com/core-abilities/fetching_ticket_context/)
 - [Local and global metadata](https://pr-insight-docs.khulnasoft.com/core-abilities/metadata/)
 - [Dynamic context](https://pr-insight-docs.khulnasoft.com/core-abilities/dynamic_context/)
 - [Self-reflection](https://pr-insight-docs.khulnasoft.com/core-abilities/self_reflection/)
@@ -13,11 +14,11 @@ PR-Insight utilizes a variety of core abilities to provide a comprehensive and e
 
 ## Blogs
 
-Here are some additional technical blogs from Khulnasoft, that delve deeper into the core capabilities and features of Large Language Models (LLMs) when applied to coding tasks. 
+Here are some additional technical blogs from KhulnaSoft, that delve deeper into the core capabilities and features of Large Language Models (LLMs) when applied to coding tasks.
 These resources provide more comprehensive insights into leveraging LLMs for software development.
 
 ### Code Generation and LLMs
-- [State-of-the-art Code Generation with AlphaKhulnaSoft – From Prompt Engineering to Flow Engineering](https://www.khulnasoft.com/blog/khulnasoftflow-state-of-the-art-code-generation-for-code-contests/)
+- [State-of-the-art Code Generation with AlphaKhulnaSoft – From Prompt Engineering to Flow Engineering](https://www.khulnasoft.com/blog/pr-insightflow-state-of-the-art-code-generation-for-code-contests/)
 - [RAG for a Codebase with 10k Repos](https://www.khulnasoft.com/blog/rag-for-large-scale-code-repos/)
 
 ### Development Processes

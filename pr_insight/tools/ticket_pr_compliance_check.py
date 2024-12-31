@@ -6,15 +6,14 @@ from pr_insight.git_providers import GithubProvider
 from pr_insight.log import get_logger
 
 # Compile the regex pattern once, outside the function
-GITHUB_TICKET_PATTERN = re.compile(
-     r'(https://github[^/]+/[^/]+/[^/]+/issues/\d+)|(\b(\w+)/(\w+)#(\d+)\b)|(#\d+)'
-)
+GITHUB_TICKET_PATTERN = re.compile(r"(https://github[^/]+/[^/]+/[^/]+/issues/\d+)|(\b(\w+)/(\w+)#(\d+)\b)|(#\d+)")
+
 
 def find_jira_tickets(text):
     # Regular expression patterns for JIRA tickets
     patterns = [
-        r'\b[A-Z]{2,10}-\d{1,7}\b',  # Standard JIRA ticket format (e.g., PROJ-123)
-        r'(?:https?://[^\s/]+/browse/)?([A-Z]{2,10}-\d{1,7})\b'  # JIRA URL or just the ticket
+        r"\b[A-Z]{2,10}-\d{1,7}\b",  # Standard JIRA ticket format (e.g., PROJ-123)
+        r"(?:https?://[^\s/]+/browse/)?([A-Z]{2,10}-\d{1,7})\b",  # JIRA URL or just the ticket
     ]
 
     tickets = set()
@@ -32,7 +31,7 @@ def find_jira_tickets(text):
     return list(tickets)
 
 
-def extract_ticket_links_from_pr_description(pr_description, repo_path, base_url_html='https://github.com'):
+def extract_ticket_links_from_pr_description(pr_description, repo_path, base_url_html="https://github.com"):
     """
     Extract all ticket links from PR description
     """
@@ -52,8 +51,7 @@ def extract_ticket_links_from_pr_description(pr_description, repo_path, base_url
                 if issue_number.isdigit() and len(issue_number) < 5 and repo_path:
                     github_tickets.add(f'{base_url_html.strip("/")}/{repo_path}/issues/{issue_number}')
     except Exception as e:
-        get_logger().error(f"Error extracting tickets error= {e}",
-                           artifact={"traceback": traceback.format_exc()})
+        get_logger().error(f"Error extracting tickets error= {e}", artifact={"traceback": traceback.format_exc()})
 
     return list(github_tickets)
 
@@ -74,8 +72,7 @@ async def extract_tickets(git_provider):
                     try:
                         issue_main = git_provider.repo_obj.get_issue(original_issue_number)
                     except Exception as e:
-                        get_logger().error(f"Error getting issue_main error= {e}",
-                                           artifact={"traceback": traceback.format_exc()})
+                        get_logger().error(f"Error getting issue_main error= {e}", artifact={"traceback": traceback.format_exc()})
                         continue
 
                     # clip issue_main.body max length
@@ -94,32 +91,35 @@ async def extract_tickets(git_provider):
                             else:
                                 labels.append(label.name)
                     except Exception as e:
-                        get_logger().error(f"Error extracting labels error= {e}",
-                                           artifact={"traceback": traceback.format_exc()})
+                        get_logger().error(f"Error extracting labels error= {e}", artifact={"traceback": traceback.format_exc()})
                     tickets_content.append(
-                        {'ticket_id': issue_main.number,
-                         'ticket_url': ticket, 'title': issue_main.title, 'body': issue_body_str,
-                         'labels': ", ".join(labels)})
+                        {
+                            "ticket_id": issue_main.number,
+                            "ticket_url": ticket,
+                            "title": issue_main.title,
+                            "body": issue_body_str,
+                            "labels": ", ".join(labels),
+                        }
+                    )
                 return tickets_content
 
     except Exception as e:
-        get_logger().error(f"Error extracting tickets error= {e}",
-                           artifact={"traceback": traceback.format_exc()})
+        get_logger().error(f"Error extracting tickets error= {e}", artifact={"traceback": traceback.format_exc()})
 
 
 async def extract_and_cache_pr_tickets(git_provider, vars):
-    if get_settings().get('config.require_ticket_analysis_review', False):
+    if not get_settings().get("pr_reviewer.require_ticket_analysis_review", False):
         return
-    related_tickets = get_settings().get('related_tickets', [])
+    related_tickets = get_settings().get("related_tickets", [])
     if not related_tickets:
         tickets_content = await extract_tickets(git_provider)
         if tickets_content:
             get_logger().info("Extracted tickets from PR description", artifact={"tickets": tickets_content})
-            vars['related_tickets'] = tickets_content
-            get_settings().set('related_tickets', tickets_content)
+            vars["related_tickets"] = tickets_content
+            get_settings().set("related_tickets", tickets_content)
     else:  # if tickets are already cached
         get_logger().info("Using cached tickets", artifact={"tickets": related_tickets})
-        vars['related_tickets'] = related_tickets
+        vars["related_tickets"] = related_tickets
 
 
 def check_tickets_relevancy():

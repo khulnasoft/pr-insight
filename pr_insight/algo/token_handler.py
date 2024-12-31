@@ -1,8 +1,9 @@
-from jinja2 import Environment, StrictUndefined
-from tiktoken import encoding_for_model, get_encoding
-from pr_insight.config_loader import get_settings
 from threading import Lock
 
+from jinja2 import Environment, StrictUndefined
+from tiktoken import encoding_for_model, get_encoding
+
+from pr_insight.config_loader import get_settings
 from pr_insight.log import get_logger
 
 
@@ -18,8 +19,7 @@ class TokenEncoder:
             with cls._lock:  # Lock acquisition to ensure thread safety
                 if cls._encoder_instance is None or model != cls._model:
                     cls._model = model
-                    cls._encoder_instance = encoding_for_model(cls._model) if "gpt" in cls._model else get_encoding(
-                        "cl100k_base")
+                    cls._encoder_instance = encoding_for_model(cls._model) if "gpt" in cls._model else get_encoding("cl100k_base")
         return cls._encoder_instance
 
 

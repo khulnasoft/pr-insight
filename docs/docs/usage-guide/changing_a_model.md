@@ -1,15 +1,14 @@
 ## Changing a model
 
-See [here](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/algo/__init__.py) for a list of available models.
-To use a different model than the default (GPT-4), you need to edit in the [configuration file](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml#L2) the fields:
+See [here](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/algo/__init__.py) for a list of available models.
+To use a different model than the default (GPT-4), you need to edit in the [configuration file](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml#L2) the fields:
 ```
 [config]
 model = "..."
-model_turbo = "..."
 fallback_models = ["..."]
 ```
 
-For models and environments not from OpenAI, you might need to provide additional keys and other parameters. 
+For models and environments not from OpenAI, you might need to provide additional keys and other parameters.
 You can give parameters via a configuration file (see below for instructions), or from environment variables. See [litellm documentation](https://litellm.vercel.app/docs/proxy/quick_start#supported-llms) for the environment variables relevant per model.
 
 ### Azure
@@ -27,9 +26,8 @@ deployment_id = ""  # The deployment name you chose when you deployed the engine
 and set in your configuration file:
 ```
 [config]
-model="" # the OpenAI model you've deployed on Azure (e.g. gpt-3.5-turbo)
-model_turbo="" # the OpenAI model you've deployed on Azure (e.g. gpt-3.5-turbo)
-fallback_models=["..."] # the OpenAI model you've deployed on Azure (e.g. gpt-3.5-turbo)
+model="" # the OpenAI model you've deployed on Azure (e.g. gpt-4o)
+fallback_models=["..."]
 ```
 
 ### Hugging Face
@@ -52,7 +50,6 @@ MAX_TOKENS={
 
 [config] # in configuration.toml
 model = "ollama/llama2"
-model_turbo = "ollama/llama2"
 fallback_models=["ollama/llama2"]
 
 [ollama] # in .secrets.toml
@@ -76,7 +73,6 @@ MAX_TOKENS={
 }
 [config] # in configuration.toml
 model = "huggingface/meta-llama/Llama-2-7b-chat-hf"
-model_turbo = "huggingface/meta-llama/Llama-2-7b-chat-hf"
 fallback_models=["huggingface/meta-llama/Llama-2-7b-chat-hf"]
 
 [huggingface] # in .secrets.toml
@@ -91,7 +87,6 @@ To use Llama2 model with Replicate, for example, set:
 ```
 [config] # in configuration.toml
 model = "replicate/llama-2-70b-chat:2c1608e18606fad2812020dc541930f2d0495ce32eee50074220b87300bc16e1"
-model_turbo = "replicate/llama-2-70b-chat:2c1608e18606fad2812020dc541930f2d0495ce32eee50074220b87300bc16e1"
 fallback_models=["replicate/llama-2-70b-chat:2c1608e18606fad2812020dc541930f2d0495ce32eee50074220b87300bc16e1"]
 [replicate] # in .secrets.toml
 key = ...
@@ -99,7 +94,7 @@ key = ...
 (you can obtain a Llama2 key from [here](https://replicate.com/replicate/llama-2-70b-chat/api))
 
 
-Also, review the [AiHandler](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/algo/ai_handler.py) file for instructions on how to set keys for other models.
+Also, review the [AiHandler](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/algo/ai_handler.py) file for instructions on how to set keys for other models.
 
 ### Groq
 
@@ -107,8 +102,7 @@ To use Llama3 model with Groq, for example, set:
 ```
 [config] # in configuration.toml
 model = "llama3-70b-8192"
-model_turbo = "llama3-70b-8192"
-fallback_models = ["groq/llama3-70b-8192"] 
+fallback_models = ["groq/llama3-70b-8192"]
 [groq] # in .secrets.toml
 key = ... # your Groq api key
 ```
@@ -118,10 +112,9 @@ key = ... # your Groq api key
 
 To use Google's Vertex AI platform and its associated models (chat-bison/codechat-bison) set:
 
-``` 
+```
 [config] # in configuration.toml
 model = "vertex_ai/codechat-bison"
-model_turbo = "vertex_ai/codechat-bison"
 fallback_models="vertex_ai/codechat-bison"
 
 [vertexai] # in .secrets.toml
@@ -140,7 +133,6 @@ To use [Google AI Studio](https://aistudio.google.com/) models, set the relevant
 ```toml
 [config] # in configuration.toml
 model="google_ai_studio/gemini-1.5-flash"
-model_turbo="google_ai_studio/gemini-1.5-flash"
 fallback_models=["google_ai_studio/gemini-1.5-flash"]
 
 [google_ai_studio] # in .secrets.toml
@@ -156,7 +148,6 @@ To use Anthropic models, set the relevant models in the configuration section of
 ```
 [config]
 model="anthropic/claude-3-opus-20240229"
-model_turbo="anthropic/claude-3-opus-20240229"
 fallback_models=["anthropic/claude-3-opus-20240229"]
 ```
 
@@ -170,10 +161,9 @@ KEY = "..."
 
 To use Amazon Bedrock and its foundational models, add the below configuration:
 
-``` 
+```
 [config] # in configuration.toml
 model="bedrock/anthropic.claude-3-sonnet-20240229-v1:0"
-model_turbo="bedrock/anthropic.claude-3-sonnet-20240229-v1:0"
 fallback_models=["bedrock/anthropic.claude-v2:1"]
 ```
 
@@ -189,13 +179,12 @@ AWS session is automatically authenticated from your environment, but you can al
 
 ### Custom models
 
-If the relevant model doesn't appear [here](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/algo/__init__.py), you can still use it as a custom model:
+If the relevant model doesn't appear [here](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/algo/__init__.py), you can still use it as a custom model:
 
 (1) Set the model name in the configuration file:
 ```
 [config]
 model="custom_model_name"
-model_turbo="custom_model_name"
 fallback_models=["custom_model_name"]
 ```
 (2) Set the maximal tokens for the model:

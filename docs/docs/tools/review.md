@@ -203,5 +203,3 @@ If enabled, the `review` tool can approve a PR when a specific comment, `/review
 !!! tip  "Code suggestions"
 
     The `review` tool previously included a legacy feature for providing code suggestions (controlled by `--pr_reviewer.num_code_suggestion`). This functionality has been deprecated and replaced by the [`improve`](./improve.md) tool, which offers higher quality and more actionable code suggestions.
-
-    
