@@ -62,9 +62,9 @@ Here are the prompts, and example outputs, used as input-output pairs to fine-tu
 
 | Tool     | Prompt                                                                                                     | Example output |
 |----------|------------------------------------------------------------------------------------------------------------|----------------|
-| Describe | [link](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/pr_description_prompts.toml) | [link](https://github.com/Khulnasoft/pr-insight/pull/910#issue-2303989601)           |
-| Review   | [link](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/pr_reviewer_prompts.toml) | [link](https://github.com/Khulnasoft/pr-insight/pull/910#issuecomment-2118761219)           |
-| Improve  | [link](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/pr_code_suggestions_prompts.toml) | [link](https://github.com/Khulnasoft/pr-insight/pull/910#issuecomment-2118761309)           |
+| Describe | [link](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/pr_description_prompts.toml) | [link](https://github.com/KhulnaSoft/pr-insight/pull/910#issue-2303989601)           |
+| Review   | [link](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/pr_reviewer_prompts.toml) | [link](https://github.com/KhulnaSoft/pr-insight/pull/910#issuecomment-2118761219)           |
+| Improve  | [link](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/pr_code_suggestions_prompts.toml) | [link](https://github.com/KhulnaSoft/pr-insight/pull/910#issuecomment-2118761309)           |
 
 ### Evaluation dataset
 
@@ -75,7 +75,7 @@ Here are the prompts, and example outputs, used as input-output pairs to fine-tu
 <br>
 
 We experimented with three model as judges: `gpt-4-turbo-2024-04-09`, `gpt-4o`, and `claude-3-opus-20240229`. All three produced similar results, with the same ranking order. This strengthens the validity of our testing protocol.
-The evaluation prompt can be found [here](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/pr_evaluate_prompt_response.toml)
+The evaluation prompt can be found [here](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/pr_evaluate_prompt_response.toml)
 
 Here is an example of a judge model feedback:
 
@@ -84,10 +84,10 @@ command: improve
 model1_score: 9,
 model2_score: 6,
 why: |
-  Response 1 is better because it provides more actionable and specific suggestions that directly 
-  enhance the code's maintainability, performance, and best practices. For example, it suggests 
-  using a variable for reusable widget instances and using named routes for navigation, which 
-  are practical improvements. In contrast, Response 2 focuses more on general advice and less 
-  actionable suggestions, such as changing variable names and adding comments, which are less 
+  Response 1 is better because it provides more actionable and specific suggestions that directly
+  enhance the code's maintainability, performance, and best practices. For example, it suggests
+  using a variable for reusable widget instances and using named routes for navigation, which
+  are practical improvements. In contrast, Response 2 focuses more on general advice and less
+  actionable suggestions, such as changing variable names and adding comments, which are less
   critical for immediate code improvement."
 ```

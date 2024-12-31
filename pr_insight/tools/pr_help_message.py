@@ -9,41 +9,39 @@ from pr_insight.algo.ai_handlers.base_ai_handler import BaseAiHandler
 from pr_insight.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
 from pr_insight.algo.pr_processing import retry_with_fallback_models
 from pr_insight.algo.token_handler import TokenHandler
-from pr_insight.algo.utils import ModelType, load_yaml, clip_tokens
+from pr_insight.algo.utils import ModelType, clip_tokens, load_yaml
 from pr_insight.config_loader import get_settings
-from pr_insight.git_providers import GithubProvider, BitbucketServerProvider, \
-    get_git_provider_with_context
+from pr_insight.git_providers import (BitbucketServerProvider, GithubProvider,
+                                      get_git_provider_with_context)
 from pr_insight.log import get_logger
 
 
 def extract_header(snippet):
-    res = ''
-    lines = snippet.split('===Snippet content===')[0].split('\n')
-    highest_header = ''
-    highest_level = float('inf')
+    res = ""
+    lines = snippet.split("===Snippet content===")[0].split("\n")
+    highest_header = ""
+    highest_level = float("inf")
     for line in lines[::-1]:
         line = line.strip()
-        if line.startswith('Header '):
-            highest_header = line.split(': ')[1]
+        if line.startswith("Header "):
+            highest_header = line.split(": ")[1]
     if highest_header:
         res = f"#{highest_header.lower().replace(' ', '-')}"
     return res
+
 
 class PRHelpMessage:
     def __init__(self, pr_url: str, args=None, ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
         self.git_provider = get_git_provider_with_context(pr_url)
         self.ai_handler = ai_handler()
         self.question_str = self.parse_args(args)
-        self.num_retrieved_snippets = get_settings().get('pr_help.num_retrieved_snippets', 5)
+        self.num_retrieved_snippets = get_settings().get("pr_help.num_retrieved_snippets", 5)
         if self.question_str:
             self.vars = {
                 "question": self.question_str,
                 "snippets": "",
             }
-            self.token_handler = TokenHandler(None,
-                                              self.vars,
-                                              get_settings().pr_help_prompts.system,
-                                              get_settings().pr_help_prompts.user)
+            self.token_handler = TokenHandler(None, self.vars, get_settings().pr_help_prompts.system, get_settings().pr_help_prompts.user)
 
     async def _prepare_prediction(self, model: str):
         try:
@@ -51,8 +49,7 @@ class PRHelpMessage:
             environment = Environment(undefined=StrictUndefined)
             system_prompt = environment.from_string(get_settings().pr_help_prompts.system).render(variables)
             user_prompt = environment.from_string(get_settings().pr_help_prompts.user).render(variables)
-            response, finish_reason = await self.ai_handler.chat_completion(
-                model=model, temperature=get_settings().config.temperature, system=system_prompt, user=user_prompt)
+            response, finish_reason = await self.ai_handler.chat_completion(model=model, temperature=get_settings().config.temperature, system=system_prompt, user=user_prompt)
             return response
         except Exception as e:
             get_logger().error(f"Error while preparing prediction: {e}")
@@ -68,37 +65,41 @@ class PRHelpMessage:
     async def run(self):
         try:
             if self.question_str:
-                get_logger().info(f'Answering a PR question about the PR {self.git_provider.pr_url} ')
+                get_logger().info(f"Answering a PR question about the PR {self.git_provider.pr_url} ")
 
-                if not get_settings().get('openai.key'):
+                if not get_settings().get("openai.key"):
                     if get_settings().config.publish_output:
-                        self.git_provider.publish_comment(
-                            "The `Help` tool chat feature requires an OpenAI API key for calculating embeddings")
+                        self.git_provider.publish_comment("The `Help` tool chat feature requires an OpenAI API key for calculating embeddings")
                     else:
                         get_logger().error("The `Help` tool chat feature requires an OpenAI API key for calculating embeddings")
                     return
 
                 # current path
-                docs_path= Path(__file__).parent.parent.parent / 'docs' / 'docs'
+                docs_path = Path(__file__).parent.parent.parent / "docs" / "docs"
                 # get all the 'md' files inside docs_path and its subdirectories
-                md_files = list(docs_path.glob('**/*.md'))
-                folders_to_exclude = ['/finetuning_benchmark/']
-                files_to_exclude = {'EXAMPLE_BEST_PRACTICE.md', 'compression_strategy.md', '/docs/overview/index.md'}
+                md_files = list(docs_path.glob("**/*.md"))
+                folders_to_exclude = ["/finetuning_benchmark/"]
+                files_to_exclude = {"EXAMPLE_BEST_PRACTICE.md", "compression_strategy.md", "/docs/overview/index.md"}
                 md_files = [file for file in md_files if not any(folder in str(file) for folder in folders_to_exclude) and not any(file.name == file_to_exclude for file_to_exclude in files_to_exclude)]
 
                 # sort the 'md_files' so that 'priority_files' will be at the top
-                priority_files_strings = ['/docs/index.md', '/usage-guide', 'tools/describe.md', 'tools/review.md',
-                                          'tools/improve.md', '/faq']
-                md_files_priority = [file for file in md_files if
-                                     any(priority_string in str(file) for priority_string in priority_files_strings)]
+                priority_files_strings = [
+                    "/docs/index.md",
+                    "/usage-guide",
+                    "tools/describe.md",
+                    "tools/review.md",
+                    "tools/improve.md",
+                    "/faq",
+                ]
+                md_files_priority = [file for file in md_files if any(priority_string in str(file) for priority_string in priority_files_strings)]
                 md_files_not_priority = [file for file in md_files if file not in md_files_priority]
                 md_files = md_files_priority + md_files_not_priority
 
                 docs_prompt = ""
                 for file in md_files:
                     try:
-                        with open(file, 'r') as f:
-                            file_path = str(file).replace(str(docs_path), '')
+                        with open(file, "r") as f:
+                            file_path = str(file).replace(str(docs_path), "")
                             docs_prompt += f"\n==file name==\n\n{file_path}\n\n==file content==\n\n{f.read().strip()}\n=========\n\n"
                     except Exception as e:
                         get_logger().error(f"Error while reading the file {file}: {e}")
@@ -106,18 +107,18 @@ class PRHelpMessage:
                 get_logger().debug(f"Token count of full documentation website: {token_count}")
 
                 model = get_settings().config.model
-                max_tokens_full = MAX_TOKENS[model] # note - here we take the actual max tokens, without any reductions. we do aim to get the full documentation website in the prompt
+                max_tokens_full = MAX_TOKENS[model]  # note - here we take the actual max tokens, without any reductions. we do aim to get the full documentation website in the prompt
                 delta_output = 2000
                 if token_count > max_tokens_full - delta_output:
                     get_logger().info(f"Token count {token_count} exceeds the limit {max_tokens_full - delta_output}. Skipping the PR Help message.")
                     docs_prompt = clip_tokens(docs_prompt, max_tokens_full - delta_output)
-                self.vars['snippets'] = docs_prompt.strip()
+                self.vars["snippets"] = docs_prompt.strip()
 
                 # run the AI model
-                response = await retry_with_fallback_models(self._prepare_prediction, model_type=ModelType.REGULAR)
+                response = await retry_with_fallback_models(self._prepare_prediction, model_type=ModelType.WEAK)
                 response_yaml = load_yaml(response)
-                response_str = response_yaml.get('response')
-                relevant_sections = response_yaml.get('relevant_sections')
+                response_str = response_yaml.get("response")
+                relevant_sections = response_yaml.get("relevant_sections")
 
                 if not relevant_sections:
                     get_logger().info(f"Could not find relevant answer for the question: {self.question_str}")
@@ -136,13 +137,26 @@ class PRHelpMessage:
                     answer_str += f"#### Relevant Sources:\n\n"
                     base_path = "https://pr-insight-docs.khulnasoft.com/"
                     for section in relevant_sections:
-                        file = section.get('file_name').strip().removesuffix('.md')
-                        if str(section['relevant_section_header_string']).strip():
-                            markdown_header = section['relevant_section_header_string'].strip().strip('#').strip().lower().replace(' ', '-').replace("'", '').replace('(', '').replace(')', '').replace(',', '').replace('.', '').replace('?', '').replace('!', '')
+                        file = section.get("file_name").strip().removesuffix(".md")
+                        if str(section["relevant_section_header_string"]).strip():
+                            markdown_header = (
+                                section["relevant_section_header_string"]
+                                .strip()
+                                .strip("#")
+                                .strip()
+                                .lower()
+                                .replace(" ", "-")
+                                .replace("'", "")
+                                .replace("(", "")
+                                .replace(")", "")
+                                .replace(",", "")
+                                .replace(".", "")
+                                .replace("?", "")
+                                .replace("!", "")
+                            )
                             answer_str += f"> - {base_path}{file}#{markdown_header}\n"
                         else:
                             answer_str += f"> - {base_path}{file}\n"
-
 
                 # publish the answer
                 if get_settings().config.publish_output:
@@ -151,16 +165,14 @@ class PRHelpMessage:
                     get_logger().info(f"Answer:\n{answer_str}")
             else:
                 if not isinstance(self.git_provider, BitbucketServerProvider) and not self.git_provider.is_supported("gfm_markdown"):
-                    self.git_provider.publish_comment(
-                        "The `Help` tool requires gfm markdown, which is not supported by your code platform.")
+                    self.git_provider.publish_comment("The `Help` tool requires gfm markdown, which is not supported by your code platform.")
                     return
 
-                get_logger().info('Getting PR Help Message...')
-                relevant_configs = {'pr_help': dict(get_settings().pr_help),
-                                    'config': dict(get_settings().config)}
+                get_logger().info("Getting PR Help Message...")
+                relevant_configs = {"pr_help": dict(get_settings().pr_help), "config": dict(get_settings().config)}
                 get_logger().debug("Relevant configs", artifacts=relevant_configs)
                 pr_comment = "## PR Insight Walkthrough 🤖\n\n"
-                pr_comment += "Welcome to the PR Insight, an AI-powered tool for automated pull request analysis, feedback, suggestions and more."""
+                pr_comment += "Welcome to the PR Insight, an AI-powered tool for automated pull request analysis, feedback, suggestions and more." ""
                 pr_comment += "\n\nHere is a list of tools you can use to interact with the PR Insight:\n"
                 base_path = "https://pr-insight-docs.khulnasoft.com/tools"
 
@@ -194,7 +206,7 @@ class PRHelpMessage:
                 descriptions.append("Generates custom suggestions for improving the PR code, derived only from a specific guidelines prompt defined by the user")
                 descriptions.append("Automatically retrieves and presents similar issues")
 
-                commands  =[]
+                commands = []
                 commands.append("`/describe`")
                 commands.append("`/review`")
                 commands.append("`/improve`")
@@ -227,7 +239,7 @@ class PRHelpMessage:
                 checkbox_list.append("[*]")
                 checkbox_list.append("[*]")
 
-                if isinstance(self.git_provider, GithubProvider) and not get_settings().config.get('disable_checkboxes', False):
+                if isinstance(self.git_provider, GithubProvider) and not get_settings().config.get("disable_checkboxes", False):
                     pr_comment += f"<table><tr align='left'><th align='left'>Tool</th><th align='left'>Description</th><th align='left'>Trigger Interactively :gem:</th></tr>"
                     for i in range(len(tool_names)):
                         pr_comment += f"\n<tr><td align='left'>\n\n<strong>{tool_names[i]}</strong></td>\n<td>{descriptions[i]}</td>\n<td>\n\n{checkbox_list[i]}\n</td></tr>"
@@ -257,7 +269,7 @@ class PRHelpMessage:
         relevant_snippets_full_header = []
         th = 0.75
         for s in sim_results:
-            page = s[0].metadata['source']
+            page = s[0].metadata["source"]
             content = s[0].page_content
             score = s[1]
             relevant_snippets_full.append(content)

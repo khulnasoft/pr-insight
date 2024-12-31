@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: PR Insight action step
         id: prinsight
-        uses: Khulnasoft/pr-insight@main
+        uses: KhulnaSoft/pr-insight@main
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -39,7 +39,7 @@ The GITHUB_TOKEN secret is automatically created by GitHub.
 3) Merge this change to your main branch.
 When you open your next PR, you should see a comment from `github-actions` bot with a review of your PR, and instructions on how to use the rest of the tools.
 
-4) You may configure PR-Insight by adding environment variables under the env section corresponding to any configurable property in the [configuration](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) file. Some examples:
+4) You may configure PR-Insight by adding environment variables under the env section corresponding to any configurable property in the [configuration](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) file. Some examples:
 ```yaml
       env:
         # ... previous environment values
@@ -60,7 +60,7 @@ See detailed usage instructions in the [USAGE GUIDE](https://pr-insight-docs.khu
             uses: docker://khulnasoft/pr-insight:0.23-github_action
     ...
     ```
-    
+
     For enhanced security, you can also specify the Docker image by its [digest](https://hub.docker.com/repository/docker/khulnasoft/pr-insight/tags):
     ```yaml
     ...
@@ -71,17 +71,17 @@ See detailed usage instructions in the [USAGE GUIDE](https://pr-insight-docs.khu
     ...
     ```
 
-### Action for GitHub enterprise server 
+### Action for GitHub enterprise server
 !!! tip ""
     To use the action with a GitHub enterprise server, add an environment variable `GITHUB.BASE_URL` with the API URL of your GitHub server.
-    
+
     For example, if your GitHub server is at `https://github.mycompany.com`, add the following to your workflow file:
     ```yaml
           env:
             # ... previous environment values
             GITHUB.BASE_URL: "https://github.mycompany.com/api/v3"
     ```
-    
+
 
 ---
 
@@ -114,11 +114,11 @@ WEBHOOK_SECRET=$(python -c "import secrets; print(secrets.token_hex(10))")
 4) Clone this repository:
 
 ```
-git clone https://github.com/Khulnasoft/pr-insight.git
+git clone https://github.com/KhulnaSoft/pr-insight.git
 ```
 
 5) Copy the secrets template file and fill in the following:
-    
+
 ```
 cp pr_insight/settings/.secrets_template.toml pr_insight/settings/.secrets.toml
 # Edit .secrets.toml file
@@ -128,7 +128,7 @@ cp pr_insight/settings/.secrets_template.toml pr_insight/settings/.secrets.toml
    - Copy your app's private key to the private_key field.
    - Copy your app's ID to the app_id field.
    - Copy your app's webhook secret to the webhook_secret field.
-   - Set deployment_type to 'app' in [configuration.toml](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml)
+   - Set deployment_type to 'app' in [configuration.toml](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml)
 
     > The .secrets.toml file is not copied to the Docker image by default, and is only used for local development.
     > If you want to use the .secrets.toml file in your Docker image, you can add remove it from the .dockerignore file.
@@ -147,7 +147,7 @@ cp pr_insight/settings/.secrets_template.toml pr_insight/settings/.secrets.toml
                 - mountPath: /app/pr_insight/settings_prod
                   name: settings-volume
     ```
-    
+
     > Another option is to set the secrets as environment variables in your deployment environment, for example `OPENAI.KEY` and `GITHUB.USER_TOKEN`.
 
 6) Build a Docker image for the app and optionally push it to a Docker repository. We'll use Dockerhub as an example:
@@ -190,7 +190,7 @@ For example: `GITHUB.WEBHOOK_SECRET` --> `GITHUB__WEBHOOK_SECRET`
     ```
 4. Create a lambda function that uses the uploaded image. Set the lambda timeout to be at least 3m.
 5. Configure the lambda function to have a Function URL.
-6. In the environment variables of the Lambda function, specify `AZURE_DEVOPS_CACHE_DIR` to a writable location such as /tmp. (see [link](https://github.com/Khulnasoft/pr-insight/pull/450#issuecomment-1840242269))
+6. In the environment variables of the Lambda function, specify `AZURE_DEVOPS_CACHE_DIR` to a writable location such as /tmp. (see [link](https://github.com/KhulnaSoft/pr-insight/pull/450#issuecomment-1840242269))
 7. Go back to steps 8-9 of [Method 5](#run-as-a-github-app) with the function url as your Webhook URL.
     The Webhook URL would look like `https://<LAMBDA_FUNCTION_URL>/api/v1/github_webhooks`
 

@@ -40,6 +40,7 @@ Note that if your base branches are not protected, don't set the variables as `p
 
 > **Note**: The `$CI_SERVER_FQDN` variable is available starting from GitLab version 16.10. If you're using an earlier version, this variable will not be available. However, you can combine `$CI_SERVER_HOST` and `$CI_SERVER_PORT` to achieve the same result. Please ensure you're using a compatible version or adjust your configuration.
 
+
 ## Run a GitLab webhook server
 
 1. From the GitLab workspace or group, create an access token with "Reporter" role ("Developer" if using Pro version of the insight) and "api" scope.
@@ -53,7 +54,7 @@ WEBHOOK_SECRET=$(python -c "import secrets; print(secrets.token_hex(10))")
 3. Clone this repository:
 
 ```
-git clone https://github.com/Khulnasoft/pr-insight.git
+git clone https://github.com/KhulnaSoft/pr-insight.git
 ```
 
 4. Prepare variables and secrets. Skip this step if you plan on settings these as environment variables when running the insight:

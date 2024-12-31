@@ -4,20 +4,21 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pr-insight"
-version = "0.2.4"
+version = "0.2.5"
 
-authors = [{name= "KhulnaSoft", email = "support@khulnasoft.com"}]
+authors = [{ name = "KhulnaSoft", email = "info@khulnasoft.com" }]
 
 maintainers = [
-  {name = "KhulnaSoft DevOps", email = "info@khulnasoft.com"},
-  {name = "NextLinux", email = "connect@next-linux.systems"},
+  { name = "KhulnaSoft, Lab", email = "support@khulnasoft.com" },
+  { name = "Md Abdullah Al-Mamun", email = "iconmamundentist@gmail.com" },
+  { name = "Md Sulaiman", email = "dev.sulaiman@icloud.com" },
 ]
 
 description = "KhulnaSoft PR-Insight aims to help efficiently review and handle pull requests, by providing AI feedbacks and suggestions."
 readme = "README.md"
 requires-python = ">=3.10"
 keywords = ["AI", "Insights", "Pull Request", "Automation", "Code Review"]
-license = {name = "Apache 2.0", file = "LICENSE"}
+license = { name = "Apache 2.0", file = "LICENSE" }
 
 classifiers = [
   "Intended Audience :: Developers",
@@ -25,12 +26,11 @@ classifiers = [
 ]
 dynamic = ["dependencies"]
 
-
 [tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+dependencies = { file = ["requirements.txt"] }
 
 [project.urls]
-"Homepage" = "https://github.com/Khulnasoft/pr-insight"
+"Homepage" = "https://github.com/KhulnaSoft/pr-insight"
 "Documentation" = "https://pr-insight-docs.khulnasoft.com/"
 
 [tool.setuptools]
@@ -39,41 +39,44 @@ license-files = ["LICENSE"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["pr_insight*"] # include pr_insight and any sub-packages it finds under it.
+include = [
+  "pr_insight*",
+] # include pr_insight and any sub-packages it finds under it.
 
 [project.scripts]
 pr-insight = "pr_insight.cli:run"
 
-
 [tool.ruff]
+line-length = 209
 
-line-length = 120
-
-select = [
-  "E",  # Pyflakes
-  "F",  # Pyflakes
-  "B",  # flake8-bugbear
-  "I001",  # isort basic checks
-  "I002",  # isort missing-required-import
-  ]
+lint.select = [
+  "E",    # Pyflakes
+  "F",    # Pyflakes
+  "B",    # flake8-bugbear
+  "I001", # isort basic checks
+  "I002", # isort missing-required-import
+]
 
 # First commit - only fixing isort
-fixable = [
-  "I001",  # isort basic checks
+lint.fixable = [
+  "I001", # isort basic checks
 ]
 
-unfixable = [
-  "B",  # Avoid trying to fix flake8-bugbear (`B`) violations.
-  ]
-
-exclude = [
-  "api/code_completions",
+lint.unfixable = [
+  "B", # Avoid trying to fix flake8-bugbear (`B`) violations.
 ]
 
-ignore = [
-  "E999", "B008"
-]
+lint.exclude = ["api/code_completions"]
 
-[tool.ruff.per-file-ignores]
-"__init__.py" = ["E402"]  # Ignore `E402` (import violations) in all `__init__.py` files, and in `path/to/file.py`.
-# TODO: should decide if maybe not to ignore these.
+lint.ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = [
+  "E402",
+  "E501",
+] # Ignore `E402` (import violations) in all `__init__.py` files, and in `path/to/file.py`.
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101"]
+tests = []

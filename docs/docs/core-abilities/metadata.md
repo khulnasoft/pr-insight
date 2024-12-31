@@ -21,7 +21,7 @@ By default, the first command that PR-Insight executes is [`describe`](https://p
 These AI-generated outputs are now considered as part of the PR metadata, and can be used in subsequent commands like `review` and `improve`.
 This effectively enables multi-stage chain-of-thought analysis, without doing any additional API calls which will cost time and money.
 
-For example, when generating code suggestions for different files, PR-Insight can inject the AI-generated ["Changes walkthrough"](https://github.com/Khulnasoft/pr-insight/pull/1202#issue-2511546839) file summary in the prompt:
+For example, when generating code suggestions for different files, PR-Insight can inject the AI-generated ["Changes walkthrough"](https://github.com/KhulnaSoft/pr-insight/pull/1202#issue-2511546839) file summary in the prompt:
 
 ```
 ## File: 'src/file1.py'

@@ -1,9 +1,11 @@
-import pytest
 from unittest.mock import patch
-from pr_insight.git_providers.codecommit_provider import CodeCommitFile
-from pr_insight.git_providers.codecommit_provider import CodeCommitProvider
-from pr_insight.git_providers.codecommit_provider import PullRequestCCMimic
+
+import pytest
+
 from pr_insight.algo.types import EDIT_TYPE, FilePatchInfo
+from pr_insight.git_providers.codecommit_provider import (CodeCommitFile,
+                                                          CodeCommitProvider,
+                                                          PullRequestCCMimic)
 
 
 class TestCodeCommitFile:

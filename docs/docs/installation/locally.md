@@ -19,7 +19,7 @@ def main():
     provider = "github" # github/gitlab/bitbucket/azure_devops
     user_token = "..."  #  user token
     openai_key = "..."  # OpenAI key
-    pr_url = "..."      # PR URL, for example 'https://github.com/Khulnasoft/pr-insight/pull/809'
+    pr_url = "..."      # PR URL, for example 'https://github.com/KhulnaSoft/pr-insight/pull/809'
     command = "/review" # Command to run (e.g. '/review', '/describe', '/ask="What is the purpose of this PR?"', ...)
 
     # Setting the configurations
@@ -45,7 +45,7 @@ To invoke a tool (for example `review`), you can run directly from the Docker im
     ```
     docker run --rm -it -e OPENAI.KEY=<your key> -e GITHUB.USER_TOKEN=<your token> khulnasoft/pr-insight:latest --pr_url <pr_url> review
     ```
-    If you are using GitHub enterprise server, you need to specify the custom url as variable.    
+    If you are using GitHub enterprise server, you need to specify the custom url as variable.
     For example, if your GitHub server is at `https://github.mycompany.com`, add the following to the command:
     ```
     -e GITHUB.BASE_URL=https://github.mycompany.com/api/v3
@@ -58,7 +58,7 @@ To invoke a tool (for example `review`), you can run directly from the Docker im
 
     If you have a dedicated GitLab instance, you need to specify the custom url as variable:
     ```
-    -e GITLAB.URL=<your gitlab instance url> 
+    -e GITLAB.URL=<your gitlab instance url>
     ```
 
 - For BitBucket:
@@ -66,7 +66,30 @@ To invoke a tool (for example `review`), you can run directly from the Docker im
     docker run --rm -it -e CONFIG.GIT_PROVIDER=bitbucket -e OPENAI.KEY=$OPENAI_API_KEY -e BITBUCKET.BEARER_TOKEN=$BITBUCKET_BEARER_TOKEN khulnasoft/pr-insight:latest --pr_url=<pr_url> review
     ```
 
-For other git providers, update CONFIG.GIT_PROVIDER accordingly, and check the `pr_insight/settings/.secrets_template.toml` file for the environment variables expected names and values.
+For other git providers, update `CONFIG.GIT_PROVIDER` accordingly and check the `pr_insight/settings/.secrets_template.toml` file for environment variables expected names and values.
+The `pr_insight` uses [Dynaconf](https://www.dynaconf.com/) to load settings from configuration files.
+
+It is also possible to provide or override the configuration by setting the corresponding environment variables.
+You can define the corresponding environment variables by following this convention: `<TABLE>__<KEY>=<VALUE>` or `<TABLE>.<KEY>=<VALUE>`.
+The `<TABLE>` refers to a table/section in a configuration file and `<KEY>=<VALUE>` refers to the key/value pair of a setting in the configuration file.
+
+For example, suppose you want to run `pr_insight` that connects to a self-hosted GitLab instance similar to an example above.
+You can define the environment variables in a plain text file named `.env` with the following content:
+
+> Warning: Never commit the `.env` file to version control system as it might contains sensitive credentials!
+
+```
+CONFIG__GIT_PROVIDER="gitlab"
+GITLAB__URL="<your url>"
+GITLAB__PERSONAL_ACCESS_TOKEN="<your token>"
+OPENAI__KEY="<your key>"
+```
+
+Then, you can run `pr_insight` using Docker with the following command:
+
+```shell
+docker run --rm -it --env-file .env khulnasoft/pr-insight:latest <tool> <tool parameter>
+```
 
 ---
 
@@ -75,7 +98,7 @@ For other git providers, update CONFIG.GIT_PROVIDER accordingly, and check the `
 1. Clone this repository:
 
 ```
-git clone https://github.com/Khulnasoft/pr-insight.git
+git clone https://github.com/KhulnaSoft/pr-insight.git
 ```
 
 2. Navigate to the `/pr-insight` folder and install the requirements in your favorite virtual environment:

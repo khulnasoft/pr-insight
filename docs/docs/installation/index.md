@@ -15,7 +15,7 @@ There are several ways to use self-hosted PR-Insight:
 - [Azure DevOps](./azure.md)
 
 ## PR-Insight Pro 💎
-PR-Insight Pro, an app hosted by KhulnaSoft for GitHub\GitLab\BitBucket, is also available. 
+PR-Insight Pro, an app hosted by KhulnaSoft for GitHub\GitLab\BitBucket, is also available.
 <br>
-With PR-Insight Pro, installation is as simple as signing up and adding the PR-Insight app to your relevant repo. 
+With PR-Insight Pro, installation is as simple as signing up and adding the PR-Insight app to your relevant repo.
 See [here](https://pr-insight-docs.khulnasoft.com/installation/pr_insight_pro/) for more details.

@@ -15,9 +15,8 @@ Be particularly vigilant for suggestions that:
     - Contradict or ignore parts of the PR's modifications
 In such cases, assign the suggestion a score of 0.
 
-valuate each valid suggestion by scoring its potential impact on the PR's correctness, quality and functionality.
+Evaluate each valid suggestion by scoring its potential impact on the PR's correctness, quality and functionality.
 In addition, you should also detect the line numbers in the '__new hunk__' section that correspond to the 'existing_code' snippet.
-
 
 Key guidelines for evaluation:
 - Thoroughly examine both the suggestion content and the corresponding PR code diff. Be vigilant for potential errors in each suggestion, ensuring they are logically sound, accurate, and directly derived from the PR code diff.
