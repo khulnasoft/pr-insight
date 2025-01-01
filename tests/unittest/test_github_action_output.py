@@ -1,50 +1,70 @@
 import os
 import json
+import pytest
 from pr_insight.algo.utils import get_settings, github_action_output
 
+
 class TestGitHubOutput:
-    def test_github_action_output_enabled(self, monkeypatch, tmp_path):
+    @pytest.fixture
+    def output_file(self, tmp_path):
+        """Fixture to create and return output file path"""
+        return str(tmp_path / 'output')
+
+    @pytest.fixture
+    def test_data(self):
+        """Fixture to provide test data"""
+        return {
+            'key1': {
+                'value1': 1,
+                'value2': 2
+            }
+        }
+
+    def test_github_action_output_enabled(self, monkeypatch, output_file, test_data):
+        """Test that output is written when GitHub Actions output is enabled"""
         get_settings().set('GITHUB_ACTION_CONFIG.ENABLE_OUTPUT', True)
-        monkeypatch.setenv('GITHUB_OUTPUT', str(tmp_path / 'output'))
-        output_data = {'key1': {'value1': 1, 'value2': 2}}
+        monkeypatch.setenv('GITHUB_OUTPUT', output_file)
         key_name = 'key1'
         
-        github_action_output(output_data, key_name)
+        github_action_output(test_data, key_name)
         
-        with open(str(tmp_path / 'output'), 'r') as f:
+        with open(output_file, 'r') as f:
             env_value = f.read()
         
-        actual_key = env_value.split('=')[0]
-        actual_data = json.loads(env_value.split('=')[1])
+        actual_key, actual_data_str = env_value.split('=')
+        actual_data = json.loads(actual_data_str)
         
         assert actual_key == key_name
-        assert actual_data == output_data[key_name]
+        assert actual_data == test_data[key_name]
     
-    def test_github_action_output_disabled(self, monkeypatch, tmp_path):
+    def test_github_action_output_disabled(self, monkeypatch, output_file, test_data):
+        """Test that no output is written when GitHub Actions output is disabled"""
         get_settings().set('GITHUB_ACTION_CONFIG.ENABLE_OUTPUT', False)
-        monkeypatch.setenv('GITHUB_OUTPUT', str(tmp_path / 'output'))
-        output_data = {'key1': {'value1': 1, 'value2': 2}}
-        key_name = 'key1'
+        monkeypatch.setenv('GITHUB_OUTPUT', output_file)
         
-        github_action_output(output_data, key_name)
+        github_action_output(test_data, 'key1')
         
-        assert not os.path.exists(str(tmp_path / 'output'))
+        assert not os.path.exists(output_file)
 
-    def test_github_action_output_notset(self, monkeypatch, tmp_path):
-        # not set config
-        monkeypatch.setenv('GITHUB_OUTPUT', str(tmp_path / 'output'))
-        output_data = {'key1': {'value1': 1, 'value2': 2}}
-        key_name = 'key1'
+    def test_github_action_output_notset(self, monkeypatch, output_file, test_data):
+        """Test that no output is written when GitHub Actions config is not set"""
+        monkeypatch.setenv('GITHUB_OUTPUT', output_file)
         
-        github_action_output(output_data, key_name)
+        github_action_output(test_data, 'key1')
         
-        assert not os.path.exists(str(tmp_path / 'output'))
+        assert not os.path.exists(output_file)
     
-    def test_github_action_output_error_case(self, monkeypatch, tmp_path):
-        monkeypatch.setenv('GITHUB_OUTPUT', str(tmp_path / 'output'))
-        output_data = None # invalid data
-        key_name = 'key1'
+    @pytest.mark.parametrize('invalid_data', [
+        None,
+        {},
+        {'key1': None},
+        {'key1': ''},
+    ])
+    def test_github_action_output_error_cases(self, monkeypatch, output_file, invalid_data):
+        """Test that no output is written for various invalid input data"""
+        get_settings().set('GITHUB_ACTION_CONFIG.ENABLE_OUTPUT', True)
+        monkeypatch.setenv('GITHUB_OUTPUT', output_file)
         
-        github_action_output(output_data, key_name)
+        github_action_output(invalid_data, 'key1')
         
-        assert not os.path.exists(str(tmp_path / 'output'))
+        assert not os.path.exists(output_file)

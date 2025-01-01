@@ -6,11 +6,11 @@ build-backend = "setuptools.build_meta"
 name = "pr-insight"
 version = "0.2.4"
 
-authors = [{name= "KhulnaSoft", email = "support@khulnasoft.com"}]
+authors = [{name = "KhulnaSoft", email = "support@khulnasoft.com"}]
 
 maintainers = [
-  {name = "KhulnaSoft DevOps", email = "info@khulnasoft.com"},
-  {name = "NextLinux", email = "connect@next-linux.systems"},
+    {name = "KhulnaSoft DevOps", email = "info@khulnasoft.com"},
+    {name = "NextLinux", email = "connect@next-linux.systems"},
 ]
 
 description = "KhulnaSoft PR-Insight aims to help efficiently review and handle pull requests, by providing AI feedbacks and suggestions."
@@ -20,11 +20,17 @@ keywords = ["AI", "Insights", "Pull Request", "Automation", "Code Review"]
 license = {name = "Apache 2.0", file = "LICENSE"}
 
 classifiers = [
-  "Intended Audience :: Developers",
-  "Programming Language :: Python :: 3",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Quality Assurance",
 ]
 dynamic = ["dependencies"]
-
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
@@ -32,6 +38,8 @@ dependencies = {file = ["requirements.txt"]}
 [project.urls]
 "Homepage" = "https://github.com/Khulnasoft/pr-insight"
 "Documentation" = "https://pr-insight-docs.khulnasoft.com/"
+"Bug Tracker" = "https://github.com/Khulnasoft/pr-insight/issues"
+"Source Code" = "https://github.com/Khulnasoft/pr-insight"
 
 [tool.setuptools]
 include-package-data = true
@@ -39,41 +47,40 @@ license-files = ["LICENSE"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["pr_insight*"] # include pr_insight and any sub-packages it finds under it.
+include = ["pr_insight*"]  # include pr_insight and any sub-packages it finds under it.
 
 [project.scripts]
 pr-insight = "pr_insight.cli:run"
 
-
 [tool.ruff]
-
 line-length = 120
 
 select = [
-  "E",  # Pyflakes
-  "F",  # Pyflakes
-  "B",  # flake8-bugbear
-  "I001",  # isort basic checks
-  "I002",  # isort missing-required-import
-  ]
-
-# First commit - only fixing isort
-fixable = [
-  "I001",  # isort basic checks
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "B",   # flake8-bugbear
+    "I001", # isort basic checks
+    "I002", # isort missing-required-import
 ]
 
-unfixable = [
-  "B",  # Avoid trying to fix flake8-bugbear (`B`) violations.
-  ]
+# First commit - only fixing isort
+fixable = ["I001"]  # isort basic checks
+
+unfixable = ["B"]  # Avoid trying to fix flake8-bugbear (`B`) violations.
 
 exclude = [
-  "api/code_completions",
+    "api/code_completions",
+    "__pycache__",
+    ".git",
+    ".venv",
+    "build",
+    "dist"
 ]
 
 ignore = [
-  "E999", "B008"
+    "E999",  # SyntaxError - often false positives
+    "B008"   # Do not perform function call in argument defaults
 ]
 
 [tool.ruff.per-file-ignores]
-"__init__.py" = ["E402"]  # Ignore `E402` (import violations) in all `__init__.py` files, and in `path/to/file.py`.
-# TODO: should decide if maybe not to ignore these.
+"__init__.py" = ["E402"]  # Ignore `E402` (import violations) in all `__init__.py` files

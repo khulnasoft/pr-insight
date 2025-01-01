@@ -59,6 +59,10 @@ Specific guidelines for generating code suggestions:
 - Don't suggest to add docstring, type hints, or comments, to remove unused imports, or to use more specific exception types.
 - When referencing variables or names from the code, enclose them in backticks (`). Example: "ensure that `variable_name` is..."
 - Be mindful you are viewing a partial PR code diff, not the full codebase. Avoid suggestions that might conflict with unseen code or alerting variables not declared in the visible scope, as the context is incomplete.
+- Focus on concrete, actionable improvements rather than stylistic preferences.
+- Consider edge cases and potential failure modes when making suggestions.
+- Ensure suggestions maintain or improve code readability and maintainability.
+- Pay special attention to security implications of code changes.
 
 
 {%- if extra_instructions %}
@@ -83,7 +87,7 @@ class CodeSuggestion(BaseModel):
 {%- if not focus_only_on_problems %}
     label: str = Field(description="A single, descriptive label that best characterizes the suggestion type. Possible labels include 'security', 'possible bug', 'possible issue', 'performance', 'enhancement', 'best practice', 'maintainability', 'typo'. Other relevant labels are also acceptable.")
 {%- else %}
-    label: str = Field(description="A single, descriptive label that best characterizes the suggestion type. Possible labels include 'security', 'critical bug', 'general'. The 'general' section should be used for suggestions that address a major issue, but are necessarily on a critical level.")
+    label: str = Field(description="A single, descriptive label that best characterizes the suggestion type. Possible labels include 'security', 'critical bug', 'general'. The 'general' section should be used for suggestions that address a major issue, but are not necessarily on a critical level.")
 {%- endif %}
 
 
@@ -93,39 +97,3 @@ class PRCodeSuggestions(BaseModel):
 
 
 Example output:
-```yaml
-code_suggestions:
-- relevant_file: |
-    src/file1.py
-  language: |
-    python
-  suggestion_content: |
-    ...
-  existing_code: |
-    ...
-  improved_code: |
-    ...
-  one_sentence_summary: |
-    ...
-  label: |
-    ...
-```
-
-
-Each YAML output MUST be after a newline, indented, with block scalar indicator ('|').
-"""
-
-user="""--PR Info--
-
-Title: '{{title}}'
-
-
-The PR Diff:
-======
-{{ diff_no_line_numbers|trim }}
-======
-
-
-Response (should be a valid YAML, and nothing else):
-```yaml
-"""
