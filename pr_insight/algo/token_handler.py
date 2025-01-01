@@ -5,6 +5,13 @@ from threading import Lock
 
 from pr_insight.log import get_logger
 
+try:
+    import tiktoken
+    TIKTOKEN_AVAILABLE = True
+except ImportError:
+    TIKTOKEN_AVAILABLE = False
+    from transformers import GPT2Tokenizer
+
 
 class TokenEncoder:
     _encoder_instance = None
@@ -86,3 +93,13 @@ class TokenHandler:
         The number of tokens in the patch string.
         """
         return len(self.encoder.encode(patch, disallowed_special=()))
+
+
+def get_token_count(text: str) -> int:
+    """Get token count using available tokenizer"""
+    if TIKTOKEN_AVAILABLE:
+        enc = tiktoken.get_encoding("cl100k_base")
+        return len(enc.encode(text))
+    else:
+        tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+        return len(tokenizer.encode(text))

@@ -4,9 +4,41 @@ glob = [
     # Ignore files and directories matching these glob patterns.
     # See https://docs.python.org/3/library/glob.html
     'vendor/**',
+    'node_modules/**',
+    'build/**',
+    'dist/**',
+    'target/**',
+    'bin/**',
+    'obj/**',
+    'tmp/**',
+    'temp/**',
+    '*.log',
+    '*.pyc',
+    '__pycache__/**',
+    '.git/**',
+    '.svn/**',
+    '.hg/**',
+    '.idea/**',
+    '.vscode/**',
+    '.vs/**'
 ]
+
 regex = [
     # Ignore files and directories matching these regex patterns.
     # See https://learnbyexample.github.io/python-regex-cheatsheet/
-    # for example: regex = ['.*\.toml$']
+    '.*\\.pyc$',
+    '.*\\.pyo$',
+    '.*\\.pyd$',
+    '.*\\.so$',
+    '.*\\.dll$',
+    '.*\\.dylib$',
+    '.*\\.class$',
+    '.*\\.exe$',
+    '.*\\.o$',
+    '.*\\.obj$',
+    '.*\\.swp$',
+    '.*~$',
+    '\\.git/.*',
+    '\\.svn/.*',
+    '\\.hg/.*'
 ]

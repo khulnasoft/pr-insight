@@ -9,3 +9,8 @@ dist/
 build/
 .DS_Store
 docs/.cache/
+
+# Add Rust-related entries
+target/
+**/*.rs.bk
+Cargo.lock

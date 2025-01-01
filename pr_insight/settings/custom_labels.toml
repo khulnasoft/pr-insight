@@ -1,16 +1,37 @@
 [config]
-enable_custom_labels=false
+enable_custom_labels = false
 
-## template for custom labels
-#[custom_labels."Bug fix"]
-#description = """Fixes a bug in the code"""
-#[custom_labels."Tests"]
-#description = """Adds or modifies tests"""
-#[custom_labels."Bug fix with tests"]
-#description = """Fixes a bug in the code and adds or modifies tests"""
-#[custom_labels."Enhancement"]
-#description = """Adds new features or modifies existing ones"""
-#[custom_labels."Documentation"]
-#description = """Adds or modifies documentation"""
-#[custom_labels."Other"]
-#description = """Other changes that do not fit in any of the above categories"""
+## Custom labels configuration
+## Uncomment and modify the sections below to enable custom PR labels
+
+#[custom_labels."🐛 Bug Fix"]
+#description = """Fixes bugs or defects in the codebase"""
+#color = "d73a4a"  # Red
+
+#[custom_labels."✅ Tests"] 
+#description = """Adds or updates automated tests"""
+#color = "0e8a16"  # Green
+
+#[custom_labels."🐛✅ Bug Fix with Tests"]
+#description = """Fixes bugs and includes corresponding test coverage"""
+#color = "9149d1"  # Purple
+
+#[custom_labels."✨ Enhancement"]
+#description = """Adds new features or improves existing functionality"""
+#color = "1d76db"  # Blue
+
+#[custom_labels."📝 Documentation"]
+#description = """Updates to documentation, comments, or README files"""
+#color = "0075ca"  # Lighter blue
+
+#[custom_labels."🔧 Maintenance"]
+#description = """Code refactoring, dependency updates, or other maintenance"""
+#color = "ffd700"  # Yellow
+
+#[custom_labels."⚡ Performance"]
+#description = """Improves performance or optimizes code"""
+#color = "ff7518"  # Orange
+
+#[custom_labels."🔒 Security"]
+#description = """Fixes security issues or improves security measures"""
+#color = "b60205"  # Dark red
