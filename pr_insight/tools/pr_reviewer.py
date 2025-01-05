@@ -4,19 +4,27 @@ import traceback
 from collections import OrderedDict
 from functools import partial
 from typing import List, Tuple
+
 from jinja2 import Environment, StrictUndefined
+
 from pr_insight.algo.ai_handlers.base_ai_handler import BaseAiHandler
 from pr_insight.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
-from pr_insight.algo.pr_processing import get_pr_diff, retry_with_fallback_models, add_ai_metadata_to_diff_files
+from pr_insight.algo.pr_processing import (add_ai_metadata_to_diff_files,
+                                         get_pr_diff,
+                                         retry_with_fallback_models)
 from pr_insight.algo.token_handler import TokenHandler
-from pr_insight.algo.utils import github_action_output, load_yaml, ModelType, \
-    show_relevant_configurations, convert_to_markdown_v2, PRReviewHeader
+from pr_insight.algo.utils import (ModelType, PRReviewHeader,
+                                 convert_to_markdown_v2, github_action_output,
+                                 load_yaml, show_relevant_configurations)
 from pr_insight.config_loader import get_settings
-from pr_insight.git_providers import get_git_provider, get_git_provider_with_context
-from pr_insight.git_providers.git_provider import IncrementalPR, get_main_pr_language
+from pr_insight.git_providers import (get_git_provider,
+                                    get_git_provider_with_context)
+from pr_insight.git_providers.git_provider import (IncrementalPR,
+                                                 get_main_pr_language)
 from pr_insight.log import get_logger
 from pr_insight.servers.help import HelpMessage
-from pr_insight.tools.ticket_pr_compliance_check import extract_tickets, extract_and_cache_pr_tickets
+from pr_insight.tools.ticket_pr_compliance_check import (
+    extract_and_cache_pr_tickets, extract_tickets)
 
 
 class PRReviewer:
@@ -78,7 +86,6 @@ class PRReviewer:
             "require_estimate_effort_to_review": get_settings().pr_reviewer.require_estimate_effort_to_review,
             'require_can_be_split_review': get_settings().pr_reviewer.require_can_be_split_review,
             'require_security_review': get_settings().pr_reviewer.require_security_review,
-            'num_code_suggestions': get_settings().pr_reviewer.num_code_suggestions,
             'question_str': question_str,
             'answer_str': answer_str,
             "extra_instructions": get_settings().pr_reviewer.extra_instructions,
@@ -140,7 +147,7 @@ class PRReviewer:
             if get_settings().config.publish_output and not get_settings().config.get('is_auto_command', False):
                 self.git_provider.publish_comment("Preparing review...", is_temporary=True)
 
-            await retry_with_fallback_models(self._prepare_prediction)
+            await retry_with_fallback_models(self._prepare_prediction, model_type=ModelType.REGULAR)
             if not self.prediction:
                 self.git_provider.remove_initial_comment()
                 return None
@@ -160,8 +167,10 @@ class PRReviewer:
                     self.git_provider.publish_comment(pr_review)
 
                 self.git_provider.remove_initial_comment()
-                if get_settings().pr_reviewer.inline_code_comments:
-                    self._publish_inline_code_comments()
+            else:
+                get_logger().info("Review output is not published")
+                get_settings().data = {"artifact": pr_review}
+                return
         except Exception as e:
             get_logger().error(f"Failed to review PR: {e}")
 
@@ -223,33 +232,6 @@ class PRReviewer:
             key_issues_to_review = data['review'].pop('key_issues_to_review')
             data['review']['key_issues_to_review'] = key_issues_to_review
 
-        if 'code_feedback' in data:
-            code_feedback = data['code_feedback']
-
-            # Filter out code suggestions that can be submitted as inline comments
-            if get_settings().pr_reviewer.inline_code_comments:
-                del data['code_feedback']
-            else:
-                for suggestion in code_feedback:
-                    if ('relevant_file' in suggestion) and (not suggestion['relevant_file'].startswith('``')):
-                        suggestion['relevant_file'] = f"``{suggestion['relevant_file']}``"
-
-                    if 'relevant_line' not in suggestion:
-                        suggestion['relevant_line'] = ''
-
-                    relevant_line_str = suggestion['relevant_line'].split('\n')[0]
-
-                    # removing '+'
-                    suggestion['relevant_line'] = relevant_line_str.lstrip('+').strip()
-
-                    # try to add line numbers link to code suggestions
-                    if hasattr(self.git_provider, 'generate_link_to_relevant_line_number'):
-                        link = self.git_provider.generate_link_to_relevant_line_number(suggestion)
-                        if link:
-                            suggestion['relevant_line'] = f"[{suggestion['relevant_line']}]({link})"
-                    else:
-                        pass
-
         incremental_review_markdown_text = None
         # Add incremental review section
         if self.incremental.is_incremental:
@@ -258,7 +240,9 @@ class PRReviewer:
             incremental_review_markdown_text = f"Starting from commit {last_commit_url}"
 
         markdown_text = convert_to_markdown_v2(data, self.git_provider.is_supported("gfm_markdown"),
-                                            incremental_review_markdown_text, git_provider=self.git_provider)
+                                            incremental_review_markdown_text,
+                                               git_provider=self.git_provider,
+                                               files=self.git_provider.get_diff_files())
 
         # Add help text if gfm_markdown is supported
         if self.git_provider.is_supported("gfm_markdown") and get_settings().pr_reviewer.enable_help_text:
@@ -277,38 +261,6 @@ class PRReviewer:
             markdown_text = ""
 
         return markdown_text
-
-    def _publish_inline_code_comments(self) -> None:
-        """
-        Publishes inline comments on a pull request with code suggestions generated by the AI model.
-        """
-        if get_settings().pr_reviewer.num_code_suggestions == 0:
-            return
-
-        first_key = 'review'
-        last_key = 'security_concerns'
-        data = load_yaml(self.prediction.strip(),
-                         keys_fix_yaml=["ticket_compliance_check", "estimated_effort_to_review_[1-5]:", "security_concerns:", "key_issues_to_review:",
-                                        "relevant_file:", "relevant_line:", "suggestion:"],
-                         first_key=first_key, last_key=last_key)
-        comments: List[str] = []
-        for suggestion in data.get('code_feedback', []):
-            relevant_file = suggestion.get('relevant_file', '').strip()
-            relevant_line_in_file = suggestion.get('relevant_line', '').strip()
-            content = suggestion.get('suggestion', '')
-            if not relevant_file or not relevant_line_in_file or not content:
-                get_logger().info("Skipping inline comment with missing file/line/content")
-                continue
-
-            if self.git_provider.is_supported("create_inline_comment"):
-                comment = self.git_provider.create_inline_comment(content, relevant_file, relevant_line_in_file)
-                if comment:
-                    comments.append(comment)
-            else:
-                self.git_provider.publish_inline_comment(content, relevant_file, relevant_line_in_file, suggestion)
-
-        if comments:
-            self.git_provider.publish_inline_comments(comments)
 
     def _get_user_answers(self) -> Tuple[str, str]:
         """
@@ -470,4 +422,4 @@ class PRReviewer:
         else:
             get_logger().info("Auto-approval option is disabled")
             self.git_provider.publish_comment("Auto-approval option for PR-Insight is disabled. "
-                                              "You can enable it via a [configuration file](https://github.com/Khulnasoft/pr-insight/blob/main/docs/REVIEW.md#auto-approval-1)")
+                                              "You can enable it via a [configuration file](https://github.com/KhulnaSoft/pr-insight/blob/main/docs/REVIEW.md#auto-approval-1)")
