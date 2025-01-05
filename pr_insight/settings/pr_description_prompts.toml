@@ -5,11 +5,15 @@ Your task is to provide a full description for the PR content - files walkthroug
 {%- else %}
 Your task is to provide a full description for the PR content - files walkthrough, title, type, and description.
 {%- endif %}
-- Focus on the new PR code (lines starting with '+').
-- Keep in mind that the 'Previous title', 'Previous description' and 'Commit messages' sections may be partial, simplistic, non-informative or out of date. Hence, compare them to the PR diff code, and use them only as a reference.
-- The generated title and description should prioritize the most significant changes.
-- If needed, each YAML output should be in block scalar indicator ('|-')
-- When quoting variables or names from the code, use backticks (`) instead of single quote (').
+
+Guidelines for generating PR descriptions:
+- Focus on analyzing new code introduced in the PR (lines prefixed with '+')
+- Compare the PR diff code with any existing metadata ('Previous title', 'Previous description', 'Commit messages'), but treat them as supplementary references since they may be outdated or incomplete
+- Prioritize the most significant and impactful changes in the generated title and description
+- Format YAML outputs using block scalar indicators ('|-') for proper multi-line handling
+- When referencing code elements, enclose them in backticks (`) for clarity
+- Be concise yet informative in summaries and descriptions
+- Maintain objectivity and focus on concrete changes rather than speculation
 
 {%- if extra_instructions %}
 
@@ -23,11 +27,11 @@ Extra instructions from the user:
 The output must be a YAML object equivalent to type $PRDescription, according to the following Pydantic definitions:
 =====
 class PRType(str, Enum):
-    bug_fix = "Bug fix"
-    tests = "Tests"
-    enhancement = "Enhancement"
-    documentation = "Documentation"
-    other = "Other"
+    bug_fix = "Bug fix"          # Changes that fix bugs or incorrect behavior
+    tests = "Tests"              # Changes to test files or testing infrastructure
+    enhancement = "Enhancement"   # New features or improvements to existing functionality
+    documentation = "Documentation" # Changes to documentation or comments
+    other = "Other"              # Changes that don't fit other categories
 
 {%- if enable_custom_labels %}
 
@@ -42,108 +46,20 @@ class FileDescription(BaseModel):
     language: str = Field(description="The programming language of the relevant file.")
     changes_summary: str = Field(description="concise summary of the changes in the relevant file, in bullet points (1-4 bullet points).")
     changes_title: str = Field(description="an informative title for the changes in the files, describing its main theme (5-10 words).")
-    label: str = Field(description="a single semantic label that represents a type of code changes that occurred in the File. Possible values (partial list): 'bug fix', 'tests', 'enhancement', 'documentation', 'error handling', 'configuration changes', 'dependencies', 'formatting', 'miscellaneous', ...")
+    label: str = Field(description="a single semantic label that represents a type of code changes that occurred in the File. Possible values: 'bug fix', 'tests', 'enhancement', 'documentation', 'error handling', 'configuration changes', 'dependencies', 'formatting', 'miscellaneous'")
 {%- endif %}
 
 class PRDescription(BaseModel):
-    type: List[PRType] = Field(description="one or more types that describe the PR content. Return the label member value (e.g. 'Bug fix', not 'bug_fix')")
+    type: List[PRType] = Field(description="One or more types that best characterize the PR content. Use the enum values (e.g. 'Bug fix', not 'bug_fix')")
 {%- if enable_semantic_files_types %}
-    pr_files: List[FileDescription] = Field(max_items=15, description="a list of the files in the PR, and summary of their changes")
+    pr_files: List[FileDescription] = Field(max_items=15, description="Detailed analysis of each modified file, including language, changes, and semantic categorization")
 {%- endif %}
-    description: str = Field(description="an informative and concise description of the PR. Use bullet points. Display first the most significant changes.")
-    title: str = Field(description="an informative title for the PR, describing its main theme")
+    description: str = Field(description="A clear and structured description of the PR changes, using bullet points and prioritizing significant modifications")
+    title: str = Field(description="A concise yet informative title that captures the PR's main purpose and scope")
 {%- if enable_custom_labels %}
-    labels: List[Label] =  Field(min_items=0, description="choose the relevant custom labels that describe the PR content, and return their keys. Use the value field of the Label object to better understand the label meaning.")
+    labels: List[Label] = Field(min_items=0, description="Relevant custom labels that accurately describe the PR content. Use label values to understand their intended meaning")
 {%- endif %}
 =====
 
 
 Example output:
-
-```yaml
-type:
-- ...
-- ...
-{%- if enable_semantic_files_types %}
-pr_files:
-- filename: |
-    ...
-  language: |
-    ...
-  changes_summary: |
-    ...
-  changes_title: |
-    ...
-  label: |
-    ...
-...
-{%- endif %}
-description: |
-  ...
-title: |
-  ...
-{%- if enable_custom_labels %}
-labels:
-- |
-  ...
-- |
-  ...
-{%- endif %}
-```
-
-Answer should be a valid YAML, and nothing else. Each YAML output MUST be after a newline, with proper indent, and block scalar indicator ('|')
-"""
-
-user="""
-{%- if related_tickets %}
-Related Ticket Info:
-{% for ticket in related_tickets %}
-=====
-Ticket Title: '{{ ticket.title }}'
-{%- if ticket.labels %}
-Ticket Labels: {{ ticket.labels }}
-{%- endif %}
-{%- if ticket.body %}
-Ticket Description:
-#####
-{{ ticket.body }}
-#####
-{%- endif %}
-=====
-{% endfor %}
-{%- endif %}
-
-PR Info:
-
-Previous title: '{{title}}'
-
-{%- if description %}
-
-Previous description:
-=====
-{{ description|trim }}
-=====
-{%- endif %}
-
-Branch: '{{branch}}'
-
-{%- if commit_messages_str %}
-
-Commit messages:
-=====
-{{ commit_messages_str|trim }}
-=====
-{%- endif %}
-
-
-The PR Diff:
-=====
-{{ diff|trim }}
-=====
-
-Note that lines in the diff body are prefixed with a symbol that represents the type of change: '-' for deletions, '+' for additions, and ' ' (a space) for unchanged lines.
-
-
-Response (should be a valid YAML, and nothing else):
-```yaml
-"""

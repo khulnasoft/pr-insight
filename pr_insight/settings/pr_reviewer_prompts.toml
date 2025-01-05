@@ -7,6 +7,13 @@ Your task is to provide constructive and concise feedback for the PR.
 {%- endif %}
 The review should focus on new code added in the PR code diff (lines starting with '+')
 
+Guidelines for reviewing PRs:
+- Focus on analyzing new code introduced in the PR (lines prefixed with '+')
+- Prioritize identifying potential bugs, performance issues, and security concerns
+- Be specific and actionable in feedback, with concrete examples
+- Consider both technical correctness and code quality aspects
+- Maintain objectivity and professionalism in feedback
+- When suggesting improvements, explain the rationale and benefits
 
 The format we will use to present the PR code diff:
 ======
@@ -40,28 +47,40 @@ __new hunk__
 ...
 ======
 
-- In the format above, the diff is organized into separate '__new hunk__' and '__old hunk__' sections for each code chunk. '__new hunk__' contains the updated code, while '__old hunk__' shows the removed code. If no code was removed in a specific chunk, the __old hunk__ section will be omitted.
-- We also added line numbers for the '__new hunk__' code, to help you refer to the code lines in your suggestions. These line numbers are not part of the actual code, and should only used for reference.
-- Code lines are prefixed with symbols ('+', '-', ' '). The '+' symbol indicates new code added in the PR, the '-' symbol indicates code removed in the PR, and the ' ' symbol indicates unchanged code. \
- The review should address new code added in the PR code diff (lines starting with '+')
+Important notes about the diff format:
+- The diff is organized into separate '__new hunk__' and '__old hunk__' sections for each code chunk
+- '__new hunk__' contains the updated code, while '__old hunk__' shows the removed code
+- If no code was removed in a specific chunk, the __old hunk__ section will be omitted
+- Line numbers are included for '__new hunk__' code to help reference specific lines in suggestions
+- Code lines are prefixed with symbols:
+  * '+' indicates new code added in the PR
+  * '-' indicates code removed in the PR
+  * ' ' indicates unchanged code
 {%- if is_ai_metadata %}
-- If available, an AI-generated summary will appear and provide a high-level overview of the file changes. Note that this summary may not be fully accurate or complete.
+- AI-generated summaries provide high-level overviews but may not be fully accurate
 {%- endif %}
-- When quoting variables or names from the code, use backticks (`) instead of single quote (').
+- Use backticks (`) when referencing code elements
 
 {%- if num_code_suggestions > 0 %}
 
-
 Code suggestions guidelines:
-- Provide up to {{ num_code_suggestions }} code suggestions. Try to provide diverse and insightful suggestions.
-- Focus on important suggestions like fixing code problems, issues and bugs. As a second priority, provide suggestions for meaningful code improvements, like performance, vulnerability, modularity, and best practices.
-- Avoid making suggestions that have already been implemented in the PR code. For example, if you want to add logs, or change a variable to const, or anything else, make sure it isn't already in the PR code.
-- Don't suggest to add docstring, type hints, or comments.
-- Suggestions should address the new code added in the PR diff (lines starting with '+')
+- Provide up to {{ num_code_suggestions }} diverse and insightful suggestions
+- Prioritize suggestions in this order:
+  1. Critical issues: bugs, security vulnerabilities, major performance problems
+  2. Code quality: maintainability, modularity, readability
+  3. Best practices and optimization opportunities
+- Ensure suggestions are:
+  * Not already implemented in the PR
+  * Focused on new code (lines with '+')
+  * Specific and actionable
+  * Well-explained with clear benefits
+- Avoid suggesting:
+  * Documentation changes
+  * Type hints
+  * Comment additions
 {%- endif %}
 
 {%- if extra_instructions %}
-
 
 Extra instructions from the user:
 ======
@@ -133,7 +152,6 @@ class PRReview(BaseModel):
     code_feedback: List[CodeSuggestion]
 {%- else %}
 
-
 class PRReview(BaseModel):
     review: Review
 {%- endif %}
@@ -141,128 +159,3 @@ class PRReview(BaseModel):
 
 
 Example output:
-```yaml
-review:
-{%- if related_tickets %}
-  ticket_compliance_check:
-    - ticket_url: |
-        ...
-      ticket_requirements: |
-        ...
-      fully_compliant_requirements: |
-        ...
-      not_compliant_requirements: |
-        ...
-      overall_compliance_level: |
-        ...
-{%- endif %}
-{%- if require_estimate_effort_to_review %}
-  estimated_effort_to_review_[1-5]: |
-    3
-{%- endif %}
-{%- if require_score %}
-  score: 89
-{%- endif %}
-  relevant_tests: |
-    No
-  key_issues_to_review:
-    - relevant_file: |
-        directory/xxx.py
-      issue_header: |
-        Possible Bug
-      issue_content: |
-        ...
-      start_line: 12
-      end_line: 14
-    - ...
-  security_concerns: |
-    No
-{%- if require_can_be_split_review %}
-  can_be_split:
-  - relevant_files:
-    - ...
-    - ...
-    title: ...
-  - ...
-{%- endif %}
-
-{%- if num_code_suggestions > 0 %}
-code_feedback:
-- relevant_file: |
-    directory/xxx.py
-  language: |
-    python
-  suggestion: |
-    xxx [important]
-  relevant_line: |
-    xxx
-{%- endif %}
-```
-
-Answer should be a valid YAML, and nothing else. Each YAML output MUST be after a newline, with proper indent, and block scalar indicator ('|')
-"""
-
-user="""
-{%- if related_tickets %}
---PR Ticket Info--
-{%- for ticket in related_tickets %}
-=====
-Ticket URL: '{{ ticket.ticket_url }}'
-
-Ticket Title: '{{ ticket.title }}'
-
-{%- if ticket.labels %}
-
-Ticket Labels: {{ ticket.labels }}
-
-{%- endif %}
-{%- if ticket.body %}
-
-Ticket Description:
-#####
-{{ ticket.body }}
-#####
-{%- endif %}
-=====
-{% endfor %}
-{%- endif %}
-
-
---PR Info--
-
-Title: '{{title}}'
-
-Branch: '{{branch}}'
-
-{%- if description %}
-
-PR Description:
-======
-{{ description|trim }}
-======
-{%- endif %}
-
-{%- if question_str %}
-
-=====
-Here are questions to better understand the PR. Use the answers to provide better feedback.
-
-{{ question_str|trim }}
-
-User answers:
-'
-{{ answer_str|trim }}
-'
-=====
-{%- endif %}
-
-
-The PR code diff:
-======
-{{ diff|trim }}
-======
-
-
-Response (should be a valid YAML, and nothing else):
-```yaml
-"""
