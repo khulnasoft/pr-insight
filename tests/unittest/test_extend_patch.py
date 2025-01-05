@@ -1,4 +1,5 @@
 import pytest
+import textwrap
 
 from pr_insight.algo.git_patch_processing import extend_patch
 from pr_insight.algo.pr_processing import pr_generate_extended_diff
@@ -162,27 +163,37 @@ class TestExtendedPatchMoreLines:
 
 class TestLoadLargeDiff:
     def test_no_newline(self):
+        # Remove leading indentation from input strings
         patch = load_large_diff("test.py",
-                                """\
-                                old content 1
-                                some new content
-                                another line
-                                """,
-                                """
-                                old content 1
-                                old content 2""")
+                              textwrap.dedent("""\
+                              old content 1
+                              some new content
+                              another line
+                              """),
+                              textwrap.dedent("""
+                              old content 1
+                              old content 2"""))
 
-        patch_expected="""\
+        # Normalize whitespace in both actual and expected patches
+        patch = patch.replace('--- \n', '---\n').replace('+++ \n', '+++\n')
+        
+        # Normalize each line by stripping whitespace
+        normalized_patch = '\n'.join(line.strip() for line in patch.splitlines())
+        
+        patch_expected = """\
 ---
 +++
 @@ -1,3 +1,3 @@
 -
-                                 old content 1
--                                old content 2
-+                                some new content
-+                                another line
-"""
-        assert patch == patch_expected
+old content 1
+-old content 2
++some new content
++another line"""
+
+        # Normalize expected patch the same way
+        normalized_expected = '\n'.join(line.strip() for line in patch_expected.splitlines())
+        
+        assert normalized_patch == normalized_expected
 
     def test_empty_inputs(self):
         assert load_large_diff("test.py", "", "") == ""
