@@ -45,16 +45,12 @@ Additional aspects:
 class TestConvertToMarkdown:
     # Tests that the function works correctly with a simple dictionary input
     def test_simple_dictionary_input(self):
-        input_data = {
-            "review": {
-                "estimated_effort_to_review_[1-5]": "1, because the changes are minimal and straightforward, focusing on a single functionality addition.\n",
-                "relevant_tests": "No\n",
-                "possible_issues": "No\n",
-                "security_concerns": "No\n",
-            }
-        }
+        input_data = {'review': {
+            'estimated_effort_to_review_[1-5]': '1, because the changes are minimal and straightforward, focusing on a single functionality addition.\n',
+            'relevant_tests': 'No\n', 'possible_issues': 'No\n', 'security_concerns': 'No\n'}}
 
-        expected_output = f"{PRReviewHeader.REGULAR.value} 🔍\n\nHere are some key observations to aid the review process:\n\n<table>\n<tr><td>⏱️&nbsp;<strong>Estimated effort to review</strong>: 1 🔵⚪⚪⚪⚪</td></tr>\n<tr><td>🧪&nbsp;<strong>No relevant tests</strong></td></tr>\n<tr><td>&nbsp;<strong>Possible issues</strong>: No\n</td></tr>\n<tr><td>🔒&nbsp;<strong>No security concerns identified</strong></td></tr>\n</table>"
+
+        expected_output = f'{PRReviewHeader.REGULAR.value} 🔍\n\nHere are some key observations to aid the review process:\n\n<table>\n<tr><td>⏱️&nbsp;<strong>Estimated effort to review</strong>: 1 🔵⚪⚪⚪⚪</td></tr>\n<tr><td>🧪&nbsp;<strong>No relevant tests</strong></td></tr>\n<tr><td>&nbsp;<strong>Possible issues</strong>: No\n</td></tr>\n<tr><td>🔒&nbsp;<strong>No security concerns identified</strong></td></tr>\n</table>'
 
         assert convert_to_markdown_v2(input_data).strip() == expected_output.strip()
 
@@ -62,44 +58,47 @@ class TestConvertToMarkdown:
     def test_empty_dictionary_input(self):
         input_data = {}
 
-        expected_output = ""
+        expected_output = ''
+
 
         assert convert_to_markdown_v2(input_data).strip() == expected_output.strip()
 
     def test_dictionary_with_empty_dictionaries(self):
-        input_data = {"review": {}}
+        input_data = {'review': {}}
 
-        expected_output = ""
+        expected_output = ''
+
 
         assert convert_to_markdown_v2(input_data).strip() == expected_output.strip()
 
-
 class TestBR:
     def test_br1(self):
-        file_change_description = "- Imported `FilePatchInfo` and `EDIT_TYPE` from `pr_insight.algo.types` instead of `pr_insight.git_providers.git_provider`."
+        file_change_description = '- Imported `FilePatchInfo` and `EDIT_TYPE` from `pr_insight.algo.types` instead of `pr_insight.git_providers.git_provider`.'
         file_change_description_br = insert_br_after_x_chars(file_change_description)
-        expected_output = "<li>Imported <code>FilePatchInfo</code> and <code>EDIT_TYPE</code> from " "<code>pr_insight.algo.types</code> instead <br>of " "<code>pr_insight.git_providers.git_provider</code>."
+        expected_output = ('<li>Imported <code>FilePatchInfo</code> and <code>EDIT_TYPE</code> from '
+                           '<code>pr_insight.algo.types</code> <br>instead of '
+                           '<code>pr_insight.git_providers.git_provider</code>.')
         assert file_change_description_br == expected_output
         # print("-----")
         # print(file_change_description_br)
 
     def test_br2(self):
-        file_change_description = "- Created a - new -class `ColorPaletteResourcesCollection ColorPaletteResourcesCollection " "ColorPaletteResourcesCollection ColorPaletteResourcesCollection`"
+        file_change_description = (
+            '- Created a - new -class `ColorPaletteResourcesCollection ColorPaletteResourcesCollection '
+            'ColorPaletteResourcesCollection ColorPaletteResourcesCollection`')
         file_change_description_br = insert_br_after_x_chars(file_change_description)
-        expected_output = (
-            "<li>Created a - new -class <code>ColorPaletteResourcesCollection </code><br><code>"
-            "ColorPaletteResourcesCollection ColorPaletteResourcesCollection "
-            "</code><br><code>ColorPaletteResourcesCollection</code>"
-        )
+        expected_output = ('<li>Created a - new -class <code>ColorPaletteResourcesCollection </code><br><code>'
+                           'ColorPaletteResourcesCollection ColorPaletteResourcesCollection '
+                           '</code><br><code>ColorPaletteResourcesCollection</code>')
         assert file_change_description_br == expected_output
         # print("-----")
         # print(file_change_description_br)
 
     def test_br3(self):
-        file_change_description = "Created a new class `ColorPaletteResourcesCollection` which extends `AvaloniaDictionary<ThemeVariant, ColorPaletteResources>` and implements aaa"
+        file_change_description = 'Created a new class `ColorPaletteResourcesCollection` which extends `AvaloniaDictionary<ThemeVariant, ColorPaletteResources>` and implements aaa'
         file_change_description_br = insert_br_after_x_chars(file_change_description)
-        assert file_change_description_br == (
-            "Created a new class <code>ColorPaletteResourcesCollection</code> which " "extends <br><code>AvaloniaDictionary<ThemeVariant, ColorPaletteResources>" "</code> and implements <br>aaa"
-        )
+        assert file_change_description_br == ('Created a new class <code>ColorPaletteResourcesCollection</code> which '
+                                              'extends <br><code>AvaloniaDictionary<ThemeVariant, ColorPaletteResources>'
+                                              '</code> and implements <br>aaa')
         # print("-----")
         # print(file_change_description_br)

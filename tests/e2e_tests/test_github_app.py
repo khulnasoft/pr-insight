@@ -19,13 +19,13 @@ logger = get_logger()
 def test_e2e_run_github_app():
     """
     What we want to do:
-    (1) open a PR in a repo 'https://github.com/KhulnaSoft/pr-insight-tests'
+    (1) open a PR in a repo 'https://github.com/khulnasoft/pr-insight-tests'
     (2) wait for 5 minutes until the PR is processed by the GitHub app
     (3) check that the relevant tools have been executed
     """
     base_branch = "main"  # or any base branch you want
     new_branch = f"github_app_e2e_test-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
-    repo_url = "KhulnaSoft/pr-insight-tests"
+    repo_url = 'khulnasoft/pr-insight-tests'
     get_settings().config.git_provider = "github"
     git_provider = get_git_provider()()
     github_client = git_provider.github_client
@@ -44,11 +44,22 @@ def test_e2e_run_github_app():
         # Update the file content
         logger.info(f"Updating the file {FILE_PATH}")
         commit_message = "update cli_pip.py"
-        repo.update_file(file.path, commit_message, NEW_FILE_CONTENT, file.sha, branch=new_branch)
+        repo.update_file(
+            file.path,
+            commit_message,
+            NEW_FILE_CONTENT,
+            file.sha,
+            branch=new_branch
+        )
 
         # Create a pull request
         logger.info(f"Creating a pull request from {new_branch} to {base_branch}")
-        pr = repo.create_pull(title=new_branch, body="update cli_pip.py", head=new_branch, base=base_branch)
+        pr = repo.create_pull(
+            title=new_branch,
+            body="update cli_pip.py",
+            head=new_branch,
+            base=base_branch
+        )
 
         # check every 1 minute, for 5, minutes if the PR has all the tool results
         for i in range(NUM_MINUTES):
@@ -83,5 +94,5 @@ def test_e2e_run_github_app():
         assert False
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     test_e2e_run_github_app()

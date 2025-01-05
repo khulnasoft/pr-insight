@@ -127,12 +127,12 @@ ___
 
 ## Try it now
 
-Try the GPT-4 powered PR-Insight instantly on _your public GitHub repository_. Just mention `@KhulnaSoft` and add the desired command in any PR comment. The agent will generate a response based on your command.
+Try the GPT-4 powered PR-Insight instantly on _your public GitHub repository_. Just mention `@KhulnaSoft` and add the desired command in any PR comment. The insight will generate a response based on your command.
 For example, add a comment to any pull request with the following text:
 ```
 @KhulnaSoft /review
 ```
-and the agent will respond with a review of your PR
+and the insight will respond with a review of your PR
 
 
 To set up your own PR-Insight, see the [Installation](https://khulnasoft.github.io/pr-insight/installation/) section below.
