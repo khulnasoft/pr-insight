@@ -8,9 +8,9 @@ from datetime import datetime, timezone
 import aiohttp
 import requests
 
-from pr_insight.insight.pr_insight import PRInsight
 from pr_insight.config_loader import get_settings
 from pr_insight.git_providers import get_git_provider
+from pr_insight.insight.pr_insight import PRInsight
 from pr_insight.log import LoggingFormat, get_logger, setup_logger
 
 setup_logger(fmt=LoggingFormat.JSON, level="DEBUG")

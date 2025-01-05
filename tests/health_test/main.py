@@ -4,11 +4,10 @@ import copy
 import os
 from pathlib import Path
 
-from starlette_context import request_cycle_context, context
+from starlette_context import context, request_cycle_context
 
 from pr_insight.cli import run_command
 from pr_insight.config_loader import get_settings, global_settings
-
 from pr_insight.insight.pr_insight import PRInsight, commands
 from pr_insight.log import get_logger, setup_logger
 from tests.e2e_tests import e2e_utils

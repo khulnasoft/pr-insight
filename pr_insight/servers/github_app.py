@@ -12,15 +12,15 @@ from starlette.middleware import Middleware
 from starlette_context import context
 from starlette_context.middleware import RawContextMiddleware
 
-from pr_insight.insight.pr_insight import PRInsight
 from pr_insight.algo.utils import update_settings_from_args
 from pr_insight.config_loader import get_settings, global_settings
 from pr_insight.git_providers import (get_git_provider,
-                                    get_git_provider_with_context)
+                                      get_git_provider_with_context)
 from pr_insight.git_providers.git_provider import IncrementalPR
 from pr_insight.git_providers.utils import apply_repo_settings
 from pr_insight.identity_providers import get_identity_provider
 from pr_insight.identity_providers.identity_provider import Eligibility
+from pr_insight.insight.pr_insight import PRInsight
 from pr_insight.log import LoggingFormat, get_logger, setup_logger
 from pr_insight.servers.utils import DefaultDictWithTimeout, verify_signature
 

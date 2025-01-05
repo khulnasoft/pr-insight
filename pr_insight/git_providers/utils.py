@@ -7,7 +7,7 @@ from starlette_context import context
 
 from pr_insight.config_loader import get_settings
 from pr_insight.git_providers import (get_git_provider,
-                                    get_git_provider_with_context)
+                                      get_git_provider_with_context)
 from pr_insight.log import get_logger
 
 

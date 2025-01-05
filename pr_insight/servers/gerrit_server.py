@@ -9,8 +9,8 @@ from starlette.middleware import Middleware
 from starlette_context import context
 from starlette_context.middleware import RawContextMiddleware
 
-from pr_insight.insight.pr_insight import PRInsight
 from pr_insight.config_loader import get_settings, global_settings
+from pr_insight.insight.pr_insight import PRInsight
 from pr_insight.log import get_logger, setup_logger
 
 setup_logger()

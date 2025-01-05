@@ -11,7 +11,8 @@ from pr_insight.algo.git_patch_processing import (
 from pr_insight.algo.language_handler import sort_files_by_main_languages
 from pr_insight.algo.token_handler import TokenHandler
 from pr_insight.algo.types import EDIT_TYPE, FilePatchInfo
-from pr_insight.algo.utils import ModelType, clip_tokens, get_max_tokens, get_weak_model
+from pr_insight.algo.utils import (ModelType, clip_tokens, get_max_tokens,
+                                   get_weak_model)
 from pr_insight.config_loader import get_settings
 from pr_insight.git_providers.git_provider import GitProvider
 from pr_insight.log import get_logger

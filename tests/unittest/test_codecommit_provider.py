@@ -4,8 +4,8 @@ import pytest
 
 from pr_insight.algo.types import EDIT_TYPE, FilePatchInfo
 from pr_insight.git_providers.codecommit_provider import (CodeCommitFile,
-                                                        CodeCommitProvider,
-                                                        PullRequestCCMimic)
+                                                          CodeCommitProvider,
+                                                          PullRequestCCMimic)
 
 
 class TestCodeCommitFile:

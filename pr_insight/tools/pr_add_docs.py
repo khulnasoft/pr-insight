@@ -7,7 +7,8 @@ from jinja2 import Environment, StrictUndefined
 
 from pr_insight.algo.ai_handlers.base_ai_handler import BaseAiHandler
 from pr_insight.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
-from pr_insight.algo.pr_processing import get_pr_diff, retry_with_fallback_models
+from pr_insight.algo.pr_processing import (get_pr_diff,
+                                           retry_with_fallback_models)
 from pr_insight.algo.token_handler import TokenHandler
 from pr_insight.algo.utils import load_yaml
 from pr_insight.config_loader import get_settings

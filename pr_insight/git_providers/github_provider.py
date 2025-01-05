@@ -975,4 +975,3 @@ class GithubProvider(GitProvider):
             except Exception as e:
                 get_logger().error(f"Failed to process patch for committable comment, error: {e}")
         return code_suggestions_copy
-
