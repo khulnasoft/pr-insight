@@ -166,6 +166,24 @@ To use Amazon Bedrock and its foundational models, add the below configuration:
 model="bedrock/anthropic.claude-3-sonnet-20240229-v1:0"
 fallback_models=["bedrock/anthropic.claude-v2:1"]
 ```
+### DeepSeek
+
+To use deepseek-chat model with DeepSeek, for example, set:
+
+```toml
+[config] # in configuration.toml
+model = "deepseek/deepseek-chat"
+fallback_models=["deepseek/deepseek-chat"]
+```
+
+and fill up your key
+
+```toml
+[deepseek] # in .secrets.toml
+key = ...
+```
+
+(you can obtain a deepseek-chat key from [here](https://platform.deepseek.com))
 
 Note that you have to add access to foundational models before using them. Please refer to [this document](https://docs.aws.amazon.com/bedrock/latest/userguide/setting-up.html) for more details.
 
