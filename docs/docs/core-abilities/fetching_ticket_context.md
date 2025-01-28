@@ -120,9 +120,41 @@ jira_api_email = "YOUR_EMAIL"
 ```
 
 
-#### Jira Server/Data Center 💎
+#### Jira Data Center/Server 💎
 
-Currently, we only support the Personal Access Token (PAT) Authentication method.
+##### Local App Authentication (For Pr Merge On-Premise Customers)
+
+##### 1. Step 1: Set up an application link in Jira Data Center/Server
+* Go to Jira Administration > Applications > Application Links > Click on `Create link`
+
+![application links](https://www.khulnasoft.com/images/pr_insight/jira_app_links.png){width=384}
+* Choose `External application` and set the direction to `Incoming` and then click `Continue`
+
+![external application](https://www.khulnasoft.com/images/pr_insight/jira_create_link.png){width=256}
+* In the following screen, enter the following details:
+    * Name: `Pr Merge`
+    * Redirect URL: Enter your Pr Merge URL followed  `https://{PR_MERGE_ENDPOINT}/register_ticket_provider`
+    * Permission: Select `Read`
+    * Click `Save`
+
+![external application details](https://www.khulnasoft.com/images/pr_insight/jira_fill_app_link.png){width=384}
+* Copy the `Client ID` and `Client secret` and set them in your `.secrets` file:
+
+![client id and secret](https://www.khulnasoft.com/images/pr_insight/jira_app_credentionals.png){width=256}
+```toml
+[jira]
+jira_app_secret = "..."
+jira_client_id = "..."
+```
+
+##### 2. Step 2: Authenticate with Jira Data Center/Server
+* Open this URL in your browser: `https://{PR_MERGE_ENDPOINT}/jira_auth`
+* Click on link
+
+![jira auth success](https://www.khulnasoft.com/images/pr_insight/jira_auth_page.png){width=384}
+
+* You will be redirected to Jira Data Center/Server, click `Allow`
+* You will be redirected back to Pr Merge PR Insight and you will see a success message.
 
 1. Create a [Personal Access Token (PAT)](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html) in your Jira account
 2. In your Configuration file/Environment variables/Secrets file, add the following lines:
