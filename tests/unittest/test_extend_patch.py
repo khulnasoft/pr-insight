@@ -163,24 +163,20 @@ class TestExtendedPatchMoreLines:
 class TestLoadLargeDiff:
     def test_no_newline(self):
         patch = load_large_diff("test.py",
-                                """\
-                                old content 1
-                                some new content
-                                another line
-                                """,
-                                """
-                                old content 1
-                                old content 2""")
+                              """old content 1
+some new content
+another line
+""",
+                              """old content 1
+old content 2""")
 
-        patch_expected="""\
---- 
-+++ 
-@@ -1,3 +1,3 @@
--                                old content 1
--                                old content 2
-+                                old content 1
-+                                some new content
-+                                another line
+        patch_expected = """---
++++
+@@ -1,2 +1,3 @@
+ old content 1
+-old content 2
++some new content
++another line
 """
         assert patch == patch_expected
 
