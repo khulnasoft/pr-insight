@@ -12,10 +12,10 @@ from starlette.middleware import Middleware
 from starlette_context import context
 from starlette_context.middleware import RawContextMiddleware
 
+from pr_insight.agent.pr_insight import PRInsight
 from pr_insight.algo.utils import update_settings_from_args
 from pr_insight.config_loader import get_settings, global_settings
 from pr_insight.git_providers.utils import apply_repo_settings
-from pr_insight.insight.pr_insight import PRInsight
 from pr_insight.log import LoggingFormat, get_logger, setup_logger
 from pr_insight.secret_providers import get_secret_provider
 
@@ -58,7 +58,7 @@ async def handle_request(api_url: str, body: str, log_context: dict, sender_id: 
         await PRInsight().handle_request(api_url, body)
 
 
-async def _perform_commands_gitlab(commands_conf: str, insight: PRInsight, api_url: str,
+async def _perform_commands_gitlab(commands_conf: str, agent: PRInsight, api_url: str,
                                    log_context: dict, data: dict):
     apply_repo_settings(api_url)
     if commands_conf == "pr_commands" and get_settings().config.disable_auto_feedback:  # auto commands for PR, and auto feedback is disabled
@@ -77,7 +77,7 @@ async def _perform_commands_gitlab(commands_conf: str, insight: PRInsight, api_u
             new_command = ' '.join([command] + other_args)
             get_logger().info(f"Performing command: {new_command}")
             with get_logger().contextualize(**log_context):
-                await insight.handle_request(api_url, new_command)
+                await agent.handle_request(api_url, new_command)
         except Exception as e:
             get_logger().error(f"Failed to perform command {command}: {e}")
 
@@ -100,6 +100,14 @@ def should_process_pr_logic(data) -> bool:
         if not data.get('object_attributes', {}):
             return False
         title = data['object_attributes'].get('title')
+        sender = data.get("user", {}).get("username", "")
+
+        # logic to ignore PRs from specific users
+        ignore_pr_users = get_settings().get("CONFIG.IGNORE_PR_AUTHORS", [])
+        if ignore_pr_users and sender:
+            if sender in ignore_pr_users:
+                get_logger().info(f"Ignoring PR from user '{sender}' due to 'config.ignore_pr_authors' settings")
+                return False
 
         # logic to ignore MRs for titles, labels and source, target branches.
         ignore_mr_title = get_settings().get("CONFIG.IGNORE_PR_TITLE", [])

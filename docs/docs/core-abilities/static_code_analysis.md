@@ -1,6 +1,6 @@
 ## Overview - Static Code Analysis 💎
 
-By combining static code analysis with LLM capabilities, PR-Insight can provide a comprehensive analysis of the PR code changes on a component level.
+By combining static code analysis with LLM capabilities, Khulnasoft Merge can provide a comprehensive analysis of the PR code changes on a component level.
 
 It scans the PR code changes, finds all the code components (methods, functions, classes) that changed, and enables to interactively generate tests, docs, code suggestions and similar code search for each component.
 

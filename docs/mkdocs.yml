@@ -1,29 +1,26 @@
-site_name: PR-Insight (formerly known as PR-Insight)
-repo_url: https://github.com/KhulnaSoft/pr-insight
-repo_name: KhulnaSoft/pr-insight
+site_name: Khulnasoft Merge (and open-source PR-Insight)
+repo_url: https://github.com/Khulnasoft/pr-insight
+repo_name: Khulnasoft/pr-insight
 
 nav:
   - Overview:
     - 'index.md'
-    - 💎 PR-Insight Pro: 'overview/pr_insight_pro.md'
+    - 💎 Khulnasoft Merge: 'overview/pr_insight_pro.md'
     - Data Privacy: 'overview/data_privacy.md'
   - Installation:
     - 'installation/index.md'
-    - Locally: 'installation/locally.md'
-    - GitHub: 'installation/github.md'
-    - GitLab: 'installation/gitlab.md'
-    - BitBucket: 'installation/bitbucket.md'
-    - Azure DevOps: 'installation/azure.md'
-    - 💎 PR-Insight Pro: 'installation/pr_insight_pro.md'
+    - PR-Insight: 'installation/pr_insight.md'
+    - 💎 Khulnasoft Merge: 'installation/khulnasoft_merge.md'
   - Usage Guide:
     - 'usage-guide/index.md'
     - Introduction: 'usage-guide/introduction.md'
+    - Enabling a Wiki: 'usage-guide/enabling_a_wiki.md'
     - Configuration File: 'usage-guide/configuration_options.md'
     - Usage and Automation: 'usage-guide/automations_and_usage.md'
     - Managing Mail Notifications: 'usage-guide/mail_notifications.md'
     - Changing a Model: 'usage-guide/changing_a_model.md'
     - Additional Configurations: 'usage-guide/additional_configurations.md'
-    - 💎 PR-Insight Pro Models: 'usage-guide/PR_insight_pro_models'
+    - 💎 Khulnasoft Merge Models: 'usage-guide/PR_agent_pro_models'
   - Tools:
     - 'tools/index.md'
     - Describe: 'tools/describe.md'
@@ -41,9 +38,11 @@ nav:
     - 💎 Custom Prompt: 'tools/custom_prompt.md'
     - 💎 CI Feedback: 'tools/ci_feedback.md'
     - 💎 Similar Code: 'tools/similar_code.md'
+    - 💎 Implement: 'tools/implement.md'
   - Core Abilities:
       - 'core-abilities/index.md'
       - Fetching ticket context: 'core-abilities/fetching_ticket_context.md'
+      - Auto best practices: 'core-abilities/auto_best_practices.md'
       - Local and global metadata: 'core-abilities/metadata.md'
       - Dynamic context: 'core-abilities/dynamic_context.md'
       - Self-reflection: 'core-abilities/self_reflection.md'
@@ -54,7 +53,7 @@ nav:
       - Static code analysis: 'core-abilities/static_code_analysis.md'
       - Code Fine-tuning Benchmark: 'finetuning_benchmark/index.md'
   - Chrome Extension:
-      - PR-Insight Chrome Extension: 'chrome-extension/index.md'
+      - Khulnasoft Merge Chrome Extension: 'chrome-extension/index.md'
       - Features: 'chrome-extension/features.md'
       - Data Privacy: 'chrome-extension/data_privacy.md'
   - FAQ:
@@ -112,7 +111,7 @@ extra:
   generator: false
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/KhulnaSoft
+      link: https://github.com/Khulnasoft
     - icon: fontawesome/brands/discord
       link: https://discord.com/invite/SgSxuQ65GF
     - icon: fontawesome/brands/youtube
@@ -144,6 +143,9 @@ markdown_extensions:
   - pymdownx.mark
   - md_in_html
   - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!str twemoji
+      emoji_generator: !!str material.extensions.emoji.to_svg
   - toc:
       title: On this page
       toc_depth: 3

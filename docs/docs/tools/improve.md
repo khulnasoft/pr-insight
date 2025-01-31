@@ -1,5 +1,5 @@
 ## Overview
-The `improve` tool scans the PR code changes, and automatically generates [meaningful](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/pr_code_suggestions_prompts.toml#L41) suggestions for improving the PR code.
+The `improve` tool scans the PR code changes, and automatically generates [meaningful](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/pr_code_suggestions_prompts.toml#L41) suggestions for improving the PR code.
 The tool can be triggered automatically every time a new PR is [opened](../usage-guide/automations_and_usage.md#github-app-automatic-tools-when-a-new-pr-is-opened), or it can be invoked manually by commenting on any PR:
 ```toml
 /improve
@@ -9,7 +9,7 @@ The tool can be triggered automatically every time a new PR is [opened](../usage
 
 ![code_suggestions_as_comment_open.png](https://khulnasoft.com/images/pr_insight/code_suggestions_as_comment_open.png){width=512}
 
-Note that the `Apply this suggestion` checkbox, which interactively converts a suggestion into a commitable code comment, is available only for PR-Insight Pro 💎 users.
+Note that the `Apply this suggestion` checkbox, which interactively converts a suggestion into a commitable code comment, is available only for Khulnasoft Merge💎 users.
 
 
 ## Example usage
@@ -54,14 +54,14 @@ num_code_suggestions_per_chunk = ...
 
 ### Assessing Impact 💎
 
-Note that PR-Insight pro tracks two types of implementations:
+Note that Khulnasoft Merge tracks two types of implementations:
 
 - Direct implementation - when the user directly applies the suggestion by clicking the `Apply` checkbox.
-- Indirect implementation - when the user implements the suggestion in their IDE environment. In this case, PR-Insight will utilize, after each commit, a dedicated logic to identify if a suggestion was implemented, and will mark it as implemented.
+- Indirect implementation - when the user implements the suggestion in their IDE environment. In this case, Khulnasoft Merge will utilize, after each commit, a dedicated logic to identify if a suggestion was implemented, and will mark it as implemented.
 
 ![code_suggestions_asses_impact](https://khulnasoft.com/images/pr_insight/code_suggestions_asses_impact.png){width=512}
 
-In post-process, PR-Insight counts the number of suggestions that were implemented, and provides general statistics and insights about the suggestions' impact on the PR process.
+In post-process, Khulnasoft Merge counts the number of suggestions that were implemented, and provides general statistics and insights about the suggestions' impact on the PR process.
 
 ![code_suggestions_asses_impact_stats_1](https://khulnasoft.com/images/pr_insight/code_suggestions_asses_impact_stats_1.png){width=512}
 
@@ -70,12 +70,12 @@ In post-process, PR-Insight counts the number of suggestions that were implement
 ## Suggestion tracking 💎
 `Platforms supported: GitHub, GitLab`
 
-PR-Insight employs an novel detection system to automatically [identify](https://pr-insight-docs.khulnasoft.com/core-abilities/impact_evaluation/) AI code suggestions that PR authors have accepted and implemented.
+Khulnasoft Merge employs a novel detection system to automatically [identify](https://pr-insight-docs.khulnasoft.com/core-abilities/impact_evaluation/) AI code suggestions that PR authors have accepted and implemented.
 
 Accepted suggestions are also automatically documented in a dedicated wiki page called `.pr_insight_accepted_suggestions`, allowing users to track historical changes, assess the tool's effectiveness, and learn from previously implemented recommendations in the repository.
-An example [result](https://github.com/KhulnaSoft/pr-insight/wiki/.pr_insight_accepted_suggestions):
+An example [result](https://github.com/Khulnasoft/pr-insight/wiki/.pr_insight_accepted_suggestions):
 
-[![pr_insight_accepted_suggestions1.png](https://khulnasoft.com/images/pr_insight/pr_insight_accepted_suggestions1.png){width=768}](https://github.com/KhulnaSoft/pr-insight/wiki/.pr_insight_accepted_suggestions)
+[![pr_insight_accepted_suggestions1.png](https://khulnasoft.com/images/pr_insight/pr_insight_accepted_suggestions1.png){width=768}](https://github.com/Khulnasoft/pr-insight/wiki/.pr_insight_accepted_suggestions)
 
 This dedicated wiki page will also serve as a foundation for future AI model improvements, allowing it to learn from historically implemented suggestions and generate more targeted, contextually relevant recommendations.
 
@@ -122,7 +122,7 @@ Use triple quotes to write multi-line instructions. Use bullet points or numbers
 
 >`Platforms supported: GitHub, GitLab, Bitbucket`
 
-Another option to give additional guidance to the AI model is by creating a dedicated [**wiki page**](https://github.com/KhulnaSoft/pr-insight/wiki) called `best_practices.md`.
+Another option to give additional guidance to the AI model is by creating a `best_practices.md` file, either in your repository's root directory or as a [**wiki page**](https://github.com/Khulnasoft/pr-insight/wiki) (we recommend the wiki page, as editing and maintaining it over time is easier).
 This page can contain a list of best practices, coding standards, and guidelines that are specific to your repo/organization.
 
 The AI model will use this wiki page as a reference, and in case the PR code violates any of the guidelines, it will create additional suggestions, with a dedicated label: `Organization
@@ -149,7 +149,7 @@ Tips for writing an effective `best_practices.md` file:
     - Long files tend to contain generic guidelines already known to AI
 
 #### Local and global best practices
-By default, PR-Insight will look for a local `best_practices.md` wiki file in the root of the relevant local repo.
+By default, Khulnasoft Merge will look for a local `best_practices.md` wiki file in the root of the relevant local repo.
 
 If you want to enable also a global `best_practices.md` wiki file, set first in the global configuration file:
 
@@ -162,7 +162,7 @@ Then, create a `best_practices.md` wiki file in the root of [global](https://pr-
 
 #### Best practices for multiple languages
 For a git organization working with multiple programming languages, you can maintain a centralized global `best_practices.md` file containing language-specific guidelines.
-When reviewing pull requests, PR-Insight automatically identifies the programming language and applies the relevant best practices from this file.
+When reviewing pull requests, Khulnasoft Merge automatically identifies the programming language and applies the relevant best practices from this file.
 
 To do this, structure your `best_practices.md` file using the following format:
 
@@ -191,8 +191,44 @@ And the label will be: `{organization_name} best practice`.
 
 ![best_practice](https://khulnasoft.com/images/pr_insight/org_best_practice.png){width=512}
 
+### Auto best practices 💎
 
-### How to combine `extra instructions` and `best practices`
+>`Platforms supported: GitHub`
+
+'Auto best practices' is a novel Khulnasoft Merge capability that:
+
+1. Identifies recurring patterns from accepted suggestions
+2. **Automatically** generates [best practices page](https://github.com/khulnasoft/pr-insight/wiki/.pr_insight_auto_best_practices) based on what your team consistently values
+3. Applies these learned patterns to future code reviews
+
+This creates an automatic feedback loop where the system continuously learns from your team's choices to provide increasingly relevant suggestions.
+The system maintains two analysis phases:
+
+- Open exploration for new issues
+- Targeted checking against established best practices
+
+Note that when a [custom best practices](https://pr-insight-docs.khulnasoft.com/tools/improve/#best-practices) exist, Khulnasoft Merge will still generate an 'auto best practices' wiki file, though it won't use it in the `improve` tool.
+Learn more about utilizing 'auto best practices' in our [detailed guide](https://pr-insight-docs.khulnasoft.com/core-abilities/auto_best_practices/).
+
+#### Relevant configurations
+
+```toml
+[auto_best_practices]
+# Disable all auto best practices usage or generation
+enable_auto_best_practices = true
+
+# Disable usage of auto best practices file in the 'improve' tool
+utilize_auto_best_practices = true
+
+# Extra instructions to the auto best practices generation prompt
+extra_instructions = ""
+
+# Max number of patterns to be detected
+max_patterns = 5
+```
+
+
+### Combining `extra instructions` and `best practices` 💎
 
 The `extra instructions` configuration is more related to the `improve` tool prompt. It can be used, for example, to avoid specific suggestions ("Don't suggest to add try-except block", "Ignore changes in toml files", ...) or to emphasize specific aspects or formats ("Answer in Japanese", "Give only short suggestions", ...)
 
@@ -276,17 +312,17 @@ code_suggestions_self_review_text = "... (your text here) ..."
 
 
 ### How many code suggestions are generated?
-PR-Insight uses a dynamic strategy to generate code suggestions based on the size of the pull request (PR). Here's how it works:
+Khulnasoft Merge uses a dynamic strategy to generate code suggestions based on the size of the pull request (PR). Here's how it works:
 
 1) Chunking large PRs:
 
-- PR-Insight divides large PRs into 'chunks'.
+- Khulnasoft Merge divides large PRs into 'chunks'.
 - Each chunk contains up to `pr_code_suggestions.max_context_tokens` tokens (default: 14,000).
 
 
 2) Generating suggestions:
 
-- For each chunk, PR-Insight generates up to `pr_code_suggestions.num_code_suggestions_per_chunk` suggestions (default: 4).
+- For each chunk, Khulnasoft Merge generates up to `pr_code_suggestions.num_code_suggestions_per_chunk` suggestions (default: 4).
 
 
 This approach has two main benefits:
@@ -294,7 +330,7 @@ This approach has two main benefits:
 - Scalability: The number of suggestions scales with the PR size, rather than being fixed.
 - Quality: By processing smaller chunks, the AI can maintain higher quality suggestions, as larger contexts tend to decrease AI performance.
 
-Note: Chunking is primarily relevant for large PRs. For most PRs (up to 500 lines of code), PR-Insight will be able to process the entire code in a single call.
+Note: Chunking is primarily relevant for large PRs. For most PRs (up to 500 lines of code), Khulnasoft Merge will be able to process the entire code in a single call.
 
 
 ## Configuration options

@@ -19,10 +19,10 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette_context.middleware import RawContextMiddleware
 
+from pr_insight.agent.pr_insight import PRInsight, command2class
 from pr_insight.algo.utils import update_settings_from_args
 from pr_insight.config_loader import get_settings
 from pr_insight.git_providers.utils import apply_repo_settings
-from pr_insight.insight.pr_insight import PRInsight, command2class
 from pr_insight.log import LoggingFormat, get_logger, setup_logger
 
 setup_logger(fmt=LoggingFormat.JSON, level="DEBUG")
@@ -62,7 +62,7 @@ def authorize(credentials: HTTPBasicCredentials = Depends(security)):
             )
 
 
-async def _perform_commands_azure(commands_conf: str, insight: PRInsight, api_url: str, log_context: dict):
+async def _perform_commands_azure(commands_conf: str, agent: PRInsight, api_url: str, log_context: dict):
     apply_repo_settings(api_url)
     if commands_conf == "pr_commands" and get_settings().config.disable_auto_feedback:  # auto commands for PR, and auto feedback is disabled
         get_logger().info(f"Auto feedback is disabled, skipping auto commands for PR {api_url=}", **log_context)
@@ -78,7 +78,7 @@ async def _perform_commands_azure(commands_conf: str, insight: PRInsight, api_ur
             new_command = ' '.join([command] + other_args)
             get_logger().info(f"Performing command: {new_command}")
             with get_logger().contextualize(**log_context):
-                await insight.handle_request(api_url, new_command)
+                await agent.handle_request(api_url, new_command)
         except Exception as e:
             get_logger().error(f"Failed to perform command {command}: {e}")
 

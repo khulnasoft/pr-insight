@@ -1,7 +1,7 @@
 ## Run as a Bitbucket Pipeline
 
 
-You can use the Bitbucket Pipeline system to run PR-Insight on every pull request open or update.
+You can use the Bitbucket Pipeline system to run Khulnasoft Merge on every pull request open or update.
 
 1. Add the following file in your repository bitbucket-pipelines.yml
 
@@ -26,10 +26,6 @@ You can get a Bitbucket token for your repository by following Repository Settin
 
 Note that comments on a PR are not supported in Bitbucket Pipeline.
 
-
-## Run using KhulnaSoft-hosted Bitbucket app 💎
-
-Please contact visit [PR-Insight Pro](https://www.khulnasoft.com/pricing/) if you're interested in a hosted BitBucket app solution that provides full functionality including PR reviews and comment handling. It's based on the [bitbucket_app.py](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/git_providers/bitbucket_provider.py) implementation.
 
 
 ## Bitbucket Server and Data Center
@@ -58,7 +54,7 @@ python cli.py --pr_url https://git.onpreminstanceofbitbucket.com/projects/PROJEC
 
 ### Run it as service
 
-To run PR-Insight as webhook, build the docker image:
+To run Khulnasoft Merge as webhook, build the docker image:
 ```
 docker build . -t khulnasoft/pr-insight:bitbucket_server_webhook --target bitbucket_server_webhook -f docker/Dockerfile
 docker push khulnasoft/pr-insight:bitbucket_server_webhook  # Push to your Docker repository

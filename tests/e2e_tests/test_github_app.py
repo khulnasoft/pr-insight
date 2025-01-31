@@ -19,13 +19,13 @@ logger = get_logger()
 def test_e2e_run_github_app():
     """
     What we want to do:
-    (1) open a PR in a repo 'https://github.com/khulnasoft/pr-insight-tests'
+    (1) open a PR in a repo 'https://github.com/Khulnasoft/pr-insight-tests'
     (2) wait for 5 minutes until the PR is processed by the GitHub app
     (3) check that the relevant tools have been executed
     """
     base_branch = "main"  # or any base branch you want
     new_branch = f"github_app_e2e_test-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
-    repo_url = 'khulnasoft/pr-insight-tests'
+    repo_url = 'Khulnasoft/pr-insight-tests'
     get_settings().config.git_provider = "github"
     git_provider = get_git_provider()()
     github_client = git_provider.github_client

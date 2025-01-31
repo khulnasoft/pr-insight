@@ -1,10 +1,10 @@
-# PR-Insight Code Fine-tuning Benchmark
+# Khulnasoft Merge Code Fine-tuning Benchmark
 
 On coding tasks, the gap between open-source models and top closed-source models such as GPT4 is significant.
 <br>
 In practice, open-source models are unsuitable for most real-world code tasks, and require further fine-tuning to produce acceptable results.
 
-_PR-Insight fine-tuning benchmark_ aims to benchmark open-source models on their ability to be fine-tuned for a coding task.
+_Khulnasoft Merge fine-tuning benchmark_ aims to benchmark open-source models on their ability to be fine-tuned for a coding task.
 Specifically, we chose to fine-tune open-source models on the task of analyzing a pull request, and providing useful feedback and code suggestions.
 
 Here are the results:
@@ -53,7 +53,7 @@ Here are the results:
 
 ### Training dataset
 
-Our training dataset comprises 25,000 pull requests, aggregated from permissive license repos. For each pull request, we generated responses for the three main tools of PR-Insight:
+Our training dataset comprises 25,000 pull requests, aggregated from permissive license repos. For each pull request, we generated responses for the three main tools of Khulnasoft Merge:
 [Describe](https://pr-insight-docs.khulnasoft.com/tools/describe/), [Review](https://pr-insight-docs.khulnasoft.com/tools/improve/) and [Improve](https://pr-insight-docs.khulnasoft.com/tools/improve/).
 
 On the raw data collected, we employed various automatic and manual cleaning techniques to ensure the outputs were of the highest quality, and suitable for instruct-tuning.
@@ -62,9 +62,9 @@ Here are the prompts, and example outputs, used as input-output pairs to fine-tu
 
 | Tool     | Prompt                                                                                                     | Example output |
 |----------|------------------------------------------------------------------------------------------------------------|----------------|
-| Describe | [link](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/pr_description_prompts.toml) | [link](https://github.com/KhulnaSoft/pr-insight/pull/910#issue-2303989601)           |
-| Review   | [link](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/pr_reviewer_prompts.toml) | [link](https://github.com/KhulnaSoft/pr-insight/pull/910#issuecomment-2118761219)           |
-| Improve  | [link](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/pr_code_suggestions_prompts.toml) | [link](https://github.com/KhulnaSoft/pr-insight/pull/910#issuecomment-2118761309)           |
+| Describe | [link](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/pr_description_prompts.toml) | [link](https://github.com/Khulnasoft/pr-insight/pull/910#issue-2303989601)           |
+| Review   | [link](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/pr_reviewer_prompts.toml) | [link](https://github.com/Khulnasoft/pr-insight/pull/910#issuecomment-2118761219)           |
+| Improve  | [link](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/pr_code_suggestions_prompts.toml) | [link](https://github.com/Khulnasoft/pr-insight/pull/910#issuecomment-2118761309)           |
 
 ### Evaluation dataset
 
@@ -75,7 +75,7 @@ Here are the prompts, and example outputs, used as input-output pairs to fine-tu
 <br>
 
 We experimented with three model as judges: `gpt-4-turbo-2024-04-09`, `gpt-4o`, and `claude-3-opus-20240229`. All three produced similar results, with the same ranking order. This strengthens the validity of our testing protocol.
-The evaluation prompt can be found [here](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/pr_evaluate_prompt_response.toml)
+The evaluation prompt can be found [here](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/pr_evaluate_prompt_response.toml)
 
 Here is an example of a judge model feedback:
 

@@ -1,45 +1,14 @@
-## Using pip package
+To run PR-Insight locally, you first need to acquire two keys:
 
-Install the package:
+1. An OpenAI key from [here](https://platform.openai.com/api-keys){:target="_blank"}, with access to GPT-4 (or a key for other [language models](https://pr-insight-docs.khulnasoft.com/usage-guide/changing_a_model/), if you prefer).
+2. A personal access token from your Git platform (GitHub, GitLab, BitBucket) with repo scope. GitHub token, for example, can be issued from [here](https://github.com/settings/tokens){:target="_blank"}
 
-```
-pip install pr-insight
-```
-
-Then run the relevant tool with the script below.
-<br>
-Make sure to fill in the required parameters (`user_token`, `openai_key`, `pr_url`, `command`):
-
-```python
-from pr_insight import cli
-from pr_insight.config_loader import get_settings
-
-def main():
-    # Fill in the following values
-    provider = "github" # github/gitlab/bitbucket/azure_devops
-    user_token = "..."  #  user token
-    openai_key = "..."  # OpenAI key
-    pr_url = "..."      # PR URL, for example 'https://github.com/KhulnaSoft/pr-insight/pull/809'
-    command = "/review" # Command to run (e.g. '/review', '/describe', '/ask="What is the purpose of this PR?"', ...)
-
-    # Setting the configurations
-    get_settings().set("CONFIG.git_provider", provider)
-    get_settings().set("openai.key", openai_key)
-    get_settings().set("github.user_token", user_token)
-
-    # Run the command. Feedback will appear in GitHub PR comments
-    cli.run_command(pr_url, command)
-
-
-if __name__ == '__main__':
-    main()
-```
 
 ## Using Docker image
 
 A list of the relevant tools can be found in the [tools guide](../tools/ask.md).
 
-To invoke a tool (for example `review`), you can run directly from the Docker image. Here's how:
+To invoke a tool (for example `review`), you can run PR-Insight directly from the Docker image. Here's how:
 
 - For GitHub:
     ```
@@ -66,8 +35,9 @@ To invoke a tool (for example `review`), you can run directly from the Docker im
     docker run --rm -it -e CONFIG.GIT_PROVIDER=bitbucket -e OPENAI.KEY=$OPENAI_API_KEY -e BITBUCKET.BEARER_TOKEN=$BITBUCKET_BEARER_TOKEN khulnasoft/pr-insight:latest --pr_url=<pr_url> review
     ```
 
-For other git providers, update `CONFIG.GIT_PROVIDER` accordingly and check the `pr_insight/settings/.secrets_template.toml` file for environment variables expected names and values.
-The `pr_insight` uses [Dynaconf](https://www.dynaconf.com/) to load settings from configuration files.
+For other git providers, update `CONFIG.GIT_PROVIDER` accordingly and check the [`pr_insight/settings/.secrets_template.toml`](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/.secrets_template.toml) file for environment variables expected names and values.
+
+### Utilizing environment variables
 
 It is also possible to provide or override the configuration by setting the corresponding environment variables.
 You can define the corresponding environment variables by following this convention: `<TABLE>__<KEY>=<VALUE>` or `<TABLE>.<KEY>=<VALUE>`.
@@ -75,8 +45,6 @@ The `<TABLE>` refers to a table/section in a configuration file and `<KEY>=<VALU
 
 For example, suppose you want to run `pr_insight` that connects to a self-hosted GitLab instance similar to an example above.
 You can define the environment variables in a plain text file named `.env` with the following content:
-
-> Warning: Never commit the `.env` file to version control system as it might contains sensitive credentials!
 
 ```
 CONFIG__GIT_PROVIDER="gitlab"
@@ -93,12 +61,61 @@ docker run --rm -it --env-file .env khulnasoft/pr-insight:latest <tool> <tool pa
 
 ---
 
+### I get an error when running the Docker image. What should I do?
+
+If you encounter an error when running the Docker image, it is almost always due to a misconfiguration of api keys or tokens.
+
+Note that litellm, which is used by pr-insight, sometimes returns non-informative error messages such as `APIError: OpenAIException - Connection error.`
+Carefully check the api keys and tokens you provided and make sure they are correct.
+Adjustments may be needed depending on your llm provider.
+
+For example, for Azure OpenAI, additional keys are [needed](https://pr-insight-docs.khulnasoft.com/usage-guide/changing_a_model/#azure).
+Same goes for other providers, make sure to check the [documentation](https://pr-insight-docs.khulnasoft.com/usage-guide/changing_a_model/#changing-a-model)
+
+## Using pip package
+
+Install the package:
+
+```
+pip install pr-insight
+```
+
+Then run the relevant tool with the script below.
+<br>
+Make sure to fill in the required parameters (`user_token`, `openai_key`, `pr_url`, `command`):
+
+```python
+from pr_insight import cli
+from pr_insight.config_loader import get_settings
+
+def main():
+    # Fill in the following values
+    provider = "github" # github/gitlab/bitbucket/azure_devops
+    user_token = "..."  #  user token
+    openai_key = "..."  # OpenAI key
+    pr_url = "..."      # PR URL, for example 'https://github.com/Khulnasoft/pr-insight/pull/809'
+    command = "/review" # Command to run (e.g. '/review', '/describe', '/ask="What is the purpose of this PR?"', ...)
+
+    # Setting the configurations
+    get_settings().set("CONFIG.git_provider", provider)
+    get_settings().set("openai.key", openai_key)
+    get_settings().set("github.user_token", user_token)
+
+    # Run the command. Feedback will appear in GitHub PR comments
+    cli.run_command(pr_url, command)
+
+
+if __name__ == '__main__':
+    main()
+```
+
+
 ## Run from source
 
 1. Clone this repository:
 
 ```
-git clone https://github.com/KhulnaSoft/pr-insight.git
+git clone https://github.com/Khulnasoft/pr-insight.git
 ```
 
 2. Navigate to the `/pr-insight` folder and install the requirements in your favorite virtual environment:

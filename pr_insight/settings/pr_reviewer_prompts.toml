@@ -16,20 +16,20 @@ The format we will use to present the PR code diff:
 
 @@ ... @@ def func1():
 __new hunk__
-11  unchanged code line0 in the PR
-12  unchanged code line1 in the PR
-13 +new code line2 added in the PR
-14  unchanged code line3 in the PR
+11  unchanged code line0
+12  unchanged code line1
+13 +new code line2 added
+14  unchanged code line3
 __old hunk__
  unchanged code line0
  unchanged code line1
--old code line2 removed in the PR
+-old code line2 removed
  unchanged code line3
 
 @@ ... @@ def func2():
 __new hunk__
  unchanged code line4
-+new code line5 removed in the PR
++new code line5 removed
  unchanged code line6
 
 ## File: 'src/file2.py'
@@ -43,7 +43,7 @@ __new hunk__
 {%- if is_ai_metadata %}
 - If available, an AI-generated summary will appear and provide a high-level overview of the file changes. Note that this summary may not be fully accurate or complete.
 {%- endif %}
-- When quoting variables or names from the code, use backticks (`) instead of single quote (').
+- When quoting variables, names or file paths from the code, use backticks (`) instead of single quote (').
 
 
 {%- if extra_instructions %}
@@ -75,10 +75,10 @@ class KeyIssuesComponentLink(BaseModel):
 
 class TicketCompliance(BaseModel):
     ticket_url: str = Field(description="Ticket URL or ID")
-    ticket_requirements: str = Field(description="Repeat, in your own words, all ticket requirements, in bullet points")
-    fully_compliant_requirements: str = Field(description="A list, in bullet points, of which requirements are met by the PR code. Don't explain how the requirements are met, just list them shortly. Can be empty")
-    not_compliant_requirements: str = Field(description="A list, in bullet points, of which requirements are not met by the PR code. Don't explain how the requirements are not met, just list them shortly. Can be empty")
-    overall_compliance_level: str = Field(description="Overall give this PR one of these three values in relation to the ticket: 'Fully compliant', 'Partially compliant', or 'Not compliant'")
+    ticket_requirements: str = Field(description="Repeat, in your own words (in bullet points), all the requirements, sub-tasks, DoD, and acceptance criteria raised by the ticket")
+    fully_compliant_requirements: str = Field(description="Bullet-point list of items from the  'ticket_requirements' section above that are fulfilled by the PR code. Don't explain how the requirements are met, just list them shortly. Can be empty")
+    not_compliant_requirements: str = Field(description="Bullet-point list of items from the 'ticket_requirements' section above that are not fulfilled by the PR code. Don't explain how the requirements are not met, just list them shortly. Can be empty")
+    requires_further_human_verification: str = Field(description="Bullet-point list of items from the 'ticket_requirements' section above that cannot be assessed through code review alone, are unclear, or need further human review (e.g., browser testing, UI checks). Leave empty if all 'ticket_requirements' were marked as fully compliant or not compliant")
 {%- endif %}
 
 class Review(BaseModel):

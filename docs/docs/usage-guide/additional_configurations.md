@@ -1,5 +1,5 @@
 ## Show possible configurations
-The possible configurations of PR-Insight are stored in [here](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml).
+The possible configurations of Khulnasoft Merge are stored in [here](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml){:target="_blank"}.
 In the [tools](https://pr-insight-docs.khulnasoft.com/tools/) page you can find explanations on how to use these configurations for each tool.
 
 To print all the available configurations as a comment on your PR, you can use the following command:
@@ -22,7 +22,7 @@ Will output an additional field showing the actual configurations used for the `
 
 ## Ignoring files from analysis
 
-In some cases, you may want to exclude specific files or directories from the analysis performed by PR-Insight. This can be useful, for example, when you have files that are generated automatically or files that shouldn't be reviewed, like vendor code.
+In some cases, you may want to exclude specific files or directories from the analysis performed by Khulnasoft Merge. This can be useful, for example, when you have files that are generated automatically or files that shouldn't be reviewed, like vendor code.
 
 You can ignore files or folders using the following methods:
  - `IGNORE.GLOB`
@@ -52,7 +52,7 @@ regex = ['.*\.py$']
 
 ## Extra instructions
 
-All PR-Insight tools have a parameter called `extra_instructions`, that enables to add free-text extra instructions. Example usage:
+All Khulnasoft Merge tools have a parameter called `extra_instructions`, that enables to add free-text extra instructions. Example usage:
 ```
 /update_changelog --pr_update_changelog.extra_instructions="Make sure to update also the version ..."
 ```
@@ -85,7 +85,7 @@ By default, around any change in your PR, git patch provides three lines of cont
  code line that already existed in the file...
 ```
 
-PR-Insight will try to increase the number of lines of context, via the parameter:
+Khulnasoft Merge will try to increase the number of lines of context, via the parameter:
 ```
 [config]
 patch_extra_lines_before=3
@@ -94,16 +94,16 @@ patch_extra_lines_after=1
 
 Increasing this number provides more context to the model, but will also increase the token budget, and may overwhelm the model with too much information, unrelated to the actual PR code changes.
 
-If the PR is too large (see [PR Compression strategy](https://github.com/KhulnaSoft/pr-insight/blob/main/PR_COMPRESSION.md)), PR-Insight may automatically set this number to 0, and will use the original git patch.
+If the PR is too large (see [PR Compression strategy](https://github.com/Khulnasoft/pr-insight/blob/main/PR_COMPRESSION.md)), Khulnasoft Merge may automatically set this number to 0, and will use the original git patch.
 
 
 ## Editing the prompts
 
-The prompts for the various PR-Insight tools are defined in the `pr_insight/settings` folder.
+The prompts for the various Khulnasoft Merge tools are defined in the `pr_insight/settings` folder.
 In practice, the prompts are loaded and stored as a standard setting object.
 Hence, editing them is similar to editing any other configuration value - just place the relevant key in `.pr_insight.toml`file, and override the default value.
 
-For example, if you want to edit the prompts of the [describe](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/pr_description_prompts.toml) tool, you can add the following to your `.pr_insight.toml` file:
+For example, if you want to edit the prompts of the [describe](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/pr_description_prompts.toml) tool, you can add the following to your `.pr_insight.toml` file:
 ```
 [pr_description_prompt]
 system="""
@@ -113,7 +113,7 @@ user="""
 ...
 """
 ```
-Note that the new prompt will need to generate an output compatible with the relevant [post-process function](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/tools/pr_description.py#L137).
+Note that the new prompt will need to generate an output compatible with the relevant [post-process function](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/tools/pr_description.py#L137).
 
 ## Integrating with Logging Observability Platforms
 
@@ -138,7 +138,17 @@ LANGSMITH_BASE_URL=<url>
 
 ## Ignoring automatic commands in PRs
 
-In some cases, you may want to automatically ignore specific PRs . PR-Insight enables you to ignore PR with a specific title, or from/to specific branches (regex matching).
+Khulnasoft Merge allows you to automatically ignore certain PRs based on various criteria:
+
+- PRs with specific titles (using regex matching)
+- PRs between specific branches (using regex matching)
+- PRs that don't include changes from specific folders (using regex matching)
+- PRs containing specific labels
+- PRs opened by specific users
+
+### Example usage
+
+#### Ignoring PRs with specific titles
 
 To ignore PRs with a specific title such as "[Bump]: ...", you can add the following to your `configuration.toml` file:
 
@@ -149,6 +159,7 @@ ignore_pr_title = ["\\[Bump\\]"]
 
 Where the `ignore_pr_title` is a list of regex patterns to match the PR title you want to ignore. Default is `ignore_pr_title = ["^\\[Auto\\]", "^Auto"]`.
 
+#### Ignoring PRs between specific branches
 
 To ignore PRs from specific source or target branches, you can add the following to your `configuration.toml` file:
 
@@ -161,6 +172,7 @@ ignore_pr_target_branches = ["qa"]
 Where the `ignore_pr_source_branches` and `ignore_pr_target_branches` are lists of regex patterns to match the source and target branches you want to ignore.
 They are not mutually exclusive, you can use them together or separately.
 
+#### Ignoring PRs that don't include changes from specific folders
 
 To allow only specific folders (often needed in large monorepos), set:
 
@@ -170,3 +182,34 @@ allow_only_specific_folders=['folder1','folder2']
 ```
 
 For the configuration above, automatic feedback will only be triggered when the PR changes include files from 'folder1' or 'folder2'
+
+#### Ignoring PRs containg specific labels
+
+To ignore PRs containg specific labels, you can add the following to your `configuration.toml` file:
+
+```
+[config]
+ignore_pr_labels = ["do-not-merge"]
+```
+
+Where the `ignore_pr_labels` is a list of labels that when present in the PR, the PR will be ignored.
+
+#### Ignoring PRs from specific users
+
+Khulnasoft Merge automatically identifies and ignores pull requests created by bots using:
+
+- GitHub's native bot detection system
+- Name-based pattern matching
+
+While this detection is robust, it may not catch all cases, particularly when:
+
+- Bots are registered as regular user accounts
+- Bot names don't match common patterns
+
+To supplement the automatic bot detection, you can manually specify users to ignore. Add the following to your `configuration.toml` file to ignore PRs from specific users:
+```
+[config]
+ignore_pr_authors = ["my-special-bot-user", ...]
+```
+
+Where the `ignore_pr_authors` is a list of usernames that you want to ignore.

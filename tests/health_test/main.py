@@ -6,9 +6,9 @@ from pathlib import Path
 
 from starlette_context import context, request_cycle_context
 
+from pr_insight.agent.pr_insight import PRInsight, commands
 from pr_insight.cli import run_command
 from pr_insight.config_loader import get_settings, global_settings
-from pr_insight.insight.pr_insight import PRInsight, commands
 from pr_insight.log import get_logger, setup_logger
 from tests.e2e_tests import e2e_utils
 
@@ -17,18 +17,18 @@ setup_logger(log_level)
 
 
 async def run_async():
-    pr_url = os.getenv('TEST_PR_URL', 'https://github.com/khulnasoft/pr-insight/pull/1385')
+    pr_url = os.getenv('TEST_PR_URL', 'https://github.com/Khulnasoft/pr-insight/pull/102')
 
     get_settings().set("config.git_provider", "github")
     get_settings().set("config.publish_output", False)
     get_settings().set("config.fallback_models", [])
 
-    insight = PRInsight()
+    agent = PRInsight()
     try:
         # Run the 'describe' command
         get_logger().info(f"\nSanity check for the 'describe' command...")
         original_settings = copy.deepcopy(get_settings())
-        await insight.handle_request(pr_url, ['describe'])
+        await agent.handle_request(pr_url, ['describe'])
         pr_header_body = dict(get_settings().data)['artifact']
         assert pr_header_body.startswith('###') and 'PR Type' in pr_header_body and 'Description' in pr_header_body
         context['settings'] = copy.deepcopy(original_settings) # Restore settings state after each test to prevent test interference
@@ -37,7 +37,7 @@ async def run_async():
         # Run the 'review' command
         get_logger().info(f"\nSanity check for the 'review' command...")
         original_settings = copy.deepcopy(get_settings())
-        await insight.handle_request(pr_url, ['review'])
+        await agent.handle_request(pr_url, ['review'])
         pr_review_body = dict(get_settings().data)['artifact']
         assert pr_review_body.startswith('##') and 'PR Reviewer Guide' in pr_review_body
         context['settings'] = copy.deepcopy(original_settings)  # Restore settings state after each test to prevent test interference
@@ -46,7 +46,7 @@ async def run_async():
         # Run the 'improve' command
         get_logger().info(f"\nSanity check for the 'improve' command...")
         original_settings = copy.deepcopy(get_settings())
-        await insight.handle_request(pr_url, ['improve'])
+        await agent.handle_request(pr_url, ['improve'])
         pr_improve_body = dict(get_settings().data)['artifact']
         assert pr_improve_body.startswith('##') and 'PR Code Suggestions' in pr_improve_body
         context['settings'] = copy.deepcopy(original_settings)  # Restore settings state after each test to prevent test interference

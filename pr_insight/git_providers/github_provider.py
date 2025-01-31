@@ -713,7 +713,7 @@ class GithubProvider(GitProvider):
             except AttributeError as e:
                 raise ValueError(
                     "GitHub token is required when using user deployment. See: "
-                    "https://github.com/khulnasoft/pr-insight#method-2-run-from-source") from e
+                    "https://github.com/Khulnasoft/pr-insight#method-2-run-from-source") from e
             return Github(auth=Auth.Token(token), base_url=self.base_url)
 
     def _get_repo(self):

@@ -12,6 +12,7 @@ from starlette.middleware import Middleware
 from starlette_context import context
 from starlette_context.middleware import RawContextMiddleware
 
+from pr_insight.agent.pr_insight import PRInsight
 from pr_insight.algo.utils import update_settings_from_args
 from pr_insight.config_loader import get_settings, global_settings
 from pr_insight.git_providers import (get_git_provider,
@@ -20,7 +21,6 @@ from pr_insight.git_providers.git_provider import IncrementalPR
 from pr_insight.git_providers.utils import apply_repo_settings
 from pr_insight.identity_providers import get_identity_provider
 from pr_insight.identity_providers.identity_provider import Eligibility
-from pr_insight.insight.pr_insight import PRInsight
 from pr_insight.log import LoggingFormat, get_logger, setup_logger
 from pr_insight.servers.utils import DefaultDictWithTimeout, verify_signature
 
@@ -83,7 +83,7 @@ async def handle_comments_on_pr(body: Dict[str, Any],
                                 sender_id: str,
                                 action: str,
                                 log_context: Dict[str, Any],
-                                insight: PRInsight):
+                                agent: PRInsight):
     if "comment" not in body:
         return {}
     comment_body = body.get("comment", {}).get("body")
@@ -116,7 +116,7 @@ async def handle_comments_on_pr(body: Dict[str, Any],
     with get_logger().contextualize(**log_context):
         if get_identity_provider().verify_eligibility("github", sender_id, api_url) is not Eligibility.NOT_ELIGIBLE:
             get_logger().info(f"Processing comment on PR {api_url=}, comment_body={comment_body}")
-            await insight.handle_request(api_url, comment_body,
+            await agent.handle_request(api_url, comment_body,
                         notify=lambda: provider.add_eyes_reaction(comment_id, disable_eyes=disable_eyes))
         else:
             get_logger().info(f"User {sender=} is not eligible to process comment on PR {api_url=}")
@@ -127,7 +127,7 @@ async def handle_new_pr_opened(body: Dict[str, Any],
                                sender_id: str,
                                action: str,
                                log_context: Dict[str, Any],
-                               insight: PRInsight):
+                               agent: PRInsight):
     title = body.get("pull_request", {}).get("title", "")
 
     pull_request, api_url = _check_pull_request_event(action, body, log_context)
@@ -138,7 +138,7 @@ async def handle_new_pr_opened(body: Dict[str, Any],
         # logic to ignore PRs with specific titles (e.g. "[Auto] ...")
         apply_repo_settings(api_url)
         if get_identity_provider().verify_eligibility("github", sender_id, api_url) is not Eligibility.NOT_ELIGIBLE:
-                await _perform_auto_commands_github("pr_commands", insight, body, api_url, log_context)
+                await _perform_auto_commands_github("pr_commands", agent, body, api_url, log_context)
         else:
             get_logger().info(f"User {sender=} is not eligible to process PR {api_url=}")
 
@@ -148,7 +148,7 @@ async def handle_push_trigger_for_new_commits(body: Dict[str, Any],
                         sender_id: str,
                         action: str,
                         log_context: Dict[str, Any],
-                        insight: PRInsight):
+                        agent: PRInsight):
     pull_request, api_url = _check_pull_request_event(action, body, log_context)
     if not (pull_request and api_url):
         return {}
@@ -197,7 +197,7 @@ async def handle_push_trigger_for_new_commits(body: Dict[str, Any],
     try:
         if get_identity_provider().verify_eligibility("github", sender_id, api_url) is not Eligibility.NOT_ELIGIBLE:
                 get_logger().info(f"Performing incremental review for {api_url=} because of {event=} and {action=}")
-                await _perform_auto_commands_github("push_commands", insight, body, api_url, log_context)
+                await _perform_auto_commands_github("push_commands", agent, body, api_url, log_context)
 
     finally:
         # release the waiting task block
@@ -257,6 +257,14 @@ def should_process_pr_logic(body) -> bool:
         pr_labels = pull_request.get("labels", [])
         source_branch = pull_request.get("head", {}).get("ref", "")
         target_branch = pull_request.get("base", {}).get("ref", "")
+        sender = body.get("sender", {}).get("login")
+
+        # logic to ignore PRs from specific users
+        ignore_pr_users = get_settings().get("CONFIG.IGNORE_PR_AUTHORS", [])
+        if ignore_pr_users and sender:
+            if sender in ignore_pr_users:
+                get_logger().info(f"Ignoring PR from user '{sender}' due to 'config.ignore_pr_authors' setting")
+                return False
 
         # logic to ignore PRs with specific titles
         if title:
@@ -276,6 +284,7 @@ def should_process_pr_logic(body) -> bool:
                 get_logger().info(f"Ignoring PR with labels '{labels_str}' due to config.ignore_pr_labels settings")
                 return False
 
+        # logic to ignore PRs with specific source or target branches
         ignore_pr_source_branches = get_settings().get("CONFIG.IGNORE_PR_SOURCE_BRANCHES", [])
         ignore_pr_target_branches = get_settings().get("CONFIG.IGNORE_PR_TARGET_BRANCHES", [])
         if pull_request and (ignore_pr_source_branches or ignore_pr_target_branches):
@@ -303,7 +312,7 @@ async def handle_request(body: Dict[str, Any], event: str):
     action = body.get("action")  # "created", "opened", "reopened", "ready_for_review", "review_requested", "synchronize"
     if not action:
         return {}
-    insight = PRInsight()
+    agent = PRInsight()
     log_context, sender, sender_id, sender_type = get_log_context(body, event, action, build_number)
 
     # logic to ignore PRs opened by bot, PRs with specific titles, labels, source branches, or target branches
@@ -319,16 +328,16 @@ async def handle_request(body: Dict[str, Any], event: str):
     # handle comments on PRs
     elif action == 'created':
         get_logger().debug(f'Request body', artifact=body, event=event)
-        await handle_comments_on_pr(body, event, sender, sender_id, action, log_context, insight)
+        await handle_comments_on_pr(body, event, sender, sender_id, action, log_context, agent)
     # handle new PRs
     elif event == 'pull_request' and action != 'synchronize' and action != 'closed':
         get_logger().debug(f'Request body', artifact=body, event=event)
-        await handle_new_pr_opened(body, event, sender, sender_id, action, log_context, insight)
+        await handle_new_pr_opened(body, event, sender, sender_id, action, log_context, agent)
     elif event == "issue_comment" and 'edited' in action:
         pass # handle_checkbox_clicked
     # handle pull_request event with synchronize action - "push trigger" for new commits
     elif event == 'pull_request' and action == 'synchronize':
-        await handle_push_trigger_for_new_commits(body, event, sender,sender_id,  action, log_context, insight)
+        await handle_push_trigger_for_new_commits(body, event, sender,sender_id,  action, log_context, agent)
     elif event == 'pull_request' and action == 'closed':
         if get_settings().get("CONFIG.ANALYTICS_FOLDER", ""):
             handle_closed_pr(body, event, action, log_context)
@@ -371,7 +380,7 @@ def _check_pull_request_event(action: str, body: dict, log_context: dict) -> Tup
     return pull_request, api_url
 
 
-async def _perform_auto_commands_github(commands_conf: str, insight: PRInsight, body: dict, api_url: str,
+async def _perform_auto_commands_github(commands_conf: str, agent: PRInsight, body: dict, api_url: str,
                                         log_context: dict):
     apply_repo_settings(api_url)
     if commands_conf == "pr_commands" and get_settings().config.disable_auto_feedback:  # auto commands for PR, and auto feedback is disabled
@@ -391,7 +400,7 @@ async def _perform_auto_commands_github(commands_conf: str, insight: PRInsight, 
         other_args = update_settings_from_args(args)
         new_command = ' '.join([command] + other_args)
         get_logger().info(f"{commands_conf}. Performing auto command '{new_command}', for {api_url=}")
-        await insight.handle_request(api_url, new_command)
+        await agent.handle_request(api_url, new_command)
 
 
 @router.get("/")

@@ -2,9 +2,9 @@ import argparse
 import asyncio
 import os
 
+from pr_insight.agent.pr_insight import PRInsight, commands
 from pr_insight.algo.utils import get_version
 from pr_insight.config_loader import get_settings
-from pr_insight.insight.pr_insight import PRInsight, commands
 from pr_insight.log import get_logger, setup_logger
 
 log_level = os.environ.get("LOG_LEVEL", "INFO")

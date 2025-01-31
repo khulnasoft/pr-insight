@@ -16,18 +16,14 @@ from starlette.responses import JSONResponse
 from starlette_context import context
 from starlette_context.middleware import RawContextMiddleware
 
+from pr_insight.agent.pr_insight import PRInsight
 from pr_insight.algo.utils import update_settings_from_args
 from pr_insight.config_loader import get_settings, global_settings
 from pr_insight.git_providers.utils import apply_repo_settings
 from pr_insight.identity_providers import get_identity_provider
 from pr_insight.identity_providers.identity_provider import Eligibility
-from pr_insight.insight.pr_insight import PRInsight
 from pr_insight.log import LoggingFormat, get_logger, setup_logger
 from pr_insight.secret_providers import get_secret_provider
-from pr_insight.servers.github_action_runner import get_setting_or_env, is_true
-from pr_insight.tools.pr_code_suggestions import PRCodeSuggestions
-from pr_insight.tools.pr_description import PRDescription
-from pr_insight.tools.pr_reviewer import PRReviewer
 
 setup_logger(fmt=LoggingFormat.JSON, level="DEBUG")
 router = APIRouter()
@@ -75,7 +71,19 @@ async def handle_manifest(request: Request, response: Response):
     return JSONResponse(manifest_obj)
 
 
-async def _perform_commands_bitbucket(commands_conf: str, insight: PRInsight, api_url: str, log_context: dict, data: dict):
+def _get_username(data):
+    actor = data.get("data", {}).get("actor", {})
+    if actor:
+        if "username" in actor:
+            return actor["username"]
+        elif "display_name" in actor:
+            return actor["display_name"]
+        elif "nickname" in actor:
+            return actor["nickname"]
+    return ""
+
+
+async def _perform_commands_bitbucket(commands_conf: str, agent: PRInsight, api_url: str, log_context: dict, data: dict):
     apply_repo_settings(api_url)
     if commands_conf == "pr_commands" and get_settings().config.disable_auto_feedback:  # auto commands for PR, and auto feedback is disabled
         get_logger().info(f"Auto feedback is disabled, skipping auto commands for PR {api_url=}")
@@ -94,7 +102,7 @@ async def _perform_commands_bitbucket(commands_conf: str, insight: PRInsight, ap
             new_command = ' '.join([command] + other_args)
             get_logger().info(f"Performing command: {new_command}")
             with get_logger().contextualize(**log_context):
-                await insight.handle_request(api_url, new_command)
+                await agent.handle_request(api_url, new_command)
         except Exception as e:
             get_logger().error(f"Failed to perform command {command}: {e}")
 
@@ -118,6 +126,14 @@ def should_process_pr_logic(data) -> bool:
         title = pr_data.get("title", "")
         source_branch = pr_data.get("source", {}).get("branch", {}).get("name", "")
         target_branch = pr_data.get("destination", {}).get("branch", {}).get("name", "")
+        sender = _get_username(data)
+
+        # logic to ignore PRs from specific users
+        ignore_pr_users = get_settings().get("CONFIG.IGNORE_PR_AUTHORS", [])
+        if ignore_pr_users and sender:
+            if sender in ignore_pr_users:
+                get_logger().info(f"Ignoring PR from user '{sender}' due to 'config.ignore_pr_authors' setting")
+                return False
 
         # logic to ignore PRs with specific titles
         if title:
@@ -167,16 +183,7 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
                     return "OK"
 
             # Get the username of the sender
-            actor = data.get("data", {}).get("actor", {})
-            if actor:
-                try:
-                    username = actor["username"]
-                except KeyError:
-                    try:
-                        username = actor["display_name"]
-                    except KeyError:
-                        username = actor["nickname"]
-                log_context["sender"] = username
+            log_context["sender"] = _get_username(data)
 
             sender_id = data.get("data", {}).get("actor", {}).get("account_id", "")
             log_context["sender_id"] = sender_id
@@ -193,7 +200,7 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
             context['bitbucket_bearer_token'] = bearer_token
             context["settings"] = copy.deepcopy(global_settings)
             event = data["event"]
-            insight = PRInsight()
+            agent = PRInsight()
             if event == "pullrequest:created":
                 pr_url = data["data"]["pullrequest"]["links"]["html"]["href"]
                 log_context["api_url"] = pr_url
@@ -213,7 +220,7 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
                 with get_logger().contextualize(**log_context):
                     if get_identity_provider().verify_eligibility("bitbucket",
                                                                      sender_id, pr_url) is not Eligibility.NOT_ELIGIBLE:
-                        await insight.handle_request(pr_url, comment_body)
+                        await agent.handle_request(pr_url, comment_body)
         except Exception as e:
             get_logger().error(f"Failed to handle webhook: {e}")
     background_tasks.add_task(inner)

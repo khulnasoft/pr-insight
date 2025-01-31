@@ -1,5 +1,5 @@
 ## Run as a GitLab Pipeline
-You can use a pre-built Action Docker image to run PR-Insight as a GitLab pipeline. This is a simple way to get started with PR-Insight without setting up your own server.
+You can use a pre-built Action Docker image to run PR-Insight as a GitLab pipeline. This is a simple way to get started with Khulnasoft Merge without setting up your own server.
 
 (1) Add the following file to your repository under `.gitlab-ci.yml`:
 ```yaml
@@ -26,8 +26,8 @@ pr_insight_job:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 ```
-This script will run PR-Insight on every new merge request. You can modify the `rules` section to run PR-Insight on different events.
-You can also modify the `script` section to run different PR-Insight commands, or with different parameters by exporting different environment variables.
+This script will run Khulnasoft Merge on every new merge request. You can modify the `rules` section to run Khulnasoft Merge on different events.
+You can also modify the `script` section to run different Khulnasoft Merge commands, or with different parameters by exporting different environment variables.
 
 
 (2) Add the following masked variables to your GitLab repository (CI/CD -> Variables):
@@ -43,7 +43,7 @@ Note that if your base branches are not protected, don't set the variables as `p
 
 ## Run a GitLab webhook server
 
-1. From the GitLab workspace or group, create an access token with "Reporter" role ("Developer" if using Pro version of the insight) and "api" scope.
+1. From the GitLab workspace or group, create an access token with "Reporter" role ("Developer" if using Pro version of the agent) and "api" scope.
 
 2. Generate a random secret for your app, and save it for later. For example, you can use:
 
@@ -54,10 +54,10 @@ WEBHOOK_SECRET=$(python -c "import secrets; print(secrets.token_hex(10))")
 3. Clone this repository:
 
 ```
-git clone https://github.com/KhulnaSoft/pr-insight.git
+git clone https://github.com/Khulnasoft/pr-insight.git
 ```
 
-4. Prepare variables and secrets. Skip this step if you plan on settings these as environment variables when running the insight:
+4. Prepare variables and secrets. Skip this step if you plan on settings these as environment variables when running the agent:
   1. In the configuration file/variables:
     - Set `deployment_type` to "gitlab"
 

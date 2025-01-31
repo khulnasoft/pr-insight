@@ -1,5 +1,4 @@
 import pytest
-import textwrap
 
 from pr_insight.algo.git_patch_processing import extend_patch
 from pr_insight.algo.pr_processing import pr_generate_extended_diff
@@ -163,37 +162,25 @@ class TestExtendedPatchMoreLines:
 
 class TestLoadLargeDiff:
     def test_no_newline(self):
-        # Remove leading indentation from input strings
         patch = load_large_diff("test.py",
-                              textwrap.dedent("""\
-                              old content 1
-                              some new content
-                              another line
-                              """),
-                              textwrap.dedent("""
-                              old content 1
-                              old content 2"""))
+                              """old content 1
+some new content
+another line
+""",
+                              """old content 1
+old content 2""")
 
-        # Normalize whitespace in both actual and expected patches
-        patch = patch.replace('--- \n', '---\n').replace('+++ \n', '+++\n')
-        
-        # Normalize each line by stripping whitespace
-        normalized_patch = '\n'.join(line.strip() for line in patch.splitlines())
-        
-        patch_expected = """\
----
+        # Remove any trailing whitespace from each line to make comparison more robust
+        actual_lines = [line.rstrip() for line in patch.splitlines()]
+        expected_lines = [line.rstrip() for line in """---
 +++
-@@ -1,3 +1,3 @@
--
-old content 1
+@@ -1,2 +1,3 @@
+ old content 1
 -old content 2
 +some new content
-+another line"""
++another line""".splitlines()]
 
-        # Normalize expected patch the same way
-        normalized_expected = '\n'.join(line.strip() for line in patch_expected.splitlines())
-        
-        assert normalized_patch == normalized_expected
+        assert actual_lines == expected_lines
 
     def test_empty_inputs(self):
         assert load_large_diff("test.py", "", "") == ""

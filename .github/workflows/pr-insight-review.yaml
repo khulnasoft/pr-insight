@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: PR Insight action step
         id: prinsight
-        uses: khulnasoft/pr-insight@main
+        uses: Khulnasoft/pr-insight@main
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           OPENAI_ORG: ${{ secrets.OPENAI_ORG }} # optional

@@ -1,6 +1,6 @@
 ## Local and global metadata injection with multi-stage analysis
 (1)
-PR-Insight initially retrieves for each PR the following data:
+Khulnasoft Merge initially retrieves for each PR the following data:
 
 - PR title and branch name
 - PR original description
@@ -9,10 +9,10 @@ PR-Insight initially retrieves for each PR the following data:
 - The entire content of the files that were modified in the PR
 
 !!! tip "Tip: Organization-level metadata"
-    In addition to the inputs above, PR-Insight can incorporate supplementary preferences provided by the user, like [`extra_instructions` and `organization best practices`](https://pr-insight-docs.khulnasoft.com/tools/improve/#extra-instructions-and-best-practices). This information can be used to enhance the PR analysis.
+    In addition to the inputs above, Khulnasoft Merge can incorporate supplementary preferences provided by the user, like [`extra_instructions` and `organization best practices`](https://pr-insight-docs.khulnasoft.com/tools/improve/#extra-instructions-and-best-practices). This information can be used to enhance the PR analysis.
 
 (2)
-By default, the first command that PR-Insight executes is [`describe`](https://pr-insight-docs.khulnasoft.com/tools/describe/), which generates three types of outputs:
+By default, the first command that Khulnasoft Merge executes is [`describe`](https://pr-insight-docs.khulnasoft.com/tools/describe/), which generates three types of outputs:
 
 - PR Type (e.g. bug fix, feature, refactor, etc)
 - PR Description - a bullet point summary of the PR
@@ -21,7 +21,7 @@ By default, the first command that PR-Insight executes is [`describe`](https://p
 These AI-generated outputs are now considered as part of the PR metadata, and can be used in subsequent commands like `review` and `improve`.
 This effectively enables multi-stage chain-of-thought analysis, without doing any additional API calls which will cost time and money.
 
-For example, when generating code suggestions for different files, PR-Insight can inject the AI-generated ["Changes walkthrough"](https://github.com/KhulnaSoft/pr-insight/pull/1202#issue-2511546839) file summary in the prompt:
+For example, when generating code suggestions for different files, Khulnasoft Merge can inject the AI-generated ["Changes walkthrough"](https://github.com/Khulnasoft/pr-insight/pull/1202#issue-2511546839) file summary in the prompt:
 
 ```
 ## File: 'src/file1.py'
@@ -32,14 +32,14 @@ For example, when generating code suggestions for different files, PR-Insight ca
 
 @@ ... @@ def func1():
 __new hunk__
-11  unchanged code line0 in the PR
-12  unchanged code line1 in the PR
-13 +new code line2 added in the PR
-14  unchanged code line3 in the PR
+11  unchanged code line0
+12  unchanged code line1
+13 +new code line2 added
+14  unchanged code line3
 __old hunk__
  unchanged code line0
  unchanged code line1
--old code line2 removed in the PR
+-old code line2 removed
  unchanged code line3
 
 @@ ... @@ def func2():
@@ -53,4 +53,4 @@ __old hunk__
 
 
 (4) All the metadata described above represents several level of cumulative analysis - ranging from hunk level, to file level, to PR level, to organization level.
-This comprehensive approach enables PR-Insight AI models to generate more precise and contextually relevant suggestions and feedback.
+This comprehensive approach enables Khulnasoft Merge AI models to generate more precise and contextually relevant suggestions and feedback.

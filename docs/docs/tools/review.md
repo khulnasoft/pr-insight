@@ -8,7 +8,7 @@ The tool can be triggered automatically every time a new PR is [opened](../usage
 
 Note that the main purpose of the `review` tool is to provide the **PR reviewer** with useful feedbacks and insights. The PR author, in contrast, may prefer to save time and focus on the output of the [improve](./improve.md) tool, which provides actionable code suggestions.
 
-(Read more about the different personas in the PR process and how PR-Insight aims to assist them in our [blog](https://www.khulnasoft.com/blog/understanding-the-challenges-and-pain-points-of-the-pull-request-cycle/))
+(Read more about the different personas in the PR process and how Khulnasoft Merge aims to assist them in our [blog](https://www.khulnasoft.com/blog/understanding-the-challenges-and-pain-points-of-the-pull-request-cycle/))
 
 
 ## Example usage
@@ -55,6 +55,10 @@ extra_instructions = "..."
   <tr>
     <td><b>persistent_comment</b></td>
     <td>If set to true, the review comment will be persistent, meaning that every new review request will edit the previous one. Default is true.</td>
+  </tr>
+  <tr>
+  <td><b>final_update_message</b></td>
+  <td>When set to true, updating a persistent review comment during online commenting will automatically add a short comment with a link to the updated review in the pull request. Default is true.</td>
   </tr>
   <tr>
     <td><b>extra_instructions</b></td>
@@ -119,10 +123,6 @@ If enabled, the `review` tool can approve a PR when a specific comment, `/review
     <td><b>enable_auto_approval</b></td>
     <td>If set to true, the tool will approve the PR when invoked with the 'auto_approve' command. Default is false. This flag can be changed only from a configuration file.</td>
   </tr>
-  <tr>
-    <td><b>maximal_review_effort</b></td>
-    <td>Maximal effort level for auto-approval. If the PR's estimated review effort is above this threshold, the auto-approval will not run. Default is 5.</td>
-  </tr>
 </table>
 
 ## Usage Tips
@@ -138,7 +138,7 @@ If enabled, the `review` tool can approve a PR when a specific comment, `/review
     On the other hand, if you find one of the enabled features to be irrelevant for your use case, disable it. No default configuration can fit all use cases.
 
 !!! tip "Automation"
-    When you first install PR-Insight app, the [default mode](../usage-guide/automations_and_usage.md#github-app-automatic-tools-when-a-new-pr-is-opened) for the `review` tool is:
+    When you first install Khulnasoft Merge app, the [default mode](../usage-guide/automations_and_usage.md#github-app-automatic-tools-when-a-new-pr-is-opened) for the `review` tool is:
     ```
     pr_commands = ["/review", ...]
     ```
@@ -149,7 +149,7 @@ If enabled, the `review` tool can approve a PR when a specific comment, `/review
 
     The `review` tool can auto-generate two specific types of labels for a PR:
 
-    - a `possible security issue` label that detects if a possible [security issue](https://github.com/KhulnaSoft/pr-insight/blob/tr/user_description/pr_insight/settings/pr_reviewer_prompts.toml#L136) exists in the PR code (`enable_review_labels_security` flag)
+    - a `possible security issue` label that detects if a possible [security issue](https://github.com/Khulnasoft/pr-insight/blob/tr/user_description/pr_insight/settings/pr_reviewer_prompts.toml#L136) exists in the PR code (`enable_review_labels_security` flag)
     - a `Review effort [1-5]: x` label, where x is the estimated effort to review the PR (`enable_review_labels_effort` flag)
 
     Both modes are useful, and we recommended to enable them.
@@ -177,7 +177,7 @@ If enabled, the `review` tool can approve a PR when a specific comment, `/review
 
 !!! tip "Auto-approval"
 
-    PR-Insight can approve a PR when a specific comment is invoked.
+    Khulnasoft Merge can approve a PR when a specific comment is invoked.
 
     To ensure safety, the auto-approval feature is disabled by default. To enable auto-approval, you need to actively set in a pre-defined configuration file the following:
     ```
@@ -191,14 +191,8 @@ If enabled, the `review` tool can approve a PR when a specific comment, `/review
     ```
     /review auto_approve
     ```
-    PR-Insight will automatically approve the PR, and add a comment with the approval.
+    Khulnasoft Merge will automatically approve the PR, and add a comment with the approval.
 
-
-    You can also enable auto-approval only if the PR meets certain requirements, such as that the `estimated_review_effort` label is equal or below a certain threshold, by adjusting the flag:
-    ```
-    [pr_reviewer]
-    maximal_review_effort = 5
-    ```
 
 !!! tip  "Code suggestions"
 

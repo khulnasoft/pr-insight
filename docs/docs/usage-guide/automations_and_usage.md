@@ -1,6 +1,6 @@
 ## Local repo (CLI)
 
-When running from your locally cloned PR-Insight repo (CLI), your local configuration file will be used.
+When running from your locally cloned Khulnasoft Merge repo (CLI), your local configuration file will be used.
 Examples of invoking the different tools via the CLI:
 
 - **Review**:       `python -m pr_insight.cli --pr_url=<pr_url>  review`
@@ -10,7 +10,7 @@ Examples of invoking the different tools via the CLI:
 - **Reflect**:      `python -m pr_insight.cli --pr_url=<pr_url>  reflect`
 - **Update Changelog**:      `python -m pr_insight.cli --pr_url=<pr_url>  update_changelog`
 
-`<pr_url>` is the url of the relevant PR (for example: [#50](https://github.com/KhulnaSoft/pr-insight/pull/50)).
+`<pr_url>` is the url of the relevant PR (for example: [#50](https://github.com/Khulnasoft/pr-insight/pull/50)).
 
 **Notes:**
 
@@ -29,7 +29,7 @@ This is useful for debugging or experimenting with different tools.
 
 (3)
 
-**git provider**: The [git_provider](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml#L5) field in a configuration file determines the GIT provider that will be used by PR-Insight. Currently, the following providers are supported:
+**git provider**: The [git_provider](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml#L5) field in a configuration file determines the GIT provider that will be used by Khulnasoft Merge. Currently, the following providers are supported:
 `
 "github", "gitlab", "bitbucket", "azure", "codecommit", "local", "gerrit"
 `
@@ -37,7 +37,7 @@ This is useful for debugging or experimenting with different tools.
 Default is "github".
 
 ### CLI Health Check
-To verify that PR-Insight has been configured correctly, you can run this health check command from the repository root:
+To verify that Khulnasoft Merge has been configured correctly, you can run this health check command from the repository root:
 
 ```bash
 python -m tests.health_test.main
@@ -60,7 +60,7 @@ Before running the health check, ensure you have:
 
 ## Online usage
 
-Online usage means invoking PR-Insight tools by [comments](https://github.com/KhulnaSoft/pr-insight/pull/229#issuecomment-1695021901) on a PR.
+Online usage means invoking Khulnasoft Merge tools by [comments](https://github.com/Khulnasoft/pr-insight/pull/229#issuecomment-1695021901) on a PR.
 Commands for invoking the different tools via comments:
 
 - **Review**:       `/review`
@@ -76,32 +76,32 @@ For example, if you want to edit the `review` tool configurations, you can run:
 ```
 /review --pr_reviewer.extra_instructions="..." --pr_reviewer.require_score_review=false
 ```
-Any configuration value in [configuration file](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) file can be similarly edited. Comment `/config` to see the list of available configurations.
+Any configuration value in [configuration file](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) file can be similarly edited. Comment `/config` to see the list of available configurations.
 
 
-## PR-Insight Automatic Feedback
+## Khulnasoft Merge Automatic Feedback
 
 
 ### Disabling all automatic feedback
 
-To easily disable all automatic feedback from PR-Insight (GitHub App, GitLab Webhook, BitBucket App, Azure DevOps Webhook), set in a configuration file:
+To easily disable all automatic feedback from Khulnasoft Merge (GitHub App, GitLab Webhook, BitBucket App, Azure DevOps Webhook), set in a configuration file:
 
 ```toml
 [config]
 disable_auto_feedback = true
 ```
 
-When this parameter is set to `true`, PR-Insight will not run any automatic tools (like `describe`, `review`, `improve`) when a new PR is opened, or when new code is pushed to an open PR.
+When this parameter is set to `true`, Khulnasoft Merge will not run any automatic tools (like `describe`, `review`, `improve`) when a new PR is opened, or when new code is pushed to an open PR.
 
 ### GitHub App
 
-!!! note "Configurations for PR-Insight Pro"
-    PR-Insight Pro for GitHub is an App, hosted by KhulnaSoft. So all the instructions below are relevant also for PR-Insight Pro users.
+!!! note "Configurations for Khulnasoft Merge"
+    Khulnasoft Merge for GitHub is an App, hosted by Khulnasoft. So all the instructions below are relevant also for Khulnasoft Merge users.
     Same goes for [GitLab webhook](#gitlab-webhook) and [BitBucket App](#bitbucket-app) sections.
 
 #### GitHub app automatic tools when a new PR is opened
 
-The [github_app](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml#L220) section defines GitHub app specific configurations.
+The [github_app](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml#L220) section defines GitHub app specific configurations.
 
 The configuration parameter `pr_commands` defines the list of tools that will be **run automatically** when a new PR is opened:
 ```toml
@@ -113,7 +113,7 @@ pr_commands = [
 ]
 ```
 
-This means that when a new PR is opened/reopened or marked as ready for review, PR-Insight will run the `describe`, `review` and `improve` tools.
+This means that when a new PR is opened/reopened or marked as ready for review, Khulnasoft Merge will run the `describe`, `review` and `improve` tools.
 
 You can override the default tool parameters by using one the three options for a [configuration file](https://pr-insight-docs.khulnasoft.com/usage-guide/configuration_options/): **wiki**, **local**, or **global**.
 For example, if your configuration file contains:
@@ -150,10 +150,10 @@ push_commands = [
     "/review",
 ]
 ```
-This means that when new code is pushed to the PR, the PR-Insight will run the `describe` and `review` tools, with the specified parameters.
+This means that when new code is pushed to the PR, the Khulnasoft Merge will run the `describe` and `review` tools, with the specified parameters.
 
 ### GitHub Action
-`GitHub Action` is a different way to trigger PR-Insight tools, and uses a different configuration mechanism than `GitHub App`.<br>
+`GitHub Action` is a different way to trigger Khulnasoft Merge tools, and uses a different configuration mechanism than `GitHub App`.<br>
 You can configure settings for `GitHub Action` by adding environment variables under the env section in `.github/workflows/pr_insight.yml` file.
 Specifically, start by setting the following environment variables:
 ```yaml
@@ -184,7 +184,7 @@ For example, you can set an environment variable: `pr_description.publish_labels
 publish_labels = false
 ```
 
-to prevent PR-Insight from publishing labels when running the `describe` tool.
+to prevent Khulnasoft Merge from publishing labels when running the `describe` tool.
 
 ### GitLab Webhook
 After setting up a GitLab webhook, to control which commands will run automatically when a new MR is opened, you can set the `pr_commands` parameter in the configuration file, similar to the GitHub App:
@@ -213,7 +213,7 @@ push_commands = [
 Note that to use the 'handle_push_trigger' feature, you need to give the gitlab webhook also the "Push events" scope.
 
 ### BitBucket App
-Similar to GitHub app, when running PR-Insight from BitBucket App, the default [configuration file](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) from a pre-built docker will be initially loaded.
+Similar to GitHub app, when running Khulnasoft Merge from BitBucket App, the default [configuration file](https://github.com/Khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) from a pre-built docker will be initially loaded.
 
 By uploading a local `.pr_insight.toml` file to the root of the repo's main branch, you can edit and customize any configuration parameter. Note that you need to upload `.pr_insight.toml` prior to creating a PR, in order for the configuration to take effect.
 
@@ -227,8 +227,8 @@ Each time you invoke a `/review` tool, it will use the extra instructions you se
 
 
 Note that among other limitations, BitBucket provides relatively low rate-limits for applications (up to 1000 requests per hour), and does not provide an API to track the actual rate-limit usage.
-If you experience a lack of responses from PR-Insight, you might want to set: `bitbucket_app.avoid_full_files=true` in your configuration file.
-This will prevent PR-Insight from acquiring the full file content, and will only use the diff content. This will reduce the number of requests made to BitBucket, at the cost of small decrease in accuracy, as dynamic context will not be applicable.
+If you experience a lack of responses from Khulnasoft Merge, you might want to set: `bitbucket_app.avoid_full_files=true` in your configuration file.
+This will prevent Khulnasoft Merge from acquiring the full file content, and will only use the diff content. This will reduce the number of requests made to BitBucket, at the cost of small decrease in accuracy, as dynamic context will not be applicable.
 
 
 #### BitBucket Self-Hosted App automatic tools
@@ -266,7 +266,7 @@ git_provider="azure"
 
 Azure DevOps provider supports [PAT token](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) or [DefaultAzureCredential](https://learn.microsoft.com/en-us/azure/developer/python/sdk/authentication-overview#authentication-in-server-environments) authentication.
 PAT is faster to create, but has build in expiration date, and will use the user identity for API calls.
-Using DefaultAzureCredential you can use managed identity or Service principle, which are more secure and will create separate ADO user identity (via AAD) to the insight.
+Using DefaultAzureCredential you can use managed identity or Service principle, which are more secure and will create separate ADO user identity (via AAD) to the agent.
 
 If PAT was chosen, you can assign the value in .secrets.toml.
 If DefaultAzureCredential was chosen, you can assigned the additional env vars like AZURE_CLIENT_SECRET directly,

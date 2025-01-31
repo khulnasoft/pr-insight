@@ -3,10 +3,10 @@ import json
 import os
 from typing import Union
 
+from pr_insight.agent.pr_insight import PRInsight
 from pr_insight.config_loader import get_settings
 from pr_insight.git_providers import get_git_provider
 from pr_insight.git_providers.utils import apply_repo_settings
-from pr_insight.insight.pr_insight import PRInsight
 from pr_insight.log import get_logger
 from pr_insight.servers.github_app import handle_line_comments
 from pr_insight.tools.pr_code_suggestions import PRCodeSuggestions

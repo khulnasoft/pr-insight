@@ -8,9 +8,9 @@ from datetime import datetime, timezone
 import aiohttp
 import requests
 
+from pr_insight.agent.pr_insight import PRInsight
 from pr_insight.config_loader import get_settings
 from pr_insight.git_providers import get_git_provider
-from pr_insight.insight.pr_insight import PRInsight
 from pr_insight.log import LoggingFormat, get_logger, setup_logger
 
 setup_logger(fmt=LoggingFormat.JSON, level="DEBUG")
@@ -38,8 +38,8 @@ def now() -> str:
     return now_utc
 
 async def async_handle_request(pr_url, rest_of_comment, comment_id, git_provider):
-    insight = PRInsight()
-    success = await insight.handle_request(
+    agent = PRInsight()
+    success = await agent.handle_request(
         pr_url,
         rest_of_comment,
         notify=lambda: git_provider.add_eyes_reaction(comment_id)
@@ -63,8 +63,8 @@ async def process_comment(pr_url, rest_of_comment, comment_id):
     try:
         git_provider = get_git_provider()(pr_url=pr_url)
         git_provider.set_pr(pr_url)
-        insight = PRInsight()
-        success = await insight.handle_request(
+        agent = PRInsight()
+        success = await agent.handle_request(
             pr_url,
             rest_of_comment,
             notify=lambda: git_provider.add_eyes_reaction(comment_id)

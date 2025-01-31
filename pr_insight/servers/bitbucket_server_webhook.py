@@ -14,10 +14,10 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette_context.middleware import RawContextMiddleware
 
+from pr_insight.agent.pr_insight import PRInsight
 from pr_insight.algo.utils import update_settings_from_args
 from pr_insight.config_loader import get_settings
 from pr_insight.git_providers.utils import apply_repo_settings
-from pr_insight.insight.pr_insight import PRInsight
 from pr_insight.log import LoggingFormat, get_logger, setup_logger
 from pr_insight.servers.utils import verify_signature
 
