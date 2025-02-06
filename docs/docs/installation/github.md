@@ -266,3 +266,151 @@ PYTHONPATH="/PATH/TO/PROJECTS/pr-insight" python pr_insight/cli.py \
   --pr_url https://us-east-1.console.aws.amazon.com/codesuite/codecommit/repositories/MY_REPO_NAME/pull-requests/321 \
   review
 ```
+
+---
+
+## Next.js and Vercel Publish
+
+### Creating a GitHub App for the Repository
+
+To create a GitHub App for this repository, follow these steps:
+
+1. Create a GitHub App from the GitHub Developer Portal.
+   - Set the following permissions:
+     - Pull requests: Read & write
+     - Issue comment: Read & write
+     - Metadata: Read-only
+     - Contents: Read-only
+   - Set the following events:
+     - Issue comment
+     - Pull request
+     - Push (if you need to enable triggering on PR update)
+
+2. Generate a random secret for your app, and save it for later. For example, you can use:
+   ```
+   WEBHOOK_SECRET=$(python -c "import secrets; print(secrets.token_hex(10))")
+   ```
+
+3. Acquire the following pieces of information from your app's settings page:
+   - App private key (click "Generate a private key" and save the file)
+   - App ID
+
+4. Clone this repository:
+   ```
+   git clone https://github.com/KhulnaSoft/pr-insight.git
+   ```
+
+5. Copy the secrets template file and fill in the following:
+   ```
+   cp pr_insight/settings/.secrets_template.toml pr_insight/settings/.secrets.toml
+   # Edit .secrets.toml file
+   ```
+   - Your OpenAI key.
+   - Copy your app's private key to the private_key field.
+   - Copy your app's ID to the app_id field.
+   - Copy your app's webhook secret to the webhook_secret field.
+   - Set deployment_type to 'app' in `pr_insight/settings/configuration.toml`
+
+6. Build a Docker image for the app and optionally push it to a Docker repository. We'll use Dockerhub as an example:
+   ```
+   docker build . -t khulnasoft/pr-insight:github_app --target github_app -f docker/Dockerfile
+   docker push khulnasoft/pr-insight:github_app  # Push to your Docker repository
+   ```
+
+7. Host the app using a server, serverless function, or container environment. Alternatively, for development and debugging, you may use tools like smee.io to forward webhooks to your local machine.
+
+8. Go back to your app's settings, and set the following:
+   - Webhook URL: The URL of your app's server or the URL of the smee.io channel.
+   - Webhook secret: The secret you generated earlier.
+
+9. Install the app by navigating to the "Install App" tab and selecting your desired repositories.
+
+### Configuring the `pr_insight/settings/.secrets.toml` File
+
+To configure the `pr_insight/settings/.secrets.toml` file, follow these steps:
+
+1. Copy the `pr_insight/settings/.secrets_template.toml` file to `pr_insight/settings/.secrets.toml`.
+2. Open the `pr_insight/settings/.secrets.toml` file in a text editor.
+3. Fill in the following fields:
+   - `openai.key`: Your OpenAI API key.
+   - `github.private_key`: Copy your GitHub App's private key.
+   - `github.app_id`: Copy your GitHub App's ID.
+   - `github.webhook_secret`: Copy your GitHub App's webhook secret.
+   - `github.user_token`: Your GitHub personal access token (if using user deployment).
+   - `github.deployment_type`: Set to `app` for GitHub App deployment or `user` for user deployment.
+4. Optionally, fill in other fields for additional services like Pinecone, Anthropic, Cohere, Replicate, Groq, Huggingface, Ollama, VertexAI, Google AI Studio, GitLab, Bitbucket, Azure DevOps, and others as needed.
+
+### Handling Errors During the GitHub App Setup
+
+To handle errors during the GitHub App setup, follow these steps:
+
+1. **Verify permissions and events**: Ensure that the GitHub App has the correct permissions and events set. The required permissions are `Pull requests: Read & write`, `Issue comment: Read & write`, `Metadata: Read-only`, and `Contents: Read-only`. The required events are `Issue comment`, `Pull request`, and `Push` (if triggering on PR update is needed). Refer to the GitHub App setup instructions for more details.
+
+2. **Check webhook secret**: Ensure that the webhook secret is correctly generated and saved. You can generate a random secret using the following command:
+   ```
+   WEBHOOK_SECRET=$(python -c "import secrets; print(secrets.token_hex(10))")
+   ```
+   Make sure to set the webhook secret in the GitHub App settings and in the `pr_insight/settings/.secrets.toml` file.
+
+3. **Validate app private key and app ID**: Ensure that the app private key and app ID are correctly set in the `pr_insight/settings/.secrets.toml` file. The private key should be copied to the `private_key` field, and the app ID should be copied to the `app_id` field.
+
+4. **Check Docker image build and push**: Verify that the Docker image for the app is built and pushed correctly. Use the following commands to build and push the Docker image:
+   ```
+   docker build . -t khulnasoft/pr-insight:github_app --target github_app -f docker/Dockerfile
+   docker push khulnasoft/pr-insight:github_app
+   ```
+
+5. **Host the app**: Ensure that the app is hosted correctly using a server, serverless function, or container environment. For development and debugging, you can use tools like smee.io to forward webhooks to your local machine.
+
+6. **Set webhook URL**: Make sure to set the correct webhook URL in the GitHub App settings. The webhook URL should point to the URL of your app's server or the URL of the smee.io channel.
+
+7. **Check installation**: Verify that the GitHub App is installed on the desired repositories. Navigate to the "Install App" tab in the GitHub App settings and select the repositories where you want to install the app.
+
+8. **Review logs**: Check the logs for any errors or issues during the setup process. Logs can provide valuable information to help diagnose and resolve issues.
+
+### Setting Up the Webhook URL for the GitHub App
+
+To set up the webhook URL for the GitHub App, follow these steps:
+
+1. Go to your GitHub App's settings page.
+2. Locate the "Webhook URL" field.
+3. Enter the URL of your app's server or the URL of the smee.io channel.
+4. Save the changes.
+
+### Publishing the App Using Vercel
+
+To publish the app using Vercel, follow these steps:
+
+1. Ensure you have a Vercel account and the Vercel CLI installed.
+2. Clone the repository if you haven't already:
+   ```
+   git clone https://github.com/KhulnaSoft/pr-insight.git
+   ```
+3. Navigate to the project directory:
+   ```
+   cd pr-insight
+   ```
+4. Create a `vercel.json` configuration file in the root of the project with the following content:
+   ```json
+   {
+     "version": 2,
+     "builds": [
+       {
+         "src": "pr_insight/servers/serverless.py",
+         "use": "@vercel/python"
+       }
+     ],
+     "routes": [
+       {
+         "src": "/(.*)",
+         "dest": "pr_insight/servers/serverless.py"
+       }
+     ]
+   }
+   ```
+5. Ensure the `pr_insight/servers/serverless.py` file exists and is correctly configured. This file is already present in the repository.
+6. Deploy the app to Vercel using the Vercel CLI:
+   ```
+   vercel
+   ```
+7. Follow the prompts to complete the deployment process.
