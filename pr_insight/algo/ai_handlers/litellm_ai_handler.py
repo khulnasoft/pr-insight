@@ -6,7 +6,7 @@ import requests
 from litellm import acompletion
 from tenacity import retry, retry_if_exception_type, stop_after_attempt
 
-from pr_insight.algo.ai_handlers.base_ai_handler import BaseAiHandler
+from pr_insight.algo import NO_SUPPORT_TEMPERATURE_MODELS, USER_MESSAGE_ONLY_MODELS
 from pr_insight.algo.utils import get_version
 from pr_insight.config_loader import get_settings
 from pr_insight.log import get_logger
