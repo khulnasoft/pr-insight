@@ -26,3 +26,17 @@ class BaseAiHandler(ABC):
             temperature (float): the temperature to use for the chat completion
         """
         pass
+
+    @abstractmethod
+    def enhance_error_handling(self):
+        """
+        This method should be implemented to enhance error handling and resource management.
+        """
+        pass
+
+    @abstractmethod
+    def improve_performance(self):
+        """
+        This method should be implemented to improve performance by reducing inference times and memory usage.
+        """
+        pass
