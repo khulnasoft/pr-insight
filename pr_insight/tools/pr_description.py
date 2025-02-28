@@ -318,7 +318,10 @@ class PRDescription:
                 original_prediction_dict = {"pr_files": original_prediction_loaded}
             else:
                 original_prediction_dict = original_prediction_loaded
-            filenames_predicted = [file['filename'].strip() for file in original_prediction_dict.get('pr_files', [])]
+            if original_prediction_dict:
+                filenames_predicted = [file.get('filename', '').strip() for file in original_prediction_dict.get('pr_files', [])]
+            else:
+                filenames_predicted = []
 
             # extend the prediction with additional files not included in the original prediction
             pr_files = self.git_provider.get_diff_files()
@@ -358,8 +361,12 @@ class PRDescription:
             if counter_extra_files > 0:
                 get_logger().info(f"Adding {counter_extra_files} unprocessed extra files to table prediction")
                 prediction_extra_dict = load_yaml(prediction_extra, keys_fix_yaml=self.keys_fix)
-                if isinstance(original_prediction_dict, dict) and isinstance(prediction_extra_dict, dict):
-                    original_prediction_dict["pr_files"].extend(prediction_extra_dict["pr_files"])
+                if original_prediction_dict and isinstance(original_prediction_dict, dict) and \
+                        isinstance(prediction_extra_dict, dict) and "pr_files" in prediction_extra_dict:
+                    if "pr_files" in original_prediction_dict:
+                        original_prediction_dict["pr_files"].extend(prediction_extra_dict["pr_files"])
+                    else:
+                        original_prediction_dict["pr_files"] = prediction_extra_dict["pr_files"]
                     new_yaml = yaml.dump(original_prediction_dict)
                     if load_yaml(new_yaml, keys_fix_yaml=self.keys_fix):
                         prediction = new_yaml
@@ -368,7 +375,7 @@ class PRDescription:
 
             return prediction
         except Exception as e:
-            get_logger().error(f"Error extending uncovered files {self.pr_id}: {e}")
+            get_logger().exception(f"Error extending uncovered files {self.pr_id}", artifact={"error": e})
             return original_prediction
 
 
