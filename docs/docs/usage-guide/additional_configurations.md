@@ -1,5 +1,5 @@
 ## Show possible configurations
-The possible configurations of Qodo Merge are stored in [here](https://github.com/khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml){:target="_blank"}.
+The possible configurations of Pr Insight are stored in [here](https://github.com/khulnasoft/pr-insight/blob/main/pr_insight/settings/configuration.toml){:target="_blank"}.
 In the [tools](https://pr-insight-docs.khulnasoft.com/tools/) page you can find explanations on how to use these configurations for each tool.
 
 To print all the available configurations as a comment on your PR, you can use the following command:
@@ -22,7 +22,7 @@ Will output an additional field showing the actual configurations used for the `
 
 ## Ignoring files from analysis
 
-In some cases, you may want to exclude specific files or directories from the analysis performed by Qodo Merge. This can be useful, for example, when you have files that are generated automatically or files that shouldn't be reviewed, like vendor code.
+In some cases, you may want to exclude specific files or directories from the analysis performed by Pr Insight. This can be useful, for example, when you have files that are generated automatically or files that shouldn't be reviewed, like vendor code.
 
 You can ignore files or folders using the following methods:
  - `IGNORE.GLOB`
@@ -52,14 +52,14 @@ regex = ['.*\.py$']
 
 ## Extra instructions
 
-All Qodo Merge tools have a parameter called `extra_instructions`, that enables to add free-text extra instructions. Example usage:
+All Pr Insight tools have a parameter called `extra_instructions`, that enables to add free-text extra instructions. Example usage:
 ```
 /update_changelog --pr_update_changelog.extra_instructions="Make sure to update also the version ..."
 ```
 
 ## Language Settings
 
-The default response language for Qodo Merge is **U.S. English**. However, some development teams may prefer to display information in a different language. For example, your team's workflow might improve if PR descriptions and code suggestions are set to your country's native language.  
+The default response language for Pr Insight is **U.S. English**. However, some development teams may prefer to display information in a different language. For example, your team's workflow might improve if PR descriptions and code suggestions are set to your country's native language.  
 
 To configure this, set the `response_language` parameter in the configuration file. This will prompt the model to respond in the specified language. Use a **standard locale code** based on [ISO 3166](https://en.wikipedia.org/wiki/ISO_3166) (country codes) and [ISO 639](https://en.wikipedia.org/wiki/ISO_639) (language codes) to define a language-country pair. See this [comprehensive list of locale codes](https://simplelocalize.io/data/locales/).  
 
@@ -102,7 +102,7 @@ By default, around any change in your PR, git patch provides three lines of cont
  code line that already existed in the file...
 ```
 
-Qodo Merge will try to increase the number of lines of context, via the parameter:
+Pr Insight will try to increase the number of lines of context, via the parameter:
 ```
 [config]
 patch_extra_lines_before=3
@@ -111,12 +111,12 @@ patch_extra_lines_after=1
 
 Increasing this number provides more context to the model, but will also increase the token budget, and may overwhelm the model with too much information, unrelated to the actual PR code changes.
 
-If the PR is too large (see [PR Compression strategy](https://github.com/khulnasoft/pr-insight/blob/main/PR_COMPRESSION.md)), Qodo Merge may automatically set this number to 0, and will use the original git patch.
+If the PR is too large (see [PR Compression strategy](https://github.com/khulnasoft/pr-insight/blob/main/PR_COMPRESSION.md)), Pr Insight may automatically set this number to 0, and will use the original git patch.
 
 
 ## Editing the prompts
 
-The prompts for the various Qodo Merge tools are defined in the `pr_insight/settings` folder.
+The prompts for the various Pr Insight tools are defined in the `pr_insight/settings` folder.
 In practice, the prompts are loaded and stored as a standard setting object.
 Hence, editing them is similar to editing any other configuration value - just place the relevant key in `.pr_insight.toml`file, and override the default value.
 
@@ -155,7 +155,7 @@ LANGSMITH_BASE_URL=<url>
 
 ## Ignoring automatic commands in PRs
 
-Qodo Merge allows you to automatically ignore certain PRs based on various criteria:
+Pr Insight allows you to automatically ignore certain PRs based on various criteria:
 
 - PRs with specific titles (using regex matching)
 - PRs between specific branches (using regex matching)
@@ -211,7 +211,7 @@ Where the `ignore_pr_labels` is a list of labels that when present in the PR, th
 
 ### Ignoring PRs from specific users
 
-Qodo Merge automatically identifies and ignores pull requests created by bots using:
+Pr Insight automatically identifies and ignores pull requests created by bots using:
 
 - GitHub's native bot detection system
 - Name-based pattern matching
