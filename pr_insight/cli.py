@@ -12,8 +12,9 @@ setup_logger(log_level)
 
 
 def set_parser():
-    parser = argparse.ArgumentParser(description='AI based pull request analyzer', usage=
-    """\
+    parser = argparse.ArgumentParser(
+        description="AI based pull request analyzer",
+        usage="""\
     Usage: cli.py --pr-url=<URL on supported git hosting service> <command> [<args>].
     For example:
     - cli.py --pr_url=... review
@@ -45,12 +46,13 @@ def set_parser():
     Configuration:
     To edit any configuration parameter from 'configuration.toml', just add -config_path=<value>.
     For example: 'python cli.py --pr_url=... review --pr_reviewer.extra_instructions="focus on the file: ..."'
-    """)
-    parser.add_argument('--version', action='version', version=f'pr-insight {get_version()}')
-    parser.add_argument('--pr_url', type=str, help='The URL of the PR to review', default=None)
-    parser.add_argument('--issue_url', type=str, help='The URL of the Issue to review', default=None)
-    parser.add_argument('command', type=str, help='The', choices=commands, default='review')
-    parser.add_argument('rest', nargs=argparse.REMAINDER, default=[])
+    """,
+    )
+    parser.add_argument("--version", action="version", version=f"pr-insight {get_version()}")
+    parser.add_argument("--pr_url", type=str, help="The URL of the PR to review", default=None)
+    parser.add_argument("--issue_url", type=str, help="The URL of the Issue to review", default=None)
+    parser.add_argument("command", type=str, help="The", choices=commands, default="review")
+    parser.add_argument("rest", nargs=argparse.REMAINDER, default=[])
     return parser
 
 
@@ -92,5 +94,5 @@ def run(inargs=None, args=None):
         parser.print_help()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()

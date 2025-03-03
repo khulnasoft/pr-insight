@@ -44,7 +44,6 @@ command2class = {
 commands = list(command2class.keys())
 
 
-
 class PRInsight:
     def __init__(self, ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
         self.ai_handler = ai_handler  # will be initialized in run_action
@@ -65,25 +64,25 @@ class PRInsight:
         # validate args
         is_valid, arg = CliArgs.validate_user_args(args)
         if not is_valid:
-            get_logger().error(
-                f"CLI argument for param '{arg}' is forbidden. Use instead a configuration file."
-            )
+            get_logger().error(f"CLI argument for param '{arg}' is forbidden. Use instead a configuration file.")
             return False
 
         # Update settings from args
         args = update_settings_from_args(args)
 
         # Append the response language in the extra instructions
-        response_language = get_settings().config.get('response_language', 'en-us')
-        if response_language.lower() != 'en-us':
-            get_logger().info(f'User has set the response language to: {response_language}')
+        response_language = get_settings().config.get("response_language", "en-us")
+        if response_language.lower() != "en-us":
+            get_logger().info(f"User has set the response language to: {response_language}")
             for key in get_settings():
                 setting = get_settings().get(key)
                 if str(type(setting)) == "<class 'dynaconf.utils.boxing.DynaBox'>":
-                    if hasattr(setting, 'extra_instructions'):
+                    if hasattr(setting, "extra_instructions"):
                         current_extra_instructions = setting.extra_instructions
                         if current_extra_instructions:
-                            setting.extra_instructions = current_extra_instructions+ f"\n======\n\nIn addition, Your response MUST be written in the language corresponding to local code: {response_language}. This is crucial."
+                            setting.extra_instructions = (
+                                current_extra_instructions + f"\n======\n\nIn addition, Your response MUST be written in the language corresponding to local code: {response_language}. This is crucial."
+                            )
                         else:
                             setting.extra_instructions = f"Your response MUST be written in the language corresponding to locale code: '{response_language}'. This is crucial."
 

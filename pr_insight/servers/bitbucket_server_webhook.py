@@ -25,9 +25,7 @@ setup_logger(fmt=LoggingFormat.JSON, level="DEBUG")
 router = APIRouter()
 
 
-def handle_request(
-    background_tasks: BackgroundTasks, url: str, body: str, log_context: dict
-):
+def handle_request(background_tasks: BackgroundTasks, url: str, body: str, log_context: dict):
     log_context["action"] = body
     log_context["api_url"] = url
 
@@ -40,9 +38,11 @@ def handle_request(
 
     background_tasks.add_task(inner)
 
+
 @router.post("/")
 async def redirect_to_webhook():
     return RedirectResponse(url="/webhook")
+
 
 @router.post("/webhook")
 async def handle_webhook(background_tasks: BackgroundTasks, request: Request):
@@ -53,10 +53,8 @@ async def handle_webhook(background_tasks: BackgroundTasks, request: Request):
     webhook_secret = get_settings().get("BITBUCKET_SERVER.WEBHOOK_SECRET", None)
     if webhook_secret:
         body_bytes = await request.body()
-        if body_bytes.decode('utf-8') == '{"test": true}':
-            return JSONResponse(
-                status_code=status.HTTP_200_OK, content=jsonable_encoder({"message": "connection test successful"})
-            )
+        if body_bytes.decode("utf-8") == '{"test": true}':
+            return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder({"message": "connection test successful"}))
         signature_header = request.headers.get("x-hub-signature", None)
         verify_signature(body_bytes, webhook_secret, signature_header)
 
@@ -77,7 +75,7 @@ async def handle_webhook(background_tasks: BackgroundTasks, request: Request):
             get_logger().info(f"Auto feedback is disabled, skipping auto commands for PR {pr_url}", **log_context)
             return
         get_settings().set("config.is_auto_command", True)
-        commands_to_run.extend(_get_commands_list_from_settings('BITBUCKET_SERVER.PR_COMMANDS'))
+        commands_to_run.extend(_get_commands_list_from_settings("BITBUCKET_SERVER.PR_COMMANDS"))
     elif data["eventKey"] == "pr:comment:added":
         commands_to_run.append(data["comment"]["text"])
     else:
@@ -94,9 +92,7 @@ async def handle_webhook(background_tasks: BackgroundTasks, request: Request):
 
     background_tasks.add_task(inner)
 
-    return JSONResponse(
-        status_code=status.HTTP_200_OK, content=jsonable_encoder({"message": "success"})
-    )
+    return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder({"message": "success"}))
 
 
 async def _run_commands_sequentially(commands: List[str], url: str, log_context: dict):
@@ -116,6 +112,7 @@ async def _run_commands_sequentially(commands: List[str], url: str, log_context:
         except Exception as e:
             get_logger().error(f"Failed to handle command: {command} , error: {e}")
 
+
 def _process_command(command: str, url) -> str:
     # don't think we need this
     apply_repo_settings(url)
@@ -125,7 +122,7 @@ def _process_command(command: str, url) -> str:
     args = split_command[1:]
     # do I need this? if yes, shouldn't this be done in PRInsight?
     other_args = update_settings_from_args(args)
-    new_command = ' '.join([command] + other_args)
+    new_command = " ".join([command] + other_args)
     return new_command
 
 
@@ -142,7 +139,7 @@ def _to_list(command_string: str) -> list:
         raise ValueError(f"Invalid command string: {e}")
 
 
-def _get_commands_list_from_settings(setting_key:str ) -> list:
+def _get_commands_list_from_settings(setting_key: str) -> list:
     try:
         return get_settings().get(setting_key, [])
     except ValueError as e:

@@ -13,14 +13,14 @@ from pr_insight.git_providers.gitlab_provider import GitLabProvider
 from pr_insight.git_providers.local_git_provider import LocalGitProvider
 
 _GIT_PROVIDERS = {
-    'github': GithubProvider,
-    'gitlab': GitLabProvider,
-    'bitbucket': BitbucketProvider,
-    'bitbucket_server': BitbucketServerProvider,
-    'azure': AzureDevopsProvider,
-    'codecommit': CodeCommitProvider,
-    'local': LocalGitProvider,
-    'gerrit': GerritProvider,
+    "github": GithubProvider,
+    "gitlab": GitLabProvider,
+    "bitbucket": BitbucketProvider,
+    "bitbucket_server": BitbucketServerProvider,
+    "azure": AzureDevopsProvider,
+    "codecommit": CodeCommitProvider,
+    "local": LocalGitProvider,
+    "gerrit": GerritProvider,
 }
 
 

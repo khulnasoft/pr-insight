@@ -38,8 +38,7 @@ class OpenAIHandler(BaseAiHandler):
         """
         return get_settings().get("OPENAI.DEPLOYMENT_ID", None)
 
-    @retry(exceptions=(APIError, Timeout, AttributeError, RateLimitError),
-           tries=OPENAI_RETRIES, delay=2, backoff=2, jitter=(1, 3))
+    @retry(exceptions=(APIError, Timeout, AttributeError, RateLimitError), tries=OPENAI_RETRIES, delay=2, backoff=2, jitter=(1, 3))
     async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2):
         try:
             get_logger().info("System: ", system)
@@ -54,15 +53,14 @@ class OpenAIHandler(BaseAiHandler):
             resp = chat_completion.choices[0].message.content
             finish_reason = chat_completion.choices[0].finish_reason
             usage = chat_completion.usage
-            get_logger().info("AI response", response=resp, messages=messages, finish_reason=finish_reason,
-                              model=model, usage=usage)
+            get_logger().info("AI response", response=resp, messages=messages, finish_reason=finish_reason, model=model, usage=usage)
             return resp, finish_reason
         except (APIError, Timeout) as e:
             get_logger().error("Error during OpenAI inference: ", e)
             raise
-        except (RateLimitError) as e:
+        except RateLimitError as e:
             get_logger().error("Rate limit error during OpenAI inference: ", e)
             raise
-        except (Exception) as e:
+        except Exception as e:
             get_logger().error("Unknown error during OpenAI inference: ", e)
             raise
