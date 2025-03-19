@@ -326,7 +326,7 @@ __old hunk__
         patch_with_lines_str = f"\n\n## File: '{file.filename.strip()}'\n"
     else:
         patch_with_lines_str = ""
-      
+
     patch_lines = patch.splitlines()
     RE_HUNK_HEADER = re.compile(
         r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@[ ]?(.*)")

@@ -7,7 +7,8 @@ from jinja2 import Environment, StrictUndefined
 from pr_insight.algo.ai_handlers.base_ai_handler import BaseAiHandler
 from pr_insight.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
 from pr_insight.algo.git_patch_processing import (
-    decouple_and_convert_to_hunks_with_lines_numbers, extract_hunk_lines_from_patch)
+    decouple_and_convert_to_hunks_with_lines_numbers,
+    extract_hunk_lines_from_patch)
 from pr_insight.algo.pr_processing import (get_pr_diff,
                                            retry_with_fallback_models)
 from pr_insight.algo.token_handler import TokenHandler

@@ -12,13 +12,15 @@ from jinja2 import Environment, StrictUndefined
 from pr_insight.algo import MAX_TOKENS
 from pr_insight.algo.ai_handlers.base_ai_handler import BaseAiHandler
 from pr_insight.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
-from pr_insight.algo.git_patch_processing import decouple_and_convert_to_hunks_with_lines_numbers
+from pr_insight.algo.git_patch_processing import \
+    decouple_and_convert_to_hunks_with_lines_numbers
 from pr_insight.algo.pr_processing import (add_ai_metadata_to_diff_files,
                                            get_pr_diff, get_pr_multi_diffs,
                                            retry_with_fallback_models)
 from pr_insight.algo.token_handler import TokenHandler
-from pr_insight.algo.utils import (ModelType, load_yaml, replace_code_tags,
-                                   show_relevant_configurations, get_max_tokens, clip_tokens)
+from pr_insight.algo.utils import (ModelType, clip_tokens, get_max_tokens,
+                                   load_yaml, replace_code_tags,
+                                   show_relevant_configurations)
 from pr_insight.config_loader import get_settings
 from pr_insight.git_providers import (AzureDevopsProvider, GithubProvider,
                                       GitLabProvider, get_git_provider,
