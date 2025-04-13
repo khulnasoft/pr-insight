@@ -9,6 +9,7 @@ class PRConfig:
     """
     The PRConfig class is responsible for listing all configuration options available for the user.
     """
+
     def __init__(self, pr_url: str, args=None, ai_handler=None):
         """
         Initialize the PRConfig object with the necessary attributes and objects to comment on a pull request.
@@ -20,11 +21,11 @@ class PRConfig:
         self.git_provider = get_git_provider()(pr_url)
 
     async def run(self):
-        get_logger().info('Getting configuration settings...')
-        get_logger().info('Preparing configs...')
+        get_logger().info("Getting configuration settings...")
+        get_logger().info("Preparing configs...")
         pr_comment = self._prepare_pr_configs()
         if get_settings().config.publish_output:
-            get_logger().info('Pushing configs...')
+            get_logger().info("Pushing configs...")
             self.git_provider.publish_comment(pr_comment)
             self.git_provider.remove_initial_comment()
         return ""
@@ -34,14 +35,11 @@ class PRConfig:
         conf_settings = Dynaconf(settings_files=[conf_file])
         configuration_headers = [header.lower() for header in conf_settings.keys()]
         relevant_configs = {
-            header: configs for header, configs in get_settings().to_dict().items()
-            if (header.lower().startswith("pr_") or header.lower().startswith("config")) and header.lower() in configuration_headers
+            header: configs for header, configs in get_settings().to_dict().items() if (header.lower().startswith("pr_") or header.lower().startswith("config")) and header.lower() in configuration_headers
         }
 
-        skip_keys = ['ai_disclaimer', 'ai_disclaimer_title', 'ANALYTICS_FOLDER', 'secret_provider', "skip_keys",
-                          'trial_prefix_message', 'no_eligible_message', 'identity_provider', 'ALLOWED_REPOS',
-                          'APP_NAME']
-        extra_skip_keys = get_settings().config.get('config.skip_keys', [])
+        skip_keys = ["ai_disclaimer", "ai_disclaimer_title", "ANALYTICS_FOLDER", "secret_provider", "skip_keys", "trial_prefix_message", "no_eligible_message", "identity_provider", "ALLOWED_REPOS", "APP_NAME"]
+        extra_skip_keys = get_settings().config.get("config.skip_keys", [])
         if extra_skip_keys:
             skip_keys.extend(extra_skip_keys)
 

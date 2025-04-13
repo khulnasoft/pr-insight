@@ -48,19 +48,17 @@ async def get_bearer_token(shared_secret: str, client_key: str):
             "exp": now + 240,
             "qsh": qsh,
             "sub": client_key,
-            }
-        token = jwt.encode(payload, shared_secret, algorithm="HS256")
-        payload = 'grant_type=urn%3Abitbucket%3Aoauth2%3Ajwt'
-        headers = {
-            'Authorization': f'JWT {token}',
-            'Content-Type': 'application/x-www-form-urlencoded'
         }
+        token = jwt.encode(payload, shared_secret, algorithm="HS256")
+        payload = "grant_type=urn%3Abitbucket%3Aoauth2%3Ajwt"
+        headers = {"Authorization": f"JWT {token}", "Content-Type": "application/x-www-form-urlencoded"}
         response = requests.request("POST", url, headers=headers, data=payload)
         bearer_token = response.json()["access_token"]
         return bearer_token
     except Exception as e:
         get_logger().error(f"Failed to get bearer token: {e}")
         raise e
+
 
 @router.get("/")
 async def handle_manifest(request: Request, response: Response):
@@ -91,7 +89,7 @@ async def _perform_commands_bitbucket(commands_conf: str, insight: PRInsight, ap
             command = split_command[0]
             args = split_command[1:]
             other_args = update_settings_from_args(args)
-            new_command = ' '.join([command] + other_args)
+            new_command = " ".join([command] + other_args)
             get_logger().info(f"Performing command: {new_command}")
             with get_logger().contextualize(**log_context):
                 await insight.handle_request(api_url, new_command)
@@ -130,14 +128,12 @@ def should_process_pr_logic(data) -> bool:
 
         ignore_pr_source_branches = get_settings().get("CONFIG.IGNORE_PR_SOURCE_BRANCHES", [])
         ignore_pr_target_branches = get_settings().get("CONFIG.IGNORE_PR_TARGET_BRANCHES", [])
-        if (ignore_pr_source_branches or ignore_pr_target_branches):
+        if ignore_pr_source_branches or ignore_pr_target_branches:
             if any(re.search(regex, source_branch) for regex in ignore_pr_source_branches):
-                get_logger().info(
-                    f"Ignoring PR with source branch '{source_branch}' due to config.ignore_pr_source_branches settings")
+                get_logger().info(f"Ignoring PR with source branch '{source_branch}' due to config.ignore_pr_source_branches settings")
                 return False
             if any(re.search(regex, target_branch) for regex in ignore_pr_target_branches):
-                get_logger().info(
-                    f"Ignoring PR with target branch '{target_branch}' due to config.ignore_pr_target_branches settings")
+                get_logger().info(f"Ignoring PR with target branch '{target_branch}' due to config.ignore_pr_target_branches settings")
                 return False
     except Exception as e:
         get_logger().error(f"Failed 'should_process_pr_logic': {e}")
@@ -190,7 +186,7 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
             shared_secret = secrets["shared_secret"]
             jwt.decode(input_jwt, shared_secret, audience=client_key, algorithms=["HS256"])
             bearer_token = await get_bearer_token(shared_secret, client_key)
-            context['bitbucket_bearer_token'] = bearer_token
+            context["bitbucket_bearer_token"] = bearer_token
             context["settings"] = copy.deepcopy(global_settings)
             event = data["event"]
             insight = PRInsight()
@@ -201,8 +197,7 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
                 if pr_url:
                     with get_logger().contextualize(**log_context):
                         apply_repo_settings(pr_url)
-                        if get_identity_provider().verify_eligibility("bitbucket",
-                                                        sender_id, pr_url) is not Eligibility.NOT_ELIGIBLE:
+                        if get_identity_provider().verify_eligibility("bitbucket", sender_id, pr_url) is not Eligibility.NOT_ELIGIBLE:
                             if get_settings().get("bitbucket_app.pr_commands"):
                                 await _perform_commands_bitbucket("pr_commands", PRInsight(), pr_url, log_context, data)
             elif event == "pullrequest:comment_created":
@@ -211,17 +206,19 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
                 log_context["event"] = "comment"
                 comment_body = data["data"]["comment"]["content"]["raw"]
                 with get_logger().contextualize(**log_context):
-                    if get_identity_provider().verify_eligibility("bitbucket",
-                                                                     sender_id, pr_url) is not Eligibility.NOT_ELIGIBLE:
+                    if get_identity_provider().verify_eligibility("bitbucket", sender_id, pr_url) is not Eligibility.NOT_ELIGIBLE:
                         await insight.handle_request(pr_url, comment_body)
         except Exception as e:
             get_logger().error(f"Failed to handle webhook: {e}")
+
     background_tasks.add_task(inner)
     return "OK"
+
 
 @router.get("/webhook")
 async def handle_github_webhooks(request: Request, response: Response):
     return "Webhook server online!"
+
 
 @router.post("/installed")
 async def handle_installed_webhooks(request: Request, response: Response):
@@ -233,14 +230,12 @@ async def handle_installed_webhooks(request: Request, response: Response):
         shared_secret = data["sharedSecret"]
         client_key = data["clientKey"]
         username = data["principal"]["username"]
-        secrets = {
-            "shared_secret": shared_secret,
-            "client_key": client_key
-        }
+        secrets = {"shared_secret": shared_secret, "client_key": client_key}
         secret_provider.store_secret(username, json.dumps(secrets))
     except Exception as e:
         get_logger().error(f"Failed to register user: {e}")
         return JSONResponse({"error": "Unable to register user"}, status_code=500)
+
 
 @router.post("/uninstalled")
 async def handle_uninstalled_webhooks(request: Request, response: Response):
@@ -261,5 +256,5 @@ def start():
     uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", "3000")))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     start()

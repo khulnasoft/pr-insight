@@ -39,14 +39,8 @@ async def handle_gerrit_request(action: Action, item: Item):
 
     if action == Action.ask:
         if not item.msg:
-            return HTTPException(
-                status_code=400,
-                detail="msg is required for ask command"
-            )
-    await PRInsight().handle_request(
-        f"{item.project}:{item.refspec}",
-        f"/{item.msg.strip()}"
-    )
+            return HTTPException(status_code=400, detail="msg is required for ask command")
+    await PRInsight().handle_request(f"{item.project}:{item.refspec}", f"/{item.msg.strip()}")
 
 
 async def get_body(request):
@@ -73,5 +67,5 @@ def start():
     uvicorn.run(app, host="0.0.0.0", port=3000)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     start()
