@@ -96,6 +96,10 @@ class LiteLLMAIHandler(BaseAiHandler):
         # Models that only use user meessage
         self.user_message_only_models = USER_MESSAGE_ONLY_MODELS
 
+        # Support deepseek models
+        if get_settings().get("DEEPSEEK.KEY", None):
+            os.environ['DEEPSEEK_API_KEY'] = get_settings().get("DEEPSEEK.KEY")
+
     def prepare_logs(self, response, system, user, resp, finish_reason):
         response_log = response.dict().copy()
         response_log["system"] = system
