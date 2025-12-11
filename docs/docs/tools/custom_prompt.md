@@ -47,7 +47,7 @@ The code suggestions should focus only on the following:
 
 Results obtained with the prompt above:
 
-![Custom prompt results](https://khulnasoft.com/images/pr_assistant/custom_suggestions_result.png){width=768}
+![Custom prompt results](https://khulnasoft.com/images/pr_insight/custom_suggestions_result.png){width=768}
 
 ## Configuration options
 

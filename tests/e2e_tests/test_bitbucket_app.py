@@ -10,8 +10,8 @@ from atlassian.bitbucket import Cloud
 import requests
 from requests.auth import HTTPBasicAuth
 
-from pr_assistant.config_loader import get_settings
-from pr_assistant.log import setup_logger, get_logger
+from pr_insight.config_loader import get_settings
+from pr_insight.log import setup_logger, get_logger
 from tests.e2e_tests.e2e_utils import NEW_FILE_CONTENT, FILE_PATH, PR_HEADER_START_WITH, REVIEW_START_WITH, \
     IMPROVE_START_WITH_REGEX_PATTERN, NUM_MINUTES
 
@@ -21,7 +21,7 @@ setup_logger(log_level)
 logger = get_logger()
 
 def test_e2e_run_bitbucket_app():
-    repo_slug = 'pr-assistant-tests'
+    repo_slug = 'pr-insight-tests'
     project_key = 'khulnasoft'
     base_branch = "main"  # or any base branch you want
     new_branch = f"bitbucket_app_e2e_test-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"

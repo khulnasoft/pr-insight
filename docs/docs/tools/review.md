@@ -14,11 +14,11 @@ Note that the main purpose of the `review` tool is to provide the **PR reviewer*
 
 Invoke the tool manually by commenting `/review` on any PR:
 
-![review comment](https://khulnasoft.com/images/pr_assistant/review_comment.png){width=512}
+![review comment](https://khulnasoft.com/images/pr_insight/review_comment.png){width=512}
 
 After ~30 seconds, the tool will generate a review for the PR:
 
-![review](https://khulnasoft.com/images/pr_assistant/review3.png){width=512}
+![review](https://khulnasoft.com/images/pr_insight/review3.png){width=512}
 
 If you want to edit [configurations](#configuration-options), add the relevant ones to the command:
 ```
@@ -27,7 +27,7 @@ If you want to edit [configurations](#configuration-options), add the relevant o
 
 ### Automatic triggering
 
-To run the `review` automatically when a PR is opened, define in a [configuration file](https://pr-assistant-docs.khulnasoft.com/usage-guide/configuration_options/#wiki-configuration-file):
+To run the `review` automatically when a PR is opened, define in a [configuration file](https://pr-insight-docs.khulnasoft.com/usage-guide/configuration_options/#wiki-configuration-file):
 ```
 [github_app]
 pr_commands = [
@@ -46,7 +46,7 @@ num_code_suggestions = ...
 [//]: # ()
 [//]: # (### Incremental Mode)
 
-[//]: # (Incremental review only considers changes since the last PR-Assistant review. This can be useful when working on the PR in an iterative manner, and you want to focus on the changes since the last review instead of reviewing the entire PR again.)
+[//]: # (Incremental review only considers changes since the last PR-Insight review. This can be useful when working on the PR in an iterative manner, and you want to focus on the changes since the last review instead of reviewing the entire PR again.)
 
 [//]: # (For invoking the incremental mode, the following command can be used:)
 
@@ -59,7 +59,7 @@ num_code_suggestions = ...
 [//]: # (Note that the incremental mode is only available for GitHub.)
 
 [//]: # ()
-[//]: # (![incremental review]&#40;https://khulnasoft.com/images/pr_assistant/incremental_review_2.png&#41;{width=512})
+[//]: # (![incremental review]&#40;https://khulnasoft.com/images/pr_insight/incremental_review_2.png&#41;{width=512})
 
 [//]: # (### PR Reflection)
 
@@ -75,13 +75,13 @@ num_code_suggestions = ...
 [//]: # (The tool will first ask the author questions about the PR, and will guide the review based on their answers.)
 
 [//]: # ()
-[//]: # (![reflection questions]&#40;https://khulnasoft.com/images/pr_assistant/reflection_questions.png&#41;{width=512})
+[//]: # (![reflection questions]&#40;https://khulnasoft.com/images/pr_insight/reflection_questions.png&#41;{width=512})
 
 [//]: # ()
-[//]: # (![reflection answers]&#40;https://khulnasoft.com/images/pr_assistant/reflection_answers.png&#41;{width=512})
+[//]: # (![reflection answers]&#40;https://khulnasoft.com/images/pr_insight/reflection_answers.png&#41;{width=512})
 
 [//]: # ()
-[//]: # (![reflection insights]&#40;https://khulnasoft.com/images/pr_assistant/reflection_insights.png&#41;{width=512})
+[//]: # (![reflection insights]&#40;https://khulnasoft.com/images/pr_insight/reflection_insights.png&#41;{width=512})
 
 
 
@@ -92,7 +92,7 @@ num_code_suggestions = ...
 <table>
   <tr>
     <td><b>num_code_suggestions</b></td>
-    <td>Number of code suggestions provided by the 'review' tool. For manual comments, default is 4. For PR-Assistant app auto tools, default is 0, meaning no code suggestions will be provided by the review tool, unless you manually edit pr_commands.</td>
+    <td>Number of code suggestions provided by the 'review' tool. For manual comments, default is 4. For PR-Insight app auto tools, default is 0, meaning no code suggestions will be provided by the review tool, unless you manually edit pr_commands.</td>
   </tr>
   <tr>
     <td><b>inline_code_comments</b></td>
@@ -195,7 +195,7 @@ If enabled, the `review` tool can approve a PR when a specific comment, `/review
     On the other hand, if you find one of the enabled features to be irrelevant for your use case, disable it. No default configuration can fit all use cases.
 
 !!! tip "Automation"
-    When you first install PR-Assistant app, the [default mode](../usage-guide/automations_and_usage.md#github-app-automatic-tools-when-a-new-pr-is-opened) for the `review` tool is:
+    When you first install PR-Insight app, the [default mode](../usage-guide/automations_and_usage.md#github-app-automatic-tools-when-a-new-pr-is-opened) for the `review` tool is:
     ```
     pr_commands = ["/review --pr_reviewer.num_code_suggestions=0", ...]
     ```
@@ -206,7 +206,7 @@ If enabled, the `review` tool can approve a PR when a specific comment, `/review
 
     The `review` tool can auto-generate two specific types of labels for a PR:
     
-    - a `possible security issue` label that detects if a possible [security issue](https://github.com/Khulnasoft/pr-assistant/blob/tr/user_description/pr_assistant/settings/pr_reviewer_prompts.toml#L136) exists in the PR code (`enable_review_labels_security` flag)
+    - a `possible security issue` label that detects if a possible [security issue](https://github.com/KhulnaSoft/pr-insight/blob/tr/user_description/pr_insight/settings/pr_reviewer_prompts.toml#L136) exists in the PR code (`enable_review_labels_security` flag)
     - a `Review effort [1-5]: x` label, where x is the estimated effort to review the PR (`enable_review_labels_effort` flag)
     
     Both modes are useful, and we recommended to enable them.
@@ -234,7 +234,7 @@ If enabled, the `review` tool can approve a PR when a specific comment, `/review
 
 !!! tip "Auto-approval"
 
-    PR-Assistant can approve a PR when a specific comment is invoked.
+    PR-Insight can approve a PR when a specific comment is invoked.
     
     To ensure safety, the auto-approval feature is disabled by default. To enable auto-approval, you need to actively set in a pre-defined configuration file the following:
     ```
@@ -248,7 +248,7 @@ If enabled, the `review` tool can approve a PR when a specific comment, `/review
     ```
     /review auto_approve
     ```
-    PR-Assistant will automatically approve the PR, and add a comment with the approval.
+    PR-Insight will automatically approve the PR, and add a comment with the approval.
     
     
     You can also enable auto-approval only if the PR meets certain requirements, such as that the `estimated_review_effort` label is equal or below a certain threshold, by adjusting the flag:

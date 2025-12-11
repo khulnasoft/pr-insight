@@ -1,1 +1,1 @@
-# [Visit Our Docs Portal](https://pr-assistant-docs.khulnasoft.com/)
+# [Visit Our Docs Portal](https://pr-insight-docs.khulnasoft.com/)

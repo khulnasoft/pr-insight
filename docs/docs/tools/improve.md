@@ -11,7 +11,7 @@ The tool can be triggered automatically every time a new PR is [opened](../usage
 
 Invoke the tool manually by commenting `/improve` on any PR. The code suggestions by default are presented as a single comment:
 
-![code suggestions as comment](https://khulnasoft.com/images/pr_assistant/code_suggestions_as_comment.png){width=512}
+![code suggestions as comment](https://khulnasoft.com/images/pr_insight/code_suggestions_as_comment.png){width=512}
 
 To edit [configurations](#configuration-options) related to the improve tool, use the following template:
 ```
@@ -23,7 +23,7 @@ For example, you can choose to present the suggestions as commitable code commen
 /improve --pr_code_suggestions.commitable_code_suggestions=true
 ```
 
-![improve](https://khulnasoft.com/images/pr_assistant/improve.png){width=512}
+![improve](https://khulnasoft.com/images/pr_insight/improve.png){width=512}
 
 
 Note that a single comment has a significantly smaller PR footprint. We recommend this mode for most cases.
@@ -31,7 +31,7 @@ Also note that collapsible are not supported in _Bitbucket_. Hence, the suggesti
 
 ### Automatic triggering
 
-To run the `improve` automatically when a PR is opened, define in a [configuration file](https://pr-assistant-docs.khulnasoft.com/usage-guide/configuration_options/#wiki-configuration-file):
+To run the `improve` automatically when a PR is opened, define in a [configuration file](https://pr-insight-docs.khulnasoft.com/usage-guide/configuration_options/#wiki-configuration-file):
 ```
 [github_app]
 pr_commands = [
@@ -62,7 +62,7 @@ You can set the content of the checkbox text via:
 code_suggestions_self_review_text = "... (your text here) ..."
 ```
 
-![self_review_1](https://khulnasoft.com/images/pr_assistant/self_review_1.png){width=512}
+![self_review_1](https://khulnasoft.com/images/pr_insight/self_review_1.png){width=512}
 
 
 💎 In addition, by setting:
@@ -75,7 +75,7 @@ the tool can automatically approve the PR when the user checks the self-review c
 !!! tip "Tip - demanding self-review from the PR author"
     If you set the number of required reviewers for a PR to 2, this effectively means that the PR author must click the self-review checkbox before the PR can be merged (in addition to a human reviewer).
 
-    ![self_review_2](https://khulnasoft.com/images/pr_assistant/self_review_2.png){width=512}
+    ![self_review_2](https://khulnasoft.com/images/pr_insight/self_review_2.png){width=512}
 
 ### `Extra instructions` and `best practices`
 
@@ -96,13 +96,13 @@ extra_instructions="""\
 Use triple quotes to write multi-line instructions. Use bullet points or numbers to make the instructions more readable.
 
 #### Best practices 💎
-Another option to give additional guidance to the AI model is by creating a dedicated [**wiki page**](https://github.com/Khulnasoft/pr-assistant/wiki) called `best_practices.md`. 
+Another option to give additional guidance to the AI model is by creating a dedicated [**wiki page**](https://github.com/KhulnaSoft/pr-insight/wiki) called `best_practices.md`. 
 This page can contain a list of best practices, coding standards, and guidelines that are specific to your repo/organization
 
 The AI model will use this page as a reference, and in case the PR code violates any of the guidelines, it will suggest improvements accordingly, with a dedicated label: `Organization
 best practice`. 
 
-Example for a `best_practices.md` content can be found [here](https://github.com/Khulnasoft/pr-assistant/blob/main/docs/docs/usage-guide/EXAMPLE_BEST_PRACTICE.md) (adapted from Google's [pyguide](https://google.github.io/styleguide/pyguide.html)).
+Example for a `best_practices.md` content can be found [here](https://github.com/KhulnaSoft/pr-insight/blob/main/docs/docs/usage-guide/EXAMPLE_BEST_PRACTICE.md) (adapted from Google's [pyguide](https://google.github.io/styleguide/pyguide.html)).
 This file is only an example. Since it is used as a prompt for an AI model, we want to emphasize the following:
 
 - It should be written in a clear and concise manner
@@ -112,7 +112,7 @@ This file is only an example. Since it is used as a prompt for an AI model, we w
 
 Example results:
 
-![best_practice](https://khulnasoft.com/images/pr_assistant/org_best_practice.png){width=512}
+![best_practice](https://khulnasoft.com/images/pr_insight/org_best_practice.png){width=512}
 
 Note that while the `extra instructions` are more related to the way the `improve` tool behaves, the `best_practices.md` file is a general guideline for the way code should be written in the repo.
 Using a combination of both can help the AI model to provide relevant and tailored suggestions.
@@ -188,7 +188,7 @@ Using a combination of both can help the AI model to provide relevant and tailor
 ## A note on code suggestions quality
 
 - While the current AI for code is getting better and better (GPT-4), it's not flawless. Not all the suggestions will be perfect, and a user should not accept all of them automatically. Critical reading and judgment are required.
-- While mistakes of the AI are rare but can happen, a real benefit from the suggestions of the `improve` (and [`review`](https://pr-assistant-docs.khulnasoft.com/tools/review/)) tool is to catch, with high probability, **mistakes or bugs done by the PR author**, when they happen. So, it's a good practice to spend the needed ~30-60 seconds to review the suggestions, even if not all of them are always relevant.
+- While mistakes of the AI are rare but can happen, a real benefit from the suggestions of the `improve` (and [`review`](https://pr-insight-docs.khulnasoft.com/tools/review/)) tool is to catch, with high probability, **mistakes or bugs done by the PR author**, when they happen. So, it's a good practice to spend the needed ~30-60 seconds to review the suggestions, even if not all of them are always relevant.
 - The hierarchical structure of the suggestions is designed to help the user to _quickly_ understand them, and to decide which ones are relevant and which are not:
 
     - Only if the `Category` header is relevant, the user should move to the summarized suggestion description

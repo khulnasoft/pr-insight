@@ -11,15 +11,15 @@ To get a list of the components that changed in the PR and choose the relevant c
 
 Invoke the tool manually by commenting `/test` on any PR:
 
-![test1](https://khulnasoft.com/images/pr_assistant/test1.png){width=704}
+![test1](https://khulnasoft.com/images/pr_insight/test1.png){width=704}
 
 The tool will generate tests for the selected component (if no component is stated, it will generate tests for largest component):
 
-![test2](https://khulnasoft.com/images/pr_assistant/test2.png){width=768}
+![test2](https://khulnasoft.com/images/pr_insight/test2.png){width=768}
 
-![test3](https://khulnasoft.com/images/pr_assistant/test3.png){width=768}
+![test3](https://khulnasoft.com/images/pr_insight/test3.png){width=768}
 
-(Example taken from [here](https://github.com/Khulnasoft/pr-assistant/pull/598#issuecomment-1913679429)):
+(Example taken from [here](https://github.com/KhulnaSoft/pr-insight/pull/598#issuecomment-1913679429)):
 
 **Notes**
 - Language that are currently supported by the tool: Python, Java, C++, JavaScript, TypeScript, C#.

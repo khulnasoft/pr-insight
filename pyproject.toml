@@ -3,10 +3,10 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pr-assistant"
-version = "0.2.2"
+name = "pr-insight"
+version = "0.2.1"
 
-authors = [{name= "KhulnaSoft", email = "tal.r@khulnasoft.com"}]
+authors = [{name= "KhulnaSoftAI", email = "tal.r@khulnasoft.com"}]
 
 maintainers = [
   {name = "Tal Ridnik", email = "tal.r@khulnasoft.com"},
@@ -14,10 +14,10 @@ maintainers = [
   {name = "Hussam Lawen", email = "hussam.l@khulnasoft.com"},
 ]
 
-description = "KhulnaSoft PR-Assistant aims to help efficiently review and handle pull requests, by providing AI feedbacks and suggestions."
+description = "KhulnaSoftAI PR-Insight aims to help efficiently review and handle pull requests, by providing AI feedbacks and suggestions."
 readme = "README.md"
 requires-python = ">=3.10"
-keywords = ["AI", "Agents", "Pull Request", "Automation", "Code Review"]
+keywords = ["AI", "Insights", "Pull Request", "Automation", "Code Review"]
 license = {name = "Apache 2.0", file = "LICENSE"}
 
 classifiers = [
@@ -31,8 +31,8 @@ dynamic = ["dependencies"]
 dependencies = {file = ["requirements.txt"]}
 
 [project.urls]
-"Homepage" = "https://github.com/Khulnasoft/pr-assistant"
-"Documentation" = "https://pr-assistant-docs.khulnasoft.com/"
+"Homepage" = "https://github.com/KhulnaSoft/pr-insight"
+"Documentation" = "https://pr-insight-docs.khulnasoft.com/"
 
 [tool.setuptools]
 include-package-data = true
@@ -40,10 +40,10 @@ license-files = ["LICENSE"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["pr_assistant*"] # include pr_assistant and any sub-packages it finds under it.
+include = ["pr_insight*"] # include pr_insight and any sub-packages it finds under it.
 
 [project.scripts]
-pr-assistant = "pr_assistant.cli:run"
+pr-insight = "pr_insight.cli:run"
 
 
 [tool.ruff]

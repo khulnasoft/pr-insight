@@ -2,7 +2,7 @@
 .lsp/
 .vscode/
 venv/
-pr_assistant/settings/.secrets.toml
+pr_insight/settings/.secrets.toml
 __pycache__
 dist/
 *.egg-info/

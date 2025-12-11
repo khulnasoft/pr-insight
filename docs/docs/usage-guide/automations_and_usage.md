@@ -1,21 +1,21 @@
 ## Local repo (CLI)
-When running from your locally cloned PR-Assistant repo (CLI), your local configuration file will be used.
+When running from your locally cloned PR-Insight repo (CLI), your local configuration file will be used.
 Examples of invoking the different tools via the CLI:
 
-- **Review**:       `python -m pr_assistant.cli --pr_url=<pr_url>  review`
-- **Describe**:     `python -m pr_assistant.cli --pr_url=<pr_url>  describe`
-- **Improve**:      `python -m pr_assistant.cli --pr_url=<pr_url>  improve`
-- **Ask**:          `python -m pr_assistant.cli --pr_url=<pr_url>  ask "Write me a poem about this PR"`
-- **Reflect**:      `python -m pr_assistant.cli --pr_url=<pr_url>  reflect`
-- **Update Changelog**:      `python -m pr_assistant.cli --pr_url=<pr_url>  update_changelog`
+- **Review**:       `python -m pr_insight.cli --pr_url=<pr_url>  review`
+- **Describe**:     `python -m pr_insight.cli --pr_url=<pr_url>  describe`
+- **Improve**:      `python -m pr_insight.cli --pr_url=<pr_url>  improve`
+- **Ask**:          `python -m pr_insight.cli --pr_url=<pr_url>  ask "Write me a poem about this PR"`
+- **Reflect**:      `python -m pr_insight.cli --pr_url=<pr_url>  reflect`
+- **Update Changelog**:      `python -m pr_insight.cli --pr_url=<pr_url>  update_changelog`
 
-`<pr_url>` is the url of the relevant PR (for example: [#50](https://github.com/Khulnasoft/pr-assistant/pull/50)).
+`<pr_url>` is the url of the relevant PR (for example: [#50](https://github.com/KhulnaSoft/pr-insight/pull/50)).
 
 **Notes:**
 
 (1) in addition to editing your local configuration file, you can also change any configuration value by adding it to the command line:
 ```
-python -m pr_assistant.cli --pr_url=<pr_url>  /review --pr_reviewer.extra_instructions="focus on the file: ..."
+python -m pr_insight.cli --pr_url=<pr_url>  /review --pr_reviewer.extra_instructions="focus on the file: ..."
 ```
 
 (2) You can print results locally, without publishing them, by setting in `configuration.toml`:
@@ -28,7 +28,7 @@ This is useful for debugging or experimenting with different tools.
 
 (3)
 
-**git provider**: The [git_provider](https://github.com/Khulnasoft/pr-assistant/blob/main/pr_assistant/settings/configuration.toml#L5) field in a configuration file determines the GIT provider that will be used by PR-Assistant. Currently, the following providers are supported:
+**git provider**: The [git_provider](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml#L5) field in a configuration file determines the GIT provider that will be used by PR-Insight. Currently, the following providers are supported:
 `
 "github", "gitlab", "bitbucket", "azure", "codecommit", "local", "gerrit"
 `
@@ -39,12 +39,12 @@ Default is "github".
 
 ### Online usage
 
-Online usage means invoking PR-Assistant tools by [comments](https://github.com/Khulnasoft/pr-assistant/pull/229#issuecomment-1695021901) on a PR.
+Online usage means invoking PR-Insight tools by [comments](https://github.com/KhulnaSoft/pr-insight/pull/229#issuecomment-1695021901) on a PR.
 Commands for invoking the different tools via comments:
 
 - **Review**:       `/review`
 - **Describe**:     `/describe`
-- **Improve**:      `/improve`
+- **Improve**:      `/improve`  (or `/improve_code` for bitbucket, since `/improve` is sometimes reserved)
 - **Ask**:          `/ask "..."`
 - **Reflect**:      `/reflect`
 - **Update Changelog**:      `/update_changelog`
@@ -55,18 +55,18 @@ For example, if you want to edit the `review` tool configurations, you can run:
 ```
 /review --pr_reviewer.extra_instructions="..." --pr_reviewer.require_score_review=false
 ```
-Any configuration value in [configuration file](https://github.com/Khulnasoft/pr-assistant/blob/main/pr_assistant/settings/configuration.toml) file can be similarly edited. Comment `/config` to see the list of available configurations.
+Any configuration value in [configuration file](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) file can be similarly edited. Comment `/config` to see the list of available configurations.
 
 
 ## GitHub App
 
-!!! note "Configurations for PR-Assistant Pro"
-    PR-Assistant Pro for GitHub is an App, hosted by KhulnaSoft. So all the instructions below are relevant also for PR-Assistant Pro users.
+!!! note "Configurations for PR-Insight Pro"
+    PR-Insight Pro for GitHub is an App, hosted by KhulnaSoftAI. So all the instructions below are relevant also for PR-Insight Pro users.
     Same goes for [GitLab webhook](#gitlab-webhook) and [BitBucket App](#bitbucket-app) sections.
 
 ### GitHub app automatic tools when a new PR is opened
 
-The [github_app](https://github.com/Khulnasoft/pr-assistant/blob/main/pr_assistant/settings/configuration.toml#L108) section defines GitHub app specific configurations.  
+The [github_app](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml#L108) section defines GitHub app specific configurations.  
 
 The configuration parameter `pr_commands` defines the list of tools that will be **run automatically** when a new PR is opened.
 ```
@@ -77,11 +77,11 @@ pr_commands = [
     "/improve",
 ]
 ```
-This means that when a new PR is opened/reopened or marked as ready for review, PR-Assistant will run the `describe`, `review` and `improve` tools.  
+This means that when a new PR is opened/reopened or marked as ready for review, PR-Insight will run the `describe`, `review` and `improve` tools.  
 For the `review` tool, for example, the `num_code_suggestions` parameter will be set to 0.
 
-You can override the default tool parameters by using one the three options for a [configuration file](https://khulnasoft.github.io/Docs-PR-Assistant/usage-guide/#configuration-options): **wiki**, **local**, or **global**. 
-For example, if your local `.pr_assistant.toml` file contains:
+You can override the default tool parameters by using one the three options for a [configuration file](https://khulnasoft.github.io/Docs-PR-Insight/usage-guide/#configuration-options): **wiki**, **local**, or **global**. 
+For example, if your local `.pr_insight.toml` file contains:
 ```
 [pr_description]
 generate_ai_title = true
@@ -115,11 +115,11 @@ push_commands = [
     "/review  --pr_reviewer.num_code_suggestions=0 --pr_reviewer.final_update_message=false",
 ]
 ```
-This means that when new code is pushed to the PR, the PR-Assistant will run the `describe` and `review` tools, with the specified parameters.
+This means that when new code is pushed to the PR, the PR-Insight will run the `describe` and `review` tools, with the specified parameters.
 
 ## GitHub Action
-`GitHub Action` is a different way to trigger PR-Assistant tools, and uses a different configuration mechanism than `GitHub App`.<br>
-You can configure settings for `GitHub Action` by adding environment variables under the env section in `.github/workflows/pr_assistant.yml` file. 
+`GitHub Action` is a different way to trigger PR-Insight tools, and uses a different configuration mechanism than `GitHub App`.<br>
+You can configure settings for `GitHub Action` by adding environment variables under the env section in `.github/workflows/pr_insight.yml` file. 
 Specifically, start by setting the following environment variables:
 ```yaml
       env:
@@ -134,16 +134,16 @@ If not set, the default configuration is for all three tools to run automaticall
 
 `github_action_config.enable_output` are used to enable/disable github actions [output parameter](https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs-for-docker-container-and-javascript-actions) (default is `true`). 
 Review result is output as JSON to `steps.{step-id}.outputs.review` property.
-The JSON structure is equivalent to the yaml data structure defined in [pr_reviewer_prompts.toml](https://github.com/idubnori/pr-assistant/blob/main/pr_assistant/settings/pr_reviewer_prompts.toml).
+The JSON structure is equivalent to the yaml data structure defined in [pr_reviewer_prompts.toml](https://github.com/idubnori/pr-insight/blob/main/pr_insight/settings/pr_reviewer_prompts.toml).
 
-Note that you can give additional config parameters by adding environment variables to `.github/workflows/pr_assistant.yml`, or by using a `.pr_assistant.toml` [configuration file](https://pr-assistant-docs.khulnasoft.com/usage-guide/configuration_options/#global-configuration-file) in the root of your repo
+Note that you can give additional config parameters by adding environment variables to `.github/workflows/pr_insight.yml`, or by using a `.pr_insight.toml` [configuration file](https://pr-insight-docs.khulnasoft.com/usage-guide/configuration_options/#global-configuration-file) in the root of your repo
 
-For example, you can set an environment variable: `pr_description.publish_labels=false`, or add a `.pr_assistant.toml` file with the following content:
+For example, you can set an environment variable: `pr_description.publish_labels=false`, or add a `.pr_insight.toml` file with the following content:
 ```
 [pr_description]
 publish_labels = false
 ```
-to prevent PR-Assistant from publishing labels when running the `describe` tool.
+to prevent PR-Insight from publishing labels when running the `describe` tool.
 
 ## GitLab Webhook
 After setting up a GitLab webhook, to control which commands will run automatically when a new MR is opened, you can set the `pr_commands` parameter in the configuration file, similar to the GitHub App:
@@ -171,11 +171,11 @@ push_commands = [
 Note that to use the 'handle_push_trigger' feature, you need to give the gitlab webhook also the "Push events" scope.
 
 ## BitBucket App
-Similar to GitHub app, when running PR-Assistant from BitBucket App, the default [configuration file](https://github.com/Khulnasoft/pr-assistant/blob/main/pr_assistant/settings/configuration.toml) from a pre-built docker will be initially loaded.
+Similar to GitHub app, when running PR-Insight from BitBucket App, the default [configuration file](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml) from a pre-built docker will be initially loaded.
 
-By uploading a local `.pr_assistant.toml` file to the root of the repo's main branch, you can edit and customize any configuration parameter. Note that you need to upload `.pr_assistant.toml` prior to creating a PR, in order for the configuration to take effect.
+By uploading a local `.pr_insight.toml` file to the root of the repo's main branch, you can edit and customize any configuration parameter. Note that you need to upload `.pr_insight.toml` prior to creating a PR, in order for the configuration to take effect.
 
-For example, if your local `.pr_assistant.toml` file contains:
+For example, if your local `.pr_insight.toml` file contains:
 ```
 [pr_reviewer]
 inline_code_comments = true
@@ -208,7 +208,7 @@ git_provider="azure"
 
 Azure DevOps provider supports [PAT token](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) or [DefaultAzureCredential](https://learn.microsoft.com/en-us/azure/developer/python/sdk/authentication-overview#authentication-in-server-environments) authentication.
 PAT is faster to create, but has build in expiration date, and will use the user identity for API calls. 
-Using DefaultAzureCredential you can use managed identity or Service principle, which are more secure and will create separate ADO user identity (via AAD) to the agent.
+Using DefaultAzureCredential you can use managed identity or Service principle, which are more secure and will create separate ADO user identity (via AAD) to the insight.
 
 If PAT was chosen, you can assign the value in .secrets.toml. 
 If DefaultAzureCredential was chosen, you can assigned the additional env vars like AZURE_CLIENT_SECRET directly, 

@@ -8,7 +8,7 @@
 ## 2023-08-02
 
 ### Enhanced
-- Updated several tools in the `pr_assistant` package to use commit messages in their functionality.
+- Updated several tools in the `pr_insight` package to use commit messages in their functionality.
 - Commit messages are now retrieved and stored in the `vars` dictionary for each tool.
 - Added a section to display the commit messages in the prompts of various tools.
 
@@ -18,7 +18,7 @@
 - Introduced the ability to retrieve commit messages from pull requests across different git providers.
 - Implemented commit messages retrieval for GitHub and GitLab providers.
 - Updated the PR description template to include a section for commit messages if they exist.
-- Added support for repository-specific configuration files (.pr_assistant.yaml) for the PR Assistant.
+- Added support for repository-specific configuration files (.pr_insight.yaml) for the PR Insight.
 - Implemented this feature for both GitHub and GitLab providers.
 - Added a new configuration option 'use_repo_settings_file' to enable or disable the use of a repo-specific settings file.
 
@@ -28,7 +28,7 @@
 ### Enhanced
 - Added the ability to modify any configuration parameter from 'configuration.toml' on-the-fly.
 - Updated the command line interface and bot commands to accept configuration changes as arguments.
-- Improved the PR assistant to handle additional arguments for each action.
+- Improved the PR insight to handle additional arguments for each action.
 
 ## 2023-07-28
 

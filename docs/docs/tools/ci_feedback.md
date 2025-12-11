@@ -10,10 +10,10 @@ The tool analyzes the failed checks and provides several feedbacks:
 
 ## Example usage
 
-![Failed Check 1](https://www.khulnasoft.com/images/pr_assistant/failed_check1.png){width=768}
+![Failed Check 1](https://www.khulnasoft.com/images/pr_insight/failed_check1.png){width=768}
 
 &rarr;
-![Failed Check 2](https://www.khulnasoft.com/images/pr_assistant/failed_check2.png){width=768}
+![Failed Check 2](https://www.khulnasoft.com/images/pr_insight/failed_check2.png){width=768}
 
 ___
 

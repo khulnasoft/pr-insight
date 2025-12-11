@@ -1,4 +1,4 @@
-FILE_PATH = "pr_assistant/cli_pip.py"
+FILE_PATH = "pr_insight/cli_pip.py"
 
 PR_HEADER_START_WITH = '### **User description**\nupdate cli_pip.py\n\n\n___\n\n### **PR Type**'
 REVIEW_START_WITH = '## PR Reviewer Guide 🔍\n\n<table>\n<tr><td>⏱️&nbsp;<strong>Estimated effort to review</strong>:'
@@ -7,8 +7,8 @@ IMPROVE_START_WITH_REGEX_PATTERN = r'^## PR Code Suggestions ✨\n\n<!-- [a-z0-9
 NUM_MINUTES = 5
 
 NEW_FILE_CONTENT = """\
-from pr_assistant import cli
-from pr_assistant.config_loader import get_settings
+from pr_insight import cli
+from pr_insight.config_loader import get_settings
 
 
 def main():
@@ -16,7 +16,7 @@ def main():
     provider = "github"  # GitHub provider
     user_token = "..."  # GitHub user token
     openai_key = "ghs_afsdfasdfsdf"  # Example OpenAI key
-    pr_url = "..."  # PR URL, for example 'https://github.com/Khulnasoft/pr-assistant/pull/809'
+    pr_url = "..."  # PR URL, for example 'https://github.com/KhulnaSoft/pr-insight/pull/809'
     command = "/improve"  # Command to run (e.g. '/review', '/describe', 'improve', '/ask="What is the purpose of this PR?"')
 
     # Setting the configurations

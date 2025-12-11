@@ -3,9 +3,9 @@ import re
 import time
 from datetime import datetime
 
-from pr_assistant.config_loader import get_settings
-from pr_assistant.git_providers import get_git_provider
-from pr_assistant.log import setup_logger, get_logger
+from pr_insight.config_loader import get_settings
+from pr_insight.git_providers import get_git_provider
+from pr_insight.log import setup_logger, get_logger
 from tests.e2e_tests.e2e_utils import NEW_FILE_CONTENT, FILE_PATH, PR_HEADER_START_WITH, REVIEW_START_WITH, \
     IMPROVE_START_WITH_REGEX_PATTERN, NUM_MINUTES
 
@@ -17,13 +17,13 @@ logger = get_logger()
 def test_e2e_run_github_app():
     """
     What we want to do:
-    (1) open a PR in a repo 'https://github.com/Khulnasoft/pr-assistant-tests'
+    (1) open a PR in a repo 'https://github.com/KhulnaSoft/pr-insight-tests'
     (2) wait for 5 minutes until the PR is processed by the GitHub app
     (3) check that the relevant tools have been executed
     """
     base_branch = "main"  # or any base branch you want
     new_branch = f"github_app_e2e_test-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
-    repo_url = 'Khulnasoft/pr-assistant-tests'
+    repo_url = 'KhulnaSoft/pr-insight-tests'
     get_settings().config.git_provider = "github"
     git_provider = get_git_provider()()
     github_client = git_provider.github_client

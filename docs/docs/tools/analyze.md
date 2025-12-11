@@ -12,7 +12,7 @@ It can be invoked manually by commenting on any PR:
 
 An example result:
 
-![Analyze 1](https://khulnasoft.com/images/pr_assistant/analyze_1.png){width=750}
+![Analyze 1](https://khulnasoft.com/images/pr_insight/analyze_1.png){width=750}
 
 **Notes**
 

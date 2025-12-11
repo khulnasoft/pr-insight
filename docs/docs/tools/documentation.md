@@ -10,13 +10,13 @@ It can be invoked manually by commenting on any PR:
 
 Invoke the tool manually by commenting `/add_docs` on any PR:
 
-![Docs command](https://khulnasoft.com/images/pr_assistant/docs_command.png){width=768}
+![Docs command](https://khulnasoft.com/images/pr_insight/docs_command.png){width=768}
 
 The tool will generate documentation for all the components that changed in the PR:
 
-![Docs component](https://khulnasoft.com/images/pr_assistant/docs_components.png){width=768}
+![Docs component](https://khulnasoft.com/images/pr_insight/docs_components.png){width=768}
 
-![Docs single component](https://khulnasoft.com/images/pr_assistant/docs_single_component.png){width=768}
+![Docs single component](https://khulnasoft.com/images/pr_insight/docs_single_component.png){width=768}
 
 You can state a name of a specific component in the PR to get documentation only for that component:
 ```

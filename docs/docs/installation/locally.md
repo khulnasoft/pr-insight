@@ -3,7 +3,7 @@
 Install the package:
 
 ```
-pip install pr-assistant
+pip install pr-insight
 ```
 
 Then run the relevant tool with the script below.
@@ -11,15 +11,15 @@ Then run the relevant tool with the script below.
 Make sure to fill in the required parameters (`user_token`, `openai_key`, `pr_url`, `command`):
 
 ```python
-from pr_assistant import cli
-from pr_assistant.config_loader import get_settings
+from pr_insight import cli
+from pr_insight.config_loader import get_settings
 
 def main():
     # Fill in the following values
     provider = "github" # GitHub provider
     user_token = "..."  # GitHub user token
     openai_key = "..."  # OpenAI key
-    pr_url = "..."      # PR URL, for example 'https://github.com/Khulnasoft/pr-assistant/pull/809'
+    pr_url = "..."      # PR URL, for example 'https://github.com/KhulnaSoft/pr-insight/pull/809'
     command = "/review" # Command to run (e.g. '/review', '/describe', '/ask="What is the purpose of this PR?"', ...)
 
     # Setting the configurations
@@ -43,37 +43,37 @@ To invoke a tool (for example `review`), you can run directly from the Docker im
 
 - For GitHub:
 ```
-docker run --rm -it -e OPENAI.KEY=<your key> -e GITHUB.USER_TOKEN=<your token> khulnasoft/pr-assistant:latest --pr_url <pr_url> review
+docker run --rm -it -e OPENAI.KEY=<your key> -e GITHUB.USER_TOKEN=<your token> khulnasoft/pr-insight:latest --pr_url <pr_url> review
 ```
 
 - For GitLab:
 ```
-docker run --rm -it -e OPENAI.KEY=<your key> -e CONFIG.GIT_PROVIDER=gitlab -e GITLAB.PERSONAL_ACCESS_TOKEN=<your token> khulnasoft/pr-assistant:latest --pr_url <pr_url> review
+docker run --rm -it -e OPENAI.KEY=<your key> -e CONFIG.GIT_PROVIDER=gitlab -e GITLAB.PERSONAL_ACCESS_TOKEN=<your token> khulnasoft/pr-insight:latest --pr_url <pr_url> review
 ```
 
 Note: If you have a dedicated GitLab instance, you need to specify the custom url as variable:
 ```
-docker run --rm -it -e OPENAI.KEY=<your key> -e CONFIG.GIT_PROVIDER=gitlab -e GITLAB.PERSONAL_ACCESS_TOKEN=<your token> -e GITLAB.URL=<your gitlab instance url> khulnasoft/pr-assistant:latest --pr_url <pr_url> review
+docker run --rm -it -e OPENAI.KEY=<your key> -e CONFIG.GIT_PROVIDER=gitlab -e GITLAB.PERSONAL_ACCESS_TOKEN=<your token> -e GITLAB.URL=<your gitlab instance url> khulnasoft/pr-insight:latest --pr_url <pr_url> review
 ```
 
 - For BitBucket:
 ```
-docker run --rm -it -e CONFIG.GIT_PROVIDER=bitbucket -e OPENAI.KEY=$OPENAI_API_KEY -e BITBUCKET.BEARER_TOKEN=$BITBUCKET_BEARER_TOKEN khulnasoft/pr-assistant:latest --pr_url=<pr_url> review
+docker run --rm -it -e CONFIG.GIT_PROVIDER=bitbucket -e OPENAI.KEY=$OPENAI_API_KEY -e BITBUCKET.BEARER_TOKEN=$BITBUCKET_BEARER_TOKEN khulnasoft/pr-insight:latest --pr_url=<pr_url> review
 ```
 
-For other git providers, update CONFIG.GIT_PROVIDER accordingly, and check the `pr_assistant/settings/.secrets_template.toml` file for the environment variables expected names and values.
+For other git providers, update CONFIG.GIT_PROVIDER accordingly, and check the `pr_insight/settings/.secrets_template.toml` file for the environment variables expected names and values.
 
 ---
 
 
 If you want to ensure you're running a specific version of the Docker image, consider using the image's digest:
 ```bash
-docker run --rm -it -e OPENAI.KEY=<your key> -e GITHUB.USER_TOKEN=<your token> khulnasoft/pr-assistant@sha256:71b5ee15df59c745d352d84752d01561ba64b6d51327f97d46152f0c58a5f678 --pr_url <pr_url> review
+docker run --rm -it -e OPENAI.KEY=<your key> -e GITHUB.USER_TOKEN=<your token> khulnasoft/pr-insight@sha256:71b5ee15df59c745d352d84752d01561ba64b6d51327f97d46152f0c58a5f678 --pr_url <pr_url> review
 ```
 
-Or you can run a [specific released versions](https://github.com/Khulnasoft/pr-assistant/blob/main/RELEASE_NOTES.md) of pr-assistant, for example:
+Or you can run a [specific released versions](https://github.com/KhulnaSoft/pr-insight/blob/main/RELEASE_NOTES.md) of pr-insight, for example:
 ```
-khulnasoft/pr-assistant@v0.9
+khulnasoft/pr-insight@v0.9
 ```
 
 ---
@@ -83,10 +83,10 @@ khulnasoft/pr-assistant@v0.9
 1. Clone this repository:
 
 ```
-git clone https://github.com/Khulnasoft/pr-assistant.git
+git clone https://github.com/KhulnaSoft/pr-insight.git
 ```
 
-2. Navigate to the `/pr-assistant` folder and install the requirements in your favorite virtual environment:
+2. Navigate to the `/pr-insight` folder and install the requirements in your favorite virtual environment:
 
 ```
 pip install -e .
@@ -97,25 +97,25 @@ pip install -e .
 3. Copy the secrets template file and fill in your OpenAI key and your GitHub user token:
 
 ```
-cp pr_assistant/settings/.secrets_template.toml pr_assistant/settings/.secrets.toml
-chmod 600 pr_assistant/settings/.secrets.toml
+cp pr_insight/settings/.secrets_template.toml pr_insight/settings/.secrets.toml
+chmod 600 pr_insight/settings/.secrets.toml
 # Edit .secrets.toml file
 ```
 
 4. Run the cli.py script:
 
 ```
-python3 -m pr_assistant.cli --pr_url <pr_url> review
-python3 -m pr_assistant.cli --pr_url <pr_url> ask <your question>
-python3 -m pr_assistant.cli --pr_url <pr_url> describe
-python3 -m pr_assistant.cli --pr_url <pr_url> improve
-python3 -m pr_assistant.cli --pr_url <pr_url> add_docs
-python3 -m pr_assistant.cli --pr_url <pr_url> generate_labels
-python3 -m pr_assistant.cli --issue_url <issue_url> similar_issue
+python3 -m pr_insight.cli --pr_url <pr_url> review
+python3 -m pr_insight.cli --pr_url <pr_url> ask <your question>
+python3 -m pr_insight.cli --pr_url <pr_url> describe
+python3 -m pr_insight.cli --pr_url <pr_url> improve
+python3 -m pr_insight.cli --pr_url <pr_url> add_docs
+python3 -m pr_insight.cli --pr_url <pr_url> generate_labels
+python3 -m pr_insight.cli --issue_url <issue_url> similar_issue
 ...
 ```
 
-[Optional] Add the pr_assistant folder to your PYTHONPATH
+[Optional] Add the pr_insight folder to your PYTHONPATH
 ```
-export PYTHONPATH=$PYTHONPATH:<PATH to pr_assistant folder>
+export PYTHONPATH=$PYTHONPATH:<PATH to pr_insight folder>
 ```

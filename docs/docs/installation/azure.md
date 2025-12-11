@@ -1,4 +1,62 @@
-## Azure DevOps provider
+## Azure DevOps Pipeline
+You can use a pre-built Action Docker image to run PR-Insight as an Azure devops pipeline.
+add the following file to your repository under `azure-pipelines.yml`:
+```yaml
+# Opt out of CI triggers
+trigger: none
+
+# Configure PR trigger
+pr:
+  branches:
+    include:
+    - '*'
+  autoCancel: true
+  drafts: false
+
+stages:
+- stage: pr_insight
+  displayName: 'PR Insight Stage'
+  jobs:
+  - job: pr_insight_job
+    displayName: 'PR Insight Job'
+    pool:
+      vmImage: 'ubuntu-latest'
+    container:
+      image: khulnasoft/pr-insight:latest
+      options: --entrypoint ""
+    variables:
+      - group: pr_insight
+    steps:
+    - script: |
+        echo "Running PR Insight action step"
+
+        # Construct PR_URL
+        PR_URL="${SYSTEM_COLLECTIONURI}${SYSTEM_TEAMPROJECT}/_git/${BUILD_REPOSITORY_NAME}/pullrequest/${SYSTEM_PULLREQUEST_PULLREQUESTID}"
+        echo "PR_URL=$PR_URL"
+
+        # Extract organization URL from System.CollectionUri
+        ORG_URL=$(echo "$(System.CollectionUri)" | sed 's/\/$//') # Remove trailing slash if present
+        echo "Organization URL: $ORG_URL"
+
+        export azure_devops__org="$ORG_URL"
+        export config__git_provider="azure"
+        
+        pr-insight --pr_url="$PR_URL" describe
+        pr-insight --pr_url="$PR_URL" review
+        pr-insight --pr_url="$PR_URL" improve
+      env:
+        azure_devops__pat: $(azure_devops_pat)
+        openai__key: $(OPENAI_KEY)
+      displayName: 'Run PR Insight'
+```
+This script will run PR-Insight on every new merge request, with the `improve`, `review`, and `describe` commands.
+Note that you need to export the `azure_devops__pat` and `OPENAI_KEY` variables in the Azure DevOps pipeline settings (Pipelines -> Library -> + Variable group):
+![PR Insight Pro](https://khulnasoft.com/images/pr_insight/azure_devops_pipeline_secrets.png){width=468}
+
+Make sure to give pipeline permissions to the `pr_insight` variable group.
+
+
+## Azure DevOps from CLI
 
 To use Azure DevOps provider use the following settings in configuration.toml:
 ```
@@ -8,7 +66,7 @@ git_provider="azure"
 
 Azure DevOps provider supports [PAT token](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) or [DefaultAzureCredential](https://learn.microsoft.com/en-us/azure/developer/python/sdk/authentication-overview#authentication-in-server-environments) authentication.
 PAT is faster to create, but has build in expiration date, and will use the user identity for API calls. 
-Using DefaultAzureCredential you can use managed identity or Service principle, which are more secure and will create separate ADO user identity (via AAD) to the agent.
+Using DefaultAzureCredential you can use managed identity or Service principle, which are more secure and will create separate ADO user identity (via AAD) to the insight.
 
 If PAT was chosen, you can assign the value in .secrets.toml. 
 If DefaultAzureCredential was chosen, you can assigned the additional env vars like AZURE_CLIENT_SECRET directly, 

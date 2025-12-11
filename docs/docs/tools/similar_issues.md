@@ -8,11 +8,11 @@ It can be invoked manually by commenting on any PR:
 
 ## Example usage
 
-![similar_issue_original_issue](https://khulnasoft.com/images/pr_assistant/similar_issue_original_issue.png){width=768}
+![similar_issue_original_issue](https://khulnasoft.com/images/pr_insight/similar_issue_original_issue.png){width=768}
 
-![similar_issue_comment](https://khulnasoft.com/images/pr_assistant/similar_issue_comment.png){width=768}
+![similar_issue_comment](https://khulnasoft.com/images/pr_insight/similar_issue_comment.png){width=768}
 
-![similar_issue](https://khulnasoft.com/images/pr_assistant/similar_issue.png){width=768}
+![similar_issue](https://khulnasoft.com/images/pr_insight/similar_issue.png){width=768}
 
 Note that to perform retrieval, the `similar_issue` tool indexes all the repo previous issues (once).
 
@@ -37,7 +37,7 @@ These parameters can be obtained by registering to [Pinecone](https://app.pineco
 - To invoke the 'similar issue' tool from **CLI**, run:
 `python3 cli.py --issue_url=... similar_issue`
 
-- To invoke the 'similar' issue tool via online usage, [comment](https://github.com/Khulnasoft/pr-assistant/issues/178#issuecomment-1716934893) on a PR:
+- To invoke the 'similar' issue tool via online usage, [comment](https://github.com/KhulnaSoft/pr-insight/issues/178#issuecomment-1716934893) on a PR:
 `/similar_issue`
 
-- You can also enable the 'similar issue' tool to run automatically when a new issue is opened, by adding it to the [pr_commands list in the github_app section](https://github.com/Khulnasoft/pr-assistant/blob/main/pr_assistant/settings/configuration.toml#L66)
+- You can also enable the 'similar issue' tool to run automatically when a new issue is opened, by adding it to the [pr_commands list in the github_app section](https://github.com/KhulnaSoft/pr-insight/blob/main/pr_insight/settings/configuration.toml#L66)

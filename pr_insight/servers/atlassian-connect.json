@@ -1,0 +1,33 @@
+{
+  "name": "KhulnaSoftAI PR-Insight",
+  "description": "KhulnaSoftAI PR-Insight",
+  "key": "app_key",
+  "vendor": {
+    "name": "KhulnaSoftAI",
+    "url": "https://khulnasoft.com"
+  },
+  "authentication": {
+    "type": "jwt"
+  },
+  "baseUrl": "base_url",
+  "lifecycle": {
+    "installed": "/installed",
+    "uninstalled": "/uninstalled"
+  },
+  "scopes": [
+    "account",
+    "repository",
+    "pullrequest"
+  ],
+  "contexts": [
+    "account"
+  ],
+  "modules": {
+    "webhooks": [
+      {
+        "event": "*",
+        "url": "/webhook"
+      }
+    ]
+  }
+}

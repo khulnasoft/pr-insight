@@ -28,7 +28,7 @@ jobs:
           file: ./docker/Dockerfile
           push: false
           load: true
-          tags: khulnasoft/pr-assistant:test
+          tags: khulnasoft/pr-insight:test
           cache-from: type=gha,scope=dev
           cache-to: type=gha,mode=max,scope=dev
           target: test
@@ -36,6 +36,6 @@ jobs:
       - id: test
         name: Test dev docker
         run: |
-          docker run --rm khulnasoft/pr-assistant:test pytest -v tests/unittest
+          docker run --rm khulnasoft/pr-insight:test pytest -v tests/unittest
         
           

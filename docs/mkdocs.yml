@@ -1,11 +1,11 @@
-site_name: PR-Assistant Documentation
-repo_url: https://github.com/Khulnasoft/pr-assistant
-repo_name: Khulnasoft/pr-assistant
+site_name: PR-Insight Documentation
+repo_url: https://github.com/KhulnaSoft/pr-insight
+repo_name: KhulnaSoft/pr-insight
 
 nav:
   - Overview:
     - 'index.md'
-    - 💎 PR-Assistant Pro: 'overview/pr_assistant_pro.md'
+    - 💎 PR-Insight Pro: 'overview/pr_insight_pro.md'
     - Data Privacy: 'overview/data_privacy.md'
   - Installation:
     - 'installation/index.md'
@@ -14,7 +14,7 @@ nav:
     - GitLab: 'installation/gitlab.md'
     - BitBucket: 'installation/bitbucket.md'
     - Azure DevOps: 'installation/azure.md'
-    - 💎 PR-Assistant Pro: 'installation/pr_assistant_pro.md'
+    - 💎 PR-Insight Pro: 'installation/pr_insight_pro.md'
   - Usage Guide:
     - 'usage-guide/index.md'
     - Introduction: 'usage-guide/introduction.md'
@@ -23,7 +23,7 @@ nav:
     - Managing Mail Notifications: 'usage-guide/mail_notifications.md'
     - Changing a Model: 'usage-guide/changing_a_model.md'
     - Additional Configurations: 'usage-guide/additional_configurations.md'
-    - 💎 PR-Assistant Pro Models: 'usage-guide/PR_assistant_pro_models'
+    - 💎 PR-Insight Pro Models: 'usage-guide/PR_insight_pro_models'
   - Tools:
     - 'tools/index.md'
     - Describe: 'tools/describe.md'
@@ -96,7 +96,7 @@ extra:
   generator: false
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/Khulnasoft
+      link: https://github.com/KhulnaSoft
     - icon: fontawesome/brands/discord
       link: https://discord.com/invite/SgSxuQ65GF
     - icon: fontawesome/brands/youtube
@@ -104,7 +104,7 @@ extra:
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/company/khulnasoft
     - icon: fontawesome/brands/twitter
-      link: https://twitter.com/KhulnaSoft
+      link: https://twitter.com/KhulnaSoftAI
     - icon: fontawesome/brands/instagram
       link: https://www.instagram.com/khulnasoft/
   analytics:
@@ -138,4 +138,4 @@ markdown_extensions:
 
 
 copyright: |
-  &copy; 2024 <a href="https://www.khulnasoft.com/"  target="_blank" rel="noopener">KhulnaSoft</a>
+  &copy; 2024 <a href="https://www.khulnasoft.com/"  target="_blank" rel="noopener">KhulnaSoftAI</a>

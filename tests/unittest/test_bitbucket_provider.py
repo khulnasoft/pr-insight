@@ -1,5 +1,5 @@
-from pr_assistant.git_providers import BitbucketServerProvider
-from pr_assistant.git_providers.bitbucket_provider import BitbucketProvider
+from pr_insight.git_providers import BitbucketServerProvider
+from pr_insight.git_providers.bitbucket_provider import BitbucketProvider
 
 
 class TestBitbucketProvider:
