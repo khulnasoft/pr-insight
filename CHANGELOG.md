@@ -1,45 +1,42 @@
-## 2023-08-03
+# Changelog
 
-### Optimized
-- Optimized PR diff processing by introducing caching for diff files, reducing the number of API calls.
-- Refactored `load_large_diff` function to generate a patch only when necessary.
-- Fixed a bug in the GitLab provider where the new file was not retrieved correctly.
+All notable changes to this project will be documented in this file.
 
-## 2023-08-02
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### Enhanced
-- Updated several tools in the `pr_insight` package to use commit messages in their functionality.
-- Commit messages are now retrieved and stored in the `vars` dictionary for each tool.
-- Added a section to display the commit messages in the prompts of various tools.
-
-## 2023-08-01
-
-### Enhanced
-- Introduced the ability to retrieve commit messages from pull requests across different git providers.
-- Implemented commit messages retrieval for GitHub and GitLab providers.
-- Updated the PR description template to include a section for commit messages if they exist.
-- Added support for repository-specific configuration files (.pr_insight.yaml) for the PR Insight.
-- Implemented this feature for both GitHub and GitLab providers.
-- Added a new configuration option 'use_repo_settings_file' to enable or disable the use of a repo-specific settings file.
-
-
-## 2023-07-30
-
-### Enhanced
-- Added the ability to modify any configuration parameter from 'configuration.toml' on-the-fly.
-- Updated the command line interface and bot commands to accept configuration changes as arguments.
-- Improved the PR insight to handle additional arguments for each action.
-
-## 2023-07-28
-
-### Improved
-- Enhanced error handling and logging in the GitLab provider.
-- Improved handling of inline comments and code suggestions in GitLab.
-- Fixed a bug where an additional unneeded line was added to code suggestions in GitLab.
-
-## 2023-07-26
+## [0.3.1] - 2026-03-04
 
 ### Added
-- New feature for updating the CHANGELOG.md based on the contents of a PR.
-- Added support for this feature for the Github provider.
-- New configuration settings and prompts for the changelog update feature.
+- Gitea provider support (`pr_insight/git_providers/gitea_provider.py`)
+- AWS Secrets Manager provider (`pr_insight/secret_providers/aws_secrets_manager_provider.py`)
+- Agent module for command orchestration (`pr_insight/agent/`)
+- Lambda webhook handlers for GitHub and GitLab
+- New tool: `help_docs` for generating help documentation
+- New tool: `generate_labels` for automatic label generation
+- New tool: `add_docs` for documentation updates
+- VSCode workspace configuration (extensions, settings, launch, tasks)
+- Docker Compose for local development
+- Renovate configuration for automated dependency updates
+- Mypy type checking configuration
+
+### Changed
+- Migrated from pip to uv for dependency management
+- Updated to Python 3.12+
+- Updated dependencies to latest versions
+- Improved Docker build with uv caching
+
+### Fixed
+- Test expectations for `insert_br_after_x_chars` function
+
+## [0.2.5] - Previous
+
+### Added
+- Initial release with core features
+- GitHub, GitLab, Bitbucket, Azure DevOps support
+- CLI tools: review, describe, improve, ask, config
+- Multiple AI handler support (OpenAI, LiteLLM, Anthropic)
+
+---
+
+For older releases, please refer to the git history.
